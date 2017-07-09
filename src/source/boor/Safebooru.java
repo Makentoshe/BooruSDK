@@ -6,7 +6,7 @@ import source.еnum.Api;
  * Singleton.
  * Storage data about Safebooru API and method for getting request
  */
-public final class Safebooru extends BoorAbstract {
+public class Safebooru extends AbstractBoor {
 
     private static final Safebooru instance = new Safebooru();
 

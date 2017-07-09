@@ -6,7 +6,7 @@ import source.еnum.Api;
  * Singleton.
  * Storage data about Gelbooru API and method for getting request
  */
-public final class Gelbooru extends BoorAbstract {
+public class Gelbooru extends AbstractBoor {
 
     private static final Gelbooru instance = new Gelbooru();
 

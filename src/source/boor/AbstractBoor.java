@@ -5,7 +5,7 @@ import source.еnum.Api;
 /**
  * Created by Makentoshe on 09.07.2017.
  */
-abstract class BoorAbstract {
+abstract class AbstractBoor {
 
     public abstract Api getApi();
 

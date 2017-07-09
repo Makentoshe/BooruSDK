@@ -6,7 +6,7 @@ import source.еnum.Api;
  * Singleton.
  * Storage data about Rule34 API and method for getting request
  */
-public class Rule34 extends BoorAbstract {
+public class Rule34 extends AbstractBoor {
 
     private static final Rule34 instance = new Rule34();
 
