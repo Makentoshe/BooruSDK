@@ -4,19 +4,17 @@ import source.еnum.Api;
 
 /**
  * Singleton.
- * Storage data about Behoimi API and method for getting request
+ * Storage data about E621 API and method for getting request
  */
-public class Behoimi extends AbstractBoor {
+public class E621 extends AbstractBoor {
 
-    private static final Behoimi instance = new Behoimi();
+    private static final E621 instance = new E621();
 
-    private static final Api api = Api.ADVANCED;
-
-
-
-    public static Behoimi get(){
+    public static E621 get(){
         return instance;
     }
+
+    private final Api api = Api.ADVANCED;
 
     @Override
     public Api getApi() {
@@ -25,7 +23,7 @@ public class Behoimi extends AbstractBoor {
 
     @Override
     public String getCompleteRequest(int itemCount, String request, int pid) {
-        return "http://behoimi.org/post/index.xml?" +
+        return "https://e621.net/post/index.xml?" +
                 "limit="+itemCount+"&tags="+request+"&page=" + pid;
     }
 }

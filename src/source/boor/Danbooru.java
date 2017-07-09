@@ -3,7 +3,8 @@ package source.boor;
 import source.еnum.Api;
 
 /**
- * Created by Makentoshe on 09.07.2017.
+ * Singleton.
+ * Storage data about Danbooru API and method for getting request
  */
 public class Danbooru extends AbstractBoor {
 
