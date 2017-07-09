@@ -10,7 +10,7 @@ public class Behoimi extends AbstractBoor {
 
     private static final Behoimi instance = new Behoimi();
 
-    private static final Api api = Api.ADVANCED;
+    private final Api api = Api.ADVANCED;
 
 
 
