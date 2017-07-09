@@ -4,13 +4,13 @@ import source.еnum.Api;
 
 /**
  * Singleton.
- * Storage data about Yandere API and method for getting request.
+ * Storage data about Konachan API and method for getting request.
  */
-public class Yandere extends AbstractBoor {
+public class Konachan extends AbstractBoor {
 
-    private static final Yandere instance = new Yandere();
+    private static final Konachan instance = new Konachan();
 
-    public static Yandere get() {
+    public static Konachan get() {
         return instance;
     }
 
@@ -23,7 +23,7 @@ public class Yandere extends AbstractBoor {
 
     @Override
     public String getCompleteRequest(int itemCount, String request, int pid) {
-        return "https://yande.re/post.xml?" +
+        return "https://konachan.com/post.xml?" +
                 "limit=" + itemCount + "&tags=" + request + "&page=" + pid;
     }
 }

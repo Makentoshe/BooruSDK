@@ -4,7 +4,7 @@ import source.еnum.Api;
 
 /**
  * Singleton.
- * Storage data about Behoimi API and method for getting request
+ * Storage data about Behoimi API and method for getting request.
  */
 public class Behoimi extends AbstractBoor {
 
