@@ -1,16 +1,19 @@
 package source.boor;
 
 import source.еnum.Api;
+import source.еnum.DataType;
 
 /**
  * Singleton.
- * Storage data about Behoimi API and method for getting request.
+ * Storage data about Behoimi API, method for getting request and resolving data type.
  */
 public class Behoimi extends AbstractBoor {
 
     private static final Behoimi instance = new Behoimi();
 
     private final Api api = Api.ADVANCED;
+
+    private final DataType dataType = DataType.XML_BASIC;
 
 
 
@@ -21,6 +24,11 @@ public class Behoimi extends AbstractBoor {
     @Override
     public Api getApi() {
         return api;
+    }
+
+    @Override
+    public DataType getDataType() {
+        return dataType;
     }
 
     @Override

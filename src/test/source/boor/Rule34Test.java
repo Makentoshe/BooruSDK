@@ -2,8 +2,8 @@ package test.source.boor;
 
 import org.junit.Test;
 import source.boor.Rule34;
-import source.boor.Safebooru;
 import source.еnum.Api;
+import source.еnum.DataType;
 
 import static org.junit.Assert.*;
 
@@ -13,6 +13,11 @@ public class Rule34Test {
     @Test
     public void getApi() throws Exception {
         assertEquals(Api.BASICS, Rule34.get().getApi());
+    }
+
+    @Test
+    public void getDataType_Test() throws Exception {
+        assertEquals(DataType.XML_BASIC, Rule34.get().getDataType());
     }
 
     @Test

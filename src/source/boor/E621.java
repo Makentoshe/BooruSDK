@@ -1,6 +1,7 @@
 package source.boor;
 
 import source.еnum.Api;
+import source.еnum.DataType;
 
 /**
  * Singleton.
@@ -14,11 +15,18 @@ public class E621 extends AbstractBoor {
         return instance;
     }
 
+    private final DataType dataType = DataType.XML_ADVANCED;
+
     private final Api api = Api.ADVANCED;
 
     @Override
     public Api getApi() {
         return api;
+    }
+
+    @Override
+    public DataType getDataType() {
+        return dataType;
     }
 
     @Override

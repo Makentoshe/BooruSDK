@@ -1,4 +1,5 @@
-import engine.HttpConnection;
+import engine.parser.BasicPostParser;
+import source.boor.Gelbooru;
 
 /**
  * Created by Makentoshe on 10.07.2017.
@@ -6,6 +7,9 @@ import engine.HttpConnection;
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        System.out.println(new HttpConnection(false).getRequest("https://sas.com/anus.psa"));
+        BasicPostParser parser = new BasicPostParser();
+        parser.startParse(Gelbooru.get().getCompleteRequest(2, "hatsune_miku",0));
+
+        System.out.println(parser.getResult().size());
     }
 }

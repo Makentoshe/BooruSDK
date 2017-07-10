@@ -1,6 +1,7 @@
 package source.boor;
 
 import source.еnum.Api;
+import source.еnum.DataType;
 
 /**
  * Singleton.
@@ -16,9 +17,16 @@ public class Rule34 extends AbstractBoor {
         return instance;
     }
 
+    private final DataType dataType = DataType.XML_BASIC;
+
     @Override
     public Api getApi() {
         return api;
+    }
+
+    @Override
+    public DataType getDataType() {
+        return dataType;
     }
 
     @Override

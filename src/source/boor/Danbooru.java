@@ -1,6 +1,7 @@
 package source.boor;
 
 import source.еnum.Api;
+import source.еnum.DataType;
 
 /**
  * Singleton.
@@ -12,6 +13,7 @@ public class Danbooru extends AbstractBoor {
 
     private static final Api api = Api.ADVANCED;
 
+    private final DataType dataType = DataType.XML_ADVANCED;
 
 
     public static Danbooru get() {
@@ -21,6 +23,11 @@ public class Danbooru extends AbstractBoor {
     @Override
     public Api getApi() {
         return api;
+    }
+
+    @Override
+    public DataType getDataType() {
+        return dataType;
     }
 
     @Override

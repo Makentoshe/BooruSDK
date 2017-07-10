@@ -3,6 +3,7 @@ package test.source.boor;
 import org.junit.Test;
 import source.boor.E621;
 import source.еnum.Api;
+import source.еnum.DataType;
 
 import static org.junit.Assert.*;
 
@@ -11,6 +12,11 @@ public class E621Test {
     @Test
     public void getApi_Test() throws Exception {
         assertEquals(Api.ADVANCED, E621.get().getApi());
+    }
+
+    @Test
+    public void getDataType_Test() throws Exception{
+        assertEquals(DataType.XML_ADVANCED, E621.get().getDataType());
     }
 
     @Test

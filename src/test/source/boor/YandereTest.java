@@ -4,6 +4,7 @@ import org.junit.Test;
 import source.boor.E621;
 import source.boor.Yandere;
 import source.еnum.Api;
+import source.еnum.DataType;
 
 import static org.junit.Assert.*;
 
@@ -14,6 +15,11 @@ public class YandereTest {
     @Test
     public void getApi_Test() throws Exception {
         assertEquals(Api.ADVANCED, Yandere.get().getApi());
+    }
+
+    @Test
+    public void getDataType_Test() throws Exception {
+        assertEquals(DataType.XML_BASIC, Yandere.get().getDataType());
     }
 
     @Test

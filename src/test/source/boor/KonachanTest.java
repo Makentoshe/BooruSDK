@@ -3,6 +3,7 @@ package test.source.boor;
 import org.junit.Test;
 import source.boor.Konachan;
 import source.еnum.Api;
+import source.еnum.DataType;
 
 import static org.junit.Assert.*;
 
@@ -13,6 +14,11 @@ public class KonachanTest {
     @Test
     public void getApi() throws Exception {
         assertEquals(Api.ADVANCED, Konachan.get().getApi());
+    }
+
+    @Test
+    public void getDataType_Test() throws Exception {
+        assertEquals(DataType.XML_BASIC, Konachan.get().getDataType());
     }
 
     @Test

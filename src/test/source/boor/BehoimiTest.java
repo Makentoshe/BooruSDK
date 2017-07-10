@@ -4,6 +4,7 @@ import org.junit.Test;
 import source.boor.Behoimi;
 import source.boor.Danbooru;
 import source.еnum.Api;
+import source.еnum.DataType;
 
 import static org.junit.Assert.*;
 
@@ -11,6 +12,11 @@ public class BehoimiTest {
     @Test
     public void getApi_Test() throws Exception {
         assertEquals(Api.ADVANCED, Behoimi.get().getApi());
+    }
+
+    @Test
+    public void getDataType_Test() throws Exception {
+        assertEquals(DataType.XML_BASIC, Behoimi.get().getDataType());
     }
 
     @Test
