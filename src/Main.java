@@ -1,5 +1,4 @@
 import engine.HttpConnection;
-import source.boor.Gelbooru;
 
 /**
  * Created by Makentoshe on 10.07.2017.
@@ -7,6 +6,6 @@ import source.boor.Gelbooru;
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        System.out.println( HttpConnection.getRequest(Gelbooru.get().getCompleteRequest(2, "",0)));
+        System.out.println(new HttpConnection(false).getRequest("https://sas.com/anus.psa"));
     }
 }
