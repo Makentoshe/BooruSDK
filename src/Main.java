@@ -1,21 +1,17 @@
-import engine.HttpConnection;
-import engine.parser.XmlParser;
-import source.boor.Gelbooru;
-
-import java.io.*;
+import source.boor.Behoimi;
+import source.еnum.Format;
 
 /**
- * Sas
+ * TODO: Дописать синглтоны, пофиксить методы
  */
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        String str = new HttpConnection(false).getRequest(Gelbooru.get().getCompleteRequest(5, "hatsune_miku", 0));
+        System.out.println(Behoimi.get().getCompleteRequest(2, "sas", 0, Format.JSON));
 
-        XmlParser parser = new XmlParser();
-        InputStream is = new ByteArrayInputStream(str.getBytes());
+        System.out.println(Behoimi.get().getCompleteRequest(2, "sas", 0, Format.XML));
 
-        parser.startParse(is);
-        System.out.println(parser.getResult().size());
+        Behoimi.get().setFormat(Format.JSON);
+        System.out.println(Behoimi.get().getCompleteRequest(2, "sas", 0));
     }
 }

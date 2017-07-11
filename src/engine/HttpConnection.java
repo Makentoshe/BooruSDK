@@ -9,9 +9,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created by Makentoshe on 10.07.2017.
- */
+
 public class HttpConnection {
 
     private static final String USER_AGENT = "Mozilla/5.0";
@@ -22,6 +20,13 @@ public class HttpConnection {
         logger.setFilter(record -> logging);
     }
 
+    /**
+     * Create connection and request data.
+     *
+     * @param url - url.
+     * @return server response in String.
+     * @throws BooruEngineException - when something go wrong.
+     */
     public String getRequest(String url) throws BooruEngineException {
         StringBuilder result = new StringBuilder();
 

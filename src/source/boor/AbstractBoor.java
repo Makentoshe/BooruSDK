@@ -18,16 +18,29 @@ abstract class AbstractBoor {
      * @param itemCount - how many items must be in list.
      * @param request   - request. Contain tags and marks.
      * @param pid       - page number.
+     * @param format    - result format(XML or JSON).
      * @return complete get request
      */
-    public abstract String getCompleteRequest(int itemCount, String request, int pid);
+    public String getCompleteRequest(int itemCount, String request, int pid, Format format){
+        return  getCustomRequest("limit=" + itemCount + "&tags=" + request + "&page=" + pid, format);
+    }
+
+    //when the format is not specified explicitly
+    public String getCompleteRequest(int itemCount, String request, int pid) {
+        return getCompleteRequest(itemCount, request, pid, getFormat());
+    }
 
     /**
      * Construct custom request.
      *
      * @param request - request.
+     * @param format  - result format(XML or JSON).
      * @return complete get request
      */
-    public abstract String getCustomRequest(String request);
+    public abstract String getCustomRequest(String request, Format format);
 
+    //when the format is not specified explicitly
+    public String getCustomRequest(String request) {
+        return getCustomRequest(request, getFormat());
+    }
 }

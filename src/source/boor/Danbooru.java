@@ -11,24 +11,25 @@ public class Danbooru extends AbstractBoor {
 
     private static final Danbooru instance = new Danbooru();
 
-    private static final Api api = Api.ADVANCED;
-
-    private Format format = Format.XML;
-
-    private final String LINK = "https://danbooru.donmai.us/posts.xml?";
-
-
     public static Danbooru get() {
         return instance;
     }
 
-    public void setFormat(Format format){
-        this.format = format;
-    }
+
+
+    private static final Api api = Api.ADVANCED;
 
     @Override
     public Api getApi() {
         return api;
+    }
+
+
+
+    private Format format = Format.XML;
+
+    public void setFormat(Format format){
+        this.format = format;
     }
 
     public Format getFormat() {
@@ -36,12 +37,17 @@ public class Danbooru extends AbstractBoor {
     }
 
     @Override
-    public String getCompleteRequest(int itemCount, String request, int pid) {
-        return LINK + "tags="+ request +"&limit="+itemCount+"&page=" + pid;
+    public String getCompleteRequest(int itemCount, String request, int pid, Format format) {
+        return null;
     }
 
     @Override
-    public String getCustomRequest(String request) {
-        return LINK + request;
+    public String getCustomRequest(String request, Format format) {
+        return "https://danbooru.donmai.us/posts." + format.toString().toLowerCase() + "?" + request;;
     }
+
+
+
+
+
 }
