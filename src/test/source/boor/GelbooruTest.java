@@ -3,7 +3,7 @@ package test.source.boor;
 import org.junit.Test;
 import source.boor.Gelbooru;
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 import static org.junit.Assert.*;
 
@@ -16,7 +16,7 @@ public class GelbooruTest {
 
     @Test
     public void getDataType_Test() throws Exception{
-        assertEquals(DataType.XML, Gelbooru.get().getDataType());
+        assertEquals(Format.XML, Gelbooru.get().getFormat());
     }
 
     @Test

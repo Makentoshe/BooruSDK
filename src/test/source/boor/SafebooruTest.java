@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import source.boor.Safebooru;
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 import static org.junit.Assert.*;
 
@@ -18,7 +18,7 @@ public class SafebooruTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        Assert.assertEquals(DataType.XML, Safebooru.get().getDataType());
+        Assert.assertEquals(Format.XML, Safebooru.get().getFormat());
     }
 
     @Test

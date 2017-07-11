@@ -1,7 +1,7 @@
 package source.boor;
 
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 /**
  * Singleton.
@@ -17,7 +17,7 @@ public class Rule34 extends AbstractBoor {
         return instance;
     }
 
-    private final DataType dataType = DataType.XML;
+    private final Format format = Format.XML;
 
     private final String LINK = "https://rule34.xxx/index.php?page=dapi&s=post&q=index&";
 
@@ -26,9 +26,8 @@ public class Rule34 extends AbstractBoor {
         return api;
     }
 
-    @Override
-    public DataType getDataType() {
-        return dataType;
+    public Format getFormat() {
+        return format;
     }
 
     @Override

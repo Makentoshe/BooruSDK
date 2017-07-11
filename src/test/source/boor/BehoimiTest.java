@@ -3,7 +3,7 @@ package test.source.boor;
 import org.junit.Test;
 import source.boor.Behoimi;
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 import static org.junit.Assert.*;
 
@@ -15,7 +15,7 @@ public class BehoimiTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(DataType.XML, Behoimi.get().getDataType());
+        assertEquals(Format.XML, Behoimi.get().getFormat());
     }
 
     @Test

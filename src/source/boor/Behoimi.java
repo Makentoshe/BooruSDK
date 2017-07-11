@@ -1,7 +1,7 @@
 package source.boor;
 
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 /**
  * Singleton.
@@ -13,7 +13,7 @@ public class Behoimi extends AbstractBoor {
 
     private final Api api = Api.ADVANCED;
 
-    private final DataType dataType = DataType.XML;
+    private Format format = Format.XML;
 
     private final String LINK = "http://behoimi.org/post/index.xml?";
 
@@ -21,14 +21,17 @@ public class Behoimi extends AbstractBoor {
         return instance;
     }
 
+    public void setFormat(Format format){
+        this.format = format;
+    }
+
     @Override
     public Api getApi() {
         return api;
     }
 
-    @Override
-    public DataType getDataType() {
-        return dataType;
+    public Format getFormat() {
+        return format;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package source.boor;
 
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 /**
  * Singleton.
@@ -13,7 +13,7 @@ public class Danbooru extends AbstractBoor {
 
     private static final Api api = Api.ADVANCED;
 
-    private final DataType dataType = DataType.JSON;
+    private Format format = Format.XML;
 
     private final String LINK = "https://danbooru.donmai.us/posts.xml?";
 
@@ -22,14 +22,17 @@ public class Danbooru extends AbstractBoor {
         return instance;
     }
 
+    public void setFormat(Format format){
+        this.format = format;
+    }
+
     @Override
     public Api getApi() {
         return api;
     }
 
-    @Override
-    public DataType getDataType() {
-        return dataType;
+    public Format getFormat() {
+        return format;
     }
 
     @Override

@@ -3,7 +3,7 @@ package test.source.boor;
 import org.junit.Test;
 import source.boor.E621;
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 import static org.junit.Assert.*;
 
@@ -16,7 +16,7 @@ public class E621Test {
 
     @Test
     public void getDataType_Test() throws Exception{
-        assertEquals(DataType.JSON, E621.get().getDataType());
+        assertEquals(Format.JSON, E621.get().getFormat());
     }
 
     @Test

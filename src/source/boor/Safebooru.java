@@ -1,7 +1,7 @@
 package source.boor;
 
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 /**
  * Singleton.
@@ -19,15 +19,14 @@ public class Safebooru extends AbstractBoor {
 
     private final Api api = Api.BASICS;
 
-    private final DataType dataType = DataType.XML;
+    private final Format format = Format.XML;
 
     public Api getApi() {
         return api;
     }
 
-    @Override
-    public DataType getDataType() {
-        return dataType;
+    public Format getFormat() {
+        return format;
     }
 
 

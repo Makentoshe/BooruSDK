@@ -1,7 +1,7 @@
 package source.boor;
 
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 /**
  * Singleton.
@@ -15,20 +15,23 @@ public class E621 extends AbstractBoor {
         return instance;
     }
 
-    private final DataType dataType = DataType.JSON;
+    private Format format = Format.XML;
 
     private final Api api = Api.ADVANCED;
 
     private final String LINK = "https://e621.net/post/index.xml?";
+
+    public void setFormat(Format format){
+        this.format = format;
+    }
 
     @Override
     public Api getApi() {
         return api;
     }
 
-    @Override
-    public DataType getDataType() {
-        return dataType;
+    public Format getFormat() {
+        return format;
     }
 
     @Override

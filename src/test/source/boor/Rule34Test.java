@@ -3,7 +3,7 @@ package test.source.boor;
 import org.junit.Test;
 import source.boor.Rule34;
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +17,7 @@ public class Rule34Test {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(DataType.XML, Rule34.get().getDataType());
+        assertEquals(Format.XML, Rule34.get().getFormat());
     }
 
     @Test

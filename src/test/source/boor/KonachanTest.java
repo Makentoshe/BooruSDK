@@ -3,7 +3,7 @@ package test.source.boor;
 import org.junit.Test;
 import source.boor.Konachan;
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 import static org.junit.Assert.*;
 
@@ -18,7 +18,7 @@ public class KonachanTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(DataType.XML, Konachan.get().getDataType());
+        assertEquals(Format.XML, Konachan.get().getFormat());
     }
 
     @Test

@@ -3,7 +3,7 @@ package test.source.boor;
 import org.junit.Test;
 import source.boor.Danbooru;
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 import static org.junit.Assert.*;
 
@@ -15,7 +15,7 @@ public class DanbooruTest {
 
     @Test
     public void getDataType_Test() throws Exception{
-        assertEquals(DataType.JSON, Danbooru.get().getDataType());
+        assertEquals(Format.JSON, Danbooru.get().getFormat());
     }
 
     @Test

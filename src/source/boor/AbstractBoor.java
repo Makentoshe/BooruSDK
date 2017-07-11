@@ -1,7 +1,7 @@
 package source.boor;
 
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 /**
  * Created by Makentoshe on 09.07.2017.
@@ -10,7 +10,7 @@ abstract class AbstractBoor {
 
     public abstract Api getApi();
 
-    public abstract DataType getDataType();
+    public abstract Format getFormat();
 
     /**
      * Construct standard get request.

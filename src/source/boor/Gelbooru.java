@@ -1,7 +1,7 @@
 package source.boor;
 
 import source.еnum.Api;
-import source.еnum.DataType;
+import source.еnum.Format;
 
 /**
  * Singleton.
@@ -17,7 +17,7 @@ public class Gelbooru extends AbstractBoor {
 
     private final Api api = Api.BASICS;
 
-    private final DataType dataType = DataType.XML;
+    private final Format format = Format.XML;
 
     private final String LINK = "https://gelbooru.com/index.php?page=dapi&s=post&q=index&";
 
@@ -26,9 +26,8 @@ public class Gelbooru extends AbstractBoor {
         return api;
     }
 
-    @Override
-    public DataType getDataType() {
-        return dataType;
+    public Format getFormat() {
+        return format;
     }
 
     @Override
