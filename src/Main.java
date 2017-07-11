@@ -2,7 +2,7 @@ import source.boor.Behoimi;
 import source.еnum.Format;
 
 /**
- * TODO: Дописать синглтоны, пофиксить методы
+ * TODO: дописать тесты для хмл формата
  */
 public class Main {
 

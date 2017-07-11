@@ -19,7 +19,6 @@ public class Gelbooru extends AbstractBoor {
 
     private final Format format = Format.XML;
 
-    private final String LINK = "https://gelbooru.com/index.php?page=dapi&s=post&q=index&";
 
     @Override
     public Api getApi() {
@@ -32,11 +31,13 @@ public class Gelbooru extends AbstractBoor {
 
     @Override
     public String getCompleteRequest(int itemCount, String request, int pid) {
-        return LINK + "limit=" + itemCount + "&tags=" + request + "&pid=" + pid;
+        return getCustomRequest("limit=" + itemCount + "&tags=" + request + "&pid=" + pid);
     }
 
     @Override
-    public String getCustomRequest(String request) {
-        return LINK + request;
+    public String getCustomRequest(String request, Format format) {
+        return "https://gelbooru.com/index.php?page=dapi&s=post&q=index&" + request;
     }
+
+
 }

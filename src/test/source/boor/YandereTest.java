@@ -18,7 +18,7 @@ public class YandereTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(Format.XML, Yandere.get().getFormat());
+        assertEquals(Format.JSON, Yandere.get().getFormat());
     }
 
     @Test
@@ -27,7 +27,7 @@ public class YandereTest {
         String request = "hatsune_miku";
         int pid = 0;
         String link = Yandere.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "https://yande.re/post.xml?limit=100&tags=hatsune_miku&page=0";
+        String expected = "https://yande.re/post.json?limit=100&tags=hatsune_miku&page=0";
         assertEquals(expected, link);
     }
 

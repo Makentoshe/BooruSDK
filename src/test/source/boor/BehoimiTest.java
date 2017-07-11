@@ -15,7 +15,7 @@ public class BehoimiTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(Format.XML, Behoimi.get().getFormat());
+        assertEquals(Format.JSON, Behoimi.get().getFormat());
     }
 
     @Test
@@ -24,7 +24,7 @@ public class BehoimiTest {
         String request = "hatsune_miku";
         int pid = 0;
         String link = Behoimi.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "http://behoimi.org/post/index.xml?limit=100&tags=hatsune_miku&page=0";
+        String expected = "http://behoimi.org/post/index.json?limit=100&tags=hatsune_miku&page=0";
         assertEquals(expected, link);
     }
 

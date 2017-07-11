@@ -24,7 +24,7 @@ public class DanbooruTest {
         String request = "hatsune_miku";
         int pid = 0;
         String link = Danbooru.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "https://danbooru.donmai.us/posts.xml?tags=hatsune_miku&limit=100&page=0";
+        String expected = "https://danbooru.donmai.us/posts."+Danbooru.get().getFormat().toString().toLowerCase()+"?limit=100&tags=hatsune_miku&page=0";
         assertEquals(expected, link);
     }
 

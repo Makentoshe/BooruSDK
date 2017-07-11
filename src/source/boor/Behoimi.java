@@ -26,7 +26,7 @@ public class Behoimi extends AbstractBoor {
 
 
 
-    private Format format = Format.XML;
+    private Format format = Format.JSON;
 
     public void setFormat(Format format) {
         this.format = format;

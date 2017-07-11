@@ -26,7 +26,7 @@ public class Danbooru extends AbstractBoor {
 
 
 
-    private Format format = Format.XML;
+    private Format format = Format.JSON;
 
     public void setFormat(Format format){
         this.format = format;
@@ -37,17 +37,8 @@ public class Danbooru extends AbstractBoor {
     }
 
     @Override
-    public String getCompleteRequest(int itemCount, String request, int pid, Format format) {
-        return null;
-    }
-
-    @Override
     public String getCustomRequest(String request, Format format) {
-        return "https://danbooru.donmai.us/posts." + format.toString().toLowerCase() + "?" + request;;
+        return "https://danbooru.donmai.us/posts." + format.toString().toLowerCase() + "?" + request;
     }
-
-
-
-
 
 }

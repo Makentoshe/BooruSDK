@@ -18,7 +18,7 @@ public class KonachanTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(Format.XML, Konachan.get().getFormat());
+        assertEquals(Format.JSON, Konachan.get().getFormat());
     }
 
     @Test
@@ -27,7 +27,7 @@ public class KonachanTest {
         String request = "hatsune_miku";
         int pid = 0;
         String link = Konachan.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "https://konachan.com/post.xml?limit=100&tags=hatsune_miku&page=0";
+        String expected = "https://konachan.com/post.json?limit=100&tags=hatsune_miku&page=0";
         assertEquals(expected, link);
     }
 

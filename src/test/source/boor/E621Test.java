@@ -25,7 +25,7 @@ public class E621Test {
         String request = "hatsune_miku";
         int pid = 0;
         String link = E621.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "https://e621.net/post/index.xml?limit=100&tags=hatsune_miku&page=0";
+        String expected = "https://e621.net/post/index.json?limit=100&tags=hatsune_miku&page=0";
         assertEquals(expected, link);
     }
 

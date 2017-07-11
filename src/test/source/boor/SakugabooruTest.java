@@ -18,7 +18,7 @@ public class SakugabooruTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(Format.XML, Sakugabooru.get().getFormat());
+        assertEquals(Format.JSON, Sakugabooru.get().getFormat());
     }
 
     @Test
@@ -27,14 +27,8 @@ public class SakugabooruTest {
         String request = "hatsune_miku";
         int pid = 0;
         String link = Sakugabooru.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "https://sakugabooru.com/post/index.xml?limit=100&tag=hatsune_miku&page=0";
+        String expected = "https://sakugabooru.com/post/index.json?limit=100&tag=hatsune_miku&page=0";
         assertEquals(expected, link);
-    }
-
-    @Test
-    public void getCustomRequest_Test() throws Exception {
-        String expected = "https://sakugabooru.com/post/index.xml?limit=100&tag=hatsune_miku&page=0";
-        assertEquals(expected, Sakugabooru.get().getCustomRequest("limit=100&tag=hatsune_miku&page=0"));
     }
 
 }

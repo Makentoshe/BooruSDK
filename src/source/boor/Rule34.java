@@ -19,7 +19,7 @@ public class Rule34 extends AbstractBoor {
 
     private final Format format = Format.XML;
 
-    private final String LINK = "https://rule34.xxx/index.php?page=dapi&s=post&q=index&";
+
 
     @Override
     public Api getApi() {
@@ -31,12 +31,12 @@ public class Rule34 extends AbstractBoor {
     }
 
     @Override
-    public String getCompleteRequest(int itemCount, String request, int pid) {
-        return  LINK + "limit=" + itemCount + "&tags=" + request + "&pid=" + pid;
+    public String getCustomRequest(String request, Format format) {
+        return "https://rule34.xxx/index.php?page=dapi&s=post&q=index&" + request;
     }
 
     @Override
-    public String getCustomRequest(String request) {
-        return LINK + request;
+    public String getCompleteRequest(int itemCount, String request, int pid) {
+        return getCustomRequest("limit=" + itemCount + "&tags=" + request + "&pid=" + pid);
     }
 }

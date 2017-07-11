@@ -17,9 +17,9 @@ public class Konachan extends AbstractBoor {
 
     private final Api api = Api.ADVANCED;
 
-    private Format format = Format.XML;
+    private Format format = Format.JSON;
 
-    private final String LINK = "https://konachan.com/post.xml?";
+
 
     public void setFormat(Format format){
         this.format = format;
@@ -35,12 +35,8 @@ public class Konachan extends AbstractBoor {
     }
 
     @Override
-    public String getCompleteRequest(int itemCount, String request, int pid) {
-        return LINK + "limit=" + itemCount + "&tags=" + request + "&page=" + pid;
+    public String getCustomRequest(String request, Format format) {
+        return "https://konachan.com/post." + format.toString().toLowerCase() + "?" + request;
     }
 
-    @Override
-    public String getCustomRequest(String request) {
-        return LINK + request;
-    }
 }

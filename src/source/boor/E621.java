@@ -15,11 +15,10 @@ public class E621 extends AbstractBoor {
         return instance;
     }
 
-    private Format format = Format.XML;
+    private Format format = Format.JSON;
 
     private final Api api = Api.ADVANCED;
 
-    private final String LINK = "https://e621.net/post/index.xml?";
 
     public void setFormat(Format format){
         this.format = format;
@@ -35,12 +34,8 @@ public class E621 extends AbstractBoor {
     }
 
     @Override
-    public String getCompleteRequest(int itemCount, String request, int pid) {
-        return LINK + "limit="+itemCount+"&tags="+request+"&page=" + pid;
+    public String getCustomRequest(String request, Format format) {
+        return "https://e621.net/post/index." + format.toString().toLowerCase() + "?" + request;
     }
 
-    @Override
-    public String getCustomRequest(String request) {
-        return LINK + request;
-    }
 }

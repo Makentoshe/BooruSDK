@@ -15,7 +15,6 @@ public class Safebooru extends AbstractBoor {
         return instance;
     }
 
-    private final String LINK = "https://safebooru.org/index.php?page=dapi&s=post&q=index&";
 
     private final Api api = Api.BASICS;
 
@@ -30,12 +29,14 @@ public class Safebooru extends AbstractBoor {
     }
 
 
+    @Override
     public String getCompleteRequest(int itemCount, String request, int pid) {
-        return LINK + "limit=" + itemCount + "&tags=" + request + "&pid=" + pid;
+        return getCustomRequest("limit=" + itemCount + "&tags=" + request + "&pid=" + pid);
     }
 
     @Override
-    public String getCustomRequest(String request) {
-        return LINK + request;
+    public String getCustomRequest(String request, Format format) {
+        return "https://safebooru.org/index.php?page=dapi&s=post&q=index&" + request;
     }
+
 }

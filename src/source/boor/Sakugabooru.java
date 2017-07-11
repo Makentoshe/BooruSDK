@@ -16,9 +16,8 @@ public class Sakugabooru extends AbstractBoor {
 
     private final Api api = Api.ADVANCED;
 
-    private Format format = Format.XML;
+    private Format format = Format.JSON;
 
-    private final String LINK = "https://sakugabooru.com/post/index.xml?";
 
     public void setFormat(Format format){
         this.format = format;
@@ -33,13 +32,14 @@ public class Sakugabooru extends AbstractBoor {
         return format;
     }
 
+
     @Override
-    public String getCompleteRequest(int itemCount, String request, int pid) {
-        return LINK + "limit="+itemCount+"&tag="+request+"&page="+pid;
+    public String getCustomRequest(String request, Format format) {
+        return "https://sakugabooru.com/post/index." + format.toString().toLowerCase() + "?" + request;
     }
 
     @Override
-    public String getCustomRequest(String request) {
-        return LINK + request;
+    public String getCompleteRequest(int itemCount, String request, int pid) {
+        return getCustomRequest("limit=" + itemCount + "&tag=" + request + "&page=" + pid, format);
     }
 }

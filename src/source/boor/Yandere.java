@@ -17,9 +17,8 @@ public class Yandere extends AbstractBoor {
 
     private final Api api = Api.ADVANCED;
 
-    private Format format = Format.XML;
+    private Format format = Format.JSON;
 
-    private final String LINK = "https://yande.re/post.xml?";
 
     public void setFormat(Format format){
         this.format = format;
@@ -34,13 +33,11 @@ public class Yandere extends AbstractBoor {
         return format;
     }
 
-    @Override
-    public String getCompleteRequest(int itemCount, String request, int pid) {
-        return LINK + "limit=" + itemCount + "&tags=" + request + "&page=" + pid;
-    }
+
 
     @Override
-    public String getCustomRequest(String request) {
-        return LINK + request;
+    public String getCustomRequest(String request, Format format) {
+        return "https://yande.re/post." + format.toString().toLowerCase() + "?" + request;
     }
+
 }
