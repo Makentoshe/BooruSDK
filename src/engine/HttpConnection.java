@@ -54,7 +54,7 @@ public class HttpConnection {
 
 
         }catch (Exception e){
-            throw new BooruEngineException(e);
+            throw new BooruEngineException(e.getMessage());
         }
         return result.toString();
     }
