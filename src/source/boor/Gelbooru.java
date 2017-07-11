@@ -19,6 +19,8 @@ public class Gelbooru extends AbstractBoor {
 
     private final DataType dataType = DataType.XML_BASIC;
 
+    private final String LINK = "https://gelbooru.com/index.php?page=dapi&s=post&q=index&";
+
     @Override
     public Api getApi() {
         return api;
@@ -31,7 +33,6 @@ public class Gelbooru extends AbstractBoor {
 
     @Override
     public String getCompleteRequest(int itemCount, String request, int pid) {
-        return "https://gelbooru.com/index.php?page=dapi&s=post&q=index&" +
-                "limit=" + itemCount + "&tags=" + request + "&pid=" + pid;
+        return LINK + "limit=" + itemCount + "&tags=" + request + "&pid=" + pid;
     }
 }

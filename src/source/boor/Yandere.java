@@ -19,6 +19,7 @@ public class Yandere extends AbstractBoor {
 
     private final DataType dataType = DataType.XML_BASIC;
 
+    private final String LINK = "https://yande.re/post.xml?";
     @Override
     public Api getApi() {
         return api;
@@ -31,7 +32,6 @@ public class Yandere extends AbstractBoor {
 
     @Override
     public String getCompleteRequest(int itemCount, String request, int pid) {
-        return "https://yande.re/post.xml?" +
-                "limit=" + itemCount + "&tags=" + request + "&page=" + pid;
+        return LINK + "limit=" + itemCount + "&tags=" + request + "&page=" + pid;
     }
 }

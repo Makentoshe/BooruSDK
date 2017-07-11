@@ -13,7 +13,7 @@ abstract class AbstractBoor {
     public abstract DataType getDataType();
 
     /**
-     * Construct get request.
+     * Construct standard get request.
      *
      * @param itemCount - how many items must be in list.
      * @param request   - request. Contain tags and marks.
@@ -21,5 +21,7 @@ abstract class AbstractBoor {
      * @return complete get request
      */
     public abstract String getCompleteRequest(int itemCount, String request, int pid);
+
+
 
 }

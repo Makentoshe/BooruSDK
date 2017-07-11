@@ -19,6 +19,8 @@ public class Konachan extends AbstractBoor {
 
     private final DataType dataType = DataType.XML_BASIC;
 
+    private final String LINK = "https://konachan.com/post.xml?";
+
     @Override
     public Api getApi() {
         return api;
@@ -31,7 +33,6 @@ public class Konachan extends AbstractBoor {
 
     @Override
     public String getCompleteRequest(int itemCount, String request, int pid) {
-        return "https://konachan.com/post.xml?" +
-                "limit=" + itemCount + "&tags=" + request + "&page=" + pid;
+        return LINK + "limit=" + itemCount + "&tags=" + request + "&page=" + pid;
     }
 }

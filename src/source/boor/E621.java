@@ -19,6 +19,8 @@ public class E621 extends AbstractBoor {
 
     private final Api api = Api.ADVANCED;
 
+    private final String LINK = "https://e621.net/post/index.xml?";
+
     @Override
     public Api getApi() {
         return api;
@@ -31,7 +33,6 @@ public class E621 extends AbstractBoor {
 
     @Override
     public String getCompleteRequest(int itemCount, String request, int pid) {
-        return "https://e621.net/post/index.xml?" +
-                "limit="+itemCount+"&tags="+request+"&page=" + pid;
+        return LINK + "limit="+itemCount+"&tags="+request+"&page=" + pid;
     }
 }

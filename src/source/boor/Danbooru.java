@@ -15,6 +15,8 @@ public class Danbooru extends AbstractBoor {
 
     private final DataType dataType = DataType.XML_ADVANCED;
 
+    private final String LINK = "https://danbooru.donmai.us/posts.xml?";
+
 
     public static Danbooru get() {
         return instance;
@@ -32,7 +34,6 @@ public class Danbooru extends AbstractBoor {
 
     @Override
     public String getCompleteRequest(int itemCount, String request, int pid) {
-        return "https://danbooru.donmai.us/posts.xml?" +
-                "tags="+ request +"&limit="+itemCount+"&page=" + pid;
+        return LINK + "tags="+ request +"&limit="+itemCount+"&page=" + pid;
     }
 }

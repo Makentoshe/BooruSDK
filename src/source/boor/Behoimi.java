@@ -15,7 +15,7 @@ public class Behoimi extends AbstractBoor {
 
     private final DataType dataType = DataType.XML_BASIC;
 
-
+    private final String LINK = "http://behoimi.org/post/index.xml?";
 
     public static Behoimi get(){
         return instance;
@@ -33,7 +33,6 @@ public class Behoimi extends AbstractBoor {
 
     @Override
     public String getCompleteRequest(int itemCount, String request, int pid) {
-        return "http://behoimi.org/post/index.xml?" +
-                "limit="+itemCount+"&tags="+request+"&page=" + pid;
+        return LINK + "limit="+itemCount+"&tags="+request+"&page=" + pid;
     }
 }
