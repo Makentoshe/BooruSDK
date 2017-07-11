@@ -36,4 +36,9 @@ public class Danbooru extends AbstractBoor {
     public String getCompleteRequest(int itemCount, String request, int pid) {
         return LINK + "tags="+ request +"&limit="+itemCount+"&page=" + pid;
     }
+
+    @Override
+    public String getCustomRequest(String request) {
+        return LINK + request;
+    }
 }

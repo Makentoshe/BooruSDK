@@ -34,4 +34,9 @@ public class Safebooru extends AbstractBoor {
     public String getCompleteRequest(int itemCount, String request, int pid) {
         return LINK + "limit=" + itemCount + "&tags=" + request + "&pid=" + pid;
     }
+
+    @Override
+    public String getCustomRequest(String request) {
+        return LINK + request;
+    }
 }

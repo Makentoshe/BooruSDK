@@ -22,6 +22,12 @@ abstract class AbstractBoor {
      */
     public abstract String getCompleteRequest(int itemCount, String request, int pid);
 
-
+    /**
+     * Construct custom request.
+     *
+     * @param request - request.
+     * @return complete get request
+     */
+    public abstract String getCustomRequest(String request);
 
 }
