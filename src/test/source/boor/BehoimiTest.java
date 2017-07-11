@@ -2,7 +2,6 @@ package test.source.boor;
 
 import org.junit.Test;
 import source.boor.Behoimi;
-import source.boor.Danbooru;
 import source.еnum.Api;
 import source.еnum.DataType;
 
@@ -16,7 +15,7 @@ public class BehoimiTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(DataType.XML_BASIC, Behoimi.get().getDataType());
+        assertEquals(DataType.XML, Behoimi.get().getDataType());
     }
 
     @Test

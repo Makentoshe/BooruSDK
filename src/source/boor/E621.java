@@ -15,7 +15,7 @@ public class E621 extends AbstractBoor {
         return instance;
     }
 
-    private final DataType dataType = DataType.XML_ADVANCED;
+    private final DataType dataType = DataType.JSON;
 
     private final Api api = Api.ADVANCED;
 

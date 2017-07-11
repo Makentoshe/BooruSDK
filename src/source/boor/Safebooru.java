@@ -19,7 +19,7 @@ public class Safebooru extends AbstractBoor {
 
     private final Api api = Api.BASICS;
 
-    private final DataType dataType = DataType.XML_BASIC;
+    private final DataType dataType = DataType.XML;
 
     public Api getApi() {
         return api;

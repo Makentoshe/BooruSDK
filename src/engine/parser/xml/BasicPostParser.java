@@ -1,5 +1,6 @@
-package engine.parser;
+package engine.parser.xml;
 
+import engine.parser.xml.AbstractParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * TODO: remake xml parser. Remove AbstractParser.
  * Parser posts, which have basic structure - post with data in attributes.
  */
 public class BasicPostParser extends AbstractParser {

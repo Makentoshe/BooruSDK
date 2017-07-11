@@ -1,7 +1,6 @@
 package test.source.boor;
 
 import org.junit.Test;
-import source.boor.Safebooru;
 import source.boor.Sakugabooru;
 import source.еnum.Api;
 import source.еnum.DataType;
@@ -19,7 +18,7 @@ public class SakugabooruTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(DataType.XML_BASIC, Sakugabooru.get().getDataType());
+        assertEquals(DataType.XML, Sakugabooru.get().getDataType());
     }
 
     @Test

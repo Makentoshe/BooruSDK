@@ -17,7 +17,7 @@ public class Rule34 extends AbstractBoor {
         return instance;
     }
 
-    private final DataType dataType = DataType.XML_BASIC;
+    private final DataType dataType = DataType.XML;
 
     private final String LINK = "https://rule34.xxx/index.php?page=dapi&s=post&q=index&";
 

@@ -2,7 +2,6 @@ package test.source.boor;
 
 import org.junit.Assert;
 import org.junit.Test;
-import source.boor.Gelbooru;
 import source.boor.Safebooru;
 import source.еnum.Api;
 import source.еnum.DataType;
@@ -19,7 +18,7 @@ public class SafebooruTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        Assert.assertEquals(DataType.XML_BASIC, Safebooru.get().getDataType());
+        Assert.assertEquals(DataType.XML, Safebooru.get().getDataType());
     }
 
     @Test

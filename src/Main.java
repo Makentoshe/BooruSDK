@@ -1,4 +1,4 @@
-import engine.parser.BasicPostParser;
+import engine.parser.xml.BasicPostParser;
 import source.boor.Gelbooru;
 
 /**

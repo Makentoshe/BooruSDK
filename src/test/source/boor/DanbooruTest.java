@@ -2,7 +2,6 @@ package test.source.boor;
 
 import org.junit.Test;
 import source.boor.Danbooru;
-import source.boor.Rule34;
 import source.еnum.Api;
 import source.еnum.DataType;
 
@@ -16,7 +15,7 @@ public class DanbooruTest {
 
     @Test
     public void getDataType_Test() throws Exception{
-        assertEquals(DataType.XML_ADVANCED, Danbooru.get().getDataType());
+        assertEquals(DataType.JSON, Danbooru.get().getDataType());
     }
 
     @Test

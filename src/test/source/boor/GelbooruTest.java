@@ -16,7 +16,7 @@ public class GelbooruTest {
 
     @Test
     public void getDataType_Test() throws Exception{
-        assertEquals(DataType.XML_BASIC, Gelbooru.get().getDataType());
+        assertEquals(DataType.XML, Gelbooru.get().getDataType());
     }
 
     @Test

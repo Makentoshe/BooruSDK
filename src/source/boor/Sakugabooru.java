@@ -16,7 +16,7 @@ public class Sakugabooru extends AbstractBoor {
 
     private final Api api = Api.ADVANCED;
 
-    private final DataType dataType = DataType.XML_BASIC;
+    private final DataType dataType = DataType.XML;
 
     private final String LINK = "https://sakugabooru.com/post/index.xml?";
 

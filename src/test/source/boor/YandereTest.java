@@ -1,7 +1,6 @@
 package test.source.boor;
 
 import org.junit.Test;
-import source.boor.E621;
 import source.boor.Yandere;
 import source.еnum.Api;
 import source.еnum.DataType;
@@ -19,7 +18,7 @@ public class YandereTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(DataType.XML_BASIC, Yandere.get().getDataType());
+        assertEquals(DataType.XML, Yandere.get().getDataType());
     }
 
     @Test

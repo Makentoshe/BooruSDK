@@ -18,7 +18,7 @@ public class KonachanTest {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(DataType.XML_BASIC, Konachan.get().getDataType());
+        assertEquals(DataType.XML, Konachan.get().getDataType());
     }
 
     @Test

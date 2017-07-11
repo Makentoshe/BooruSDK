@@ -1,4 +1,4 @@
-package engine.parser;
+package engine.parser.xml;
 
 import java.io.File;
 import java.io.IOException;

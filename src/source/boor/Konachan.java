@@ -17,7 +17,7 @@ public class Konachan extends AbstractBoor {
 
     private final Api api = Api.ADVANCED;
 
-    private final DataType dataType = DataType.XML_BASIC;
+    private final DataType dataType = DataType.XML;
 
     private final String LINK = "https://konachan.com/post.xml?";
 

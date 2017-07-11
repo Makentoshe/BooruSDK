@@ -17,7 +17,7 @@ public class Gelbooru extends AbstractBoor {
 
     private final Api api = Api.BASICS;
 
-    private final DataType dataType = DataType.XML_BASIC;
+    private final DataType dataType = DataType.XML;
 
     private final String LINK = "https://gelbooru.com/index.php?page=dapi&s=post&q=index&";
 

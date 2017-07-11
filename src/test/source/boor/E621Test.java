@@ -16,7 +16,7 @@ public class E621Test {
 
     @Test
     public void getDataType_Test() throws Exception{
-        assertEquals(DataType.XML_ADVANCED, E621.get().getDataType());
+        assertEquals(DataType.JSON, E621.get().getDataType());
     }
 
     @Test

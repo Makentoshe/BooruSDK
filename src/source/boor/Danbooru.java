@@ -13,7 +13,7 @@ public class Danbooru extends AbstractBoor {
 
     private static final Api api = Api.ADVANCED;
 
-    private final DataType dataType = DataType.XML_ADVANCED;
+    private final DataType dataType = DataType.JSON;
 
     private final String LINK = "https://danbooru.donmai.us/posts.xml?";
 

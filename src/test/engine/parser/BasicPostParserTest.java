@@ -1,7 +1,6 @@
 package test.engine.parser;
 
-import engine.parser.BasicPostParser;
-import org.junit.Before;
+import engine.parser.xml.BasicPostParser;
 import org.junit.Test;
 import source.boor.Gelbooru;
 

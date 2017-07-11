@@ -17,7 +17,7 @@ public class Rule34Test {
 
     @Test
     public void getDataType_Test() throws Exception {
-        assertEquals(DataType.XML_BASIC, Rule34.get().getDataType());
+        assertEquals(DataType.XML, Rule34.get().getDataType());
     }
 
     @Test
