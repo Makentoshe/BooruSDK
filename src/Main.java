@@ -1,15 +1,21 @@
-import engine.parser.xml.BasicPostParser;
+import engine.HttpConnection;
+import engine.parser.XmlParser;
 import source.boor.Gelbooru;
 
+import java.io.*;
+
 /**
- * Created by Makentoshe on 10.07.2017.
+ * Sas
  */
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        BasicPostParser parser = new BasicPostParser();
-        parser.startParse(Gelbooru.get().getCompleteRequest(2, "hatsune_miku",0));
+        String str = new HttpConnection(false).getRequest(Gelbooru.get().getCompleteRequest(5, "hatsune_miku", 0));
 
+        XmlParser parser = new XmlParser();
+        InputStream is = new ByteArrayInputStream(str.getBytes());
+
+        parser.startParse(is);
         System.out.println(parser.getResult().size());
     }
 }
