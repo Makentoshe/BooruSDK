@@ -5,6 +5,7 @@ import engine.parser.XmlParser;
 import org.junit.Test;
 import source.boor.Danbooru;
 import source.boor.Gelbooru;
+import source.еnum.Format;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -19,20 +20,33 @@ public class XmlParserTest {
         XmlParser parser = new XmlParser();
 
         parser.startParse(Gelbooru.get().getCompleteRequest(count, "hatsune_miku", 0));
-        assertEquals(count, parser.getResult().size());
+        assertEquals(count, parser.getResult().size()); //after this result will be reset
 
-        parser.startParse(Danbooru.get().getCustomRequest("limit=" + count));
+        assertEquals(0, parser.getResult().size());
+
+        parser.startParse(Danbooru.get().getCustomRequest("limit=" + count, Format.XML));
         assertEquals(count, parser.getResult().size());
     }
 
     @Test
     public void startParse_Stream_Test() throws Exception {
-        XmlParser parser = new XmlParser();
+        XmlParser parser = new XmlParser(false);
 
         String xml = new HttpConnection(false).getRequest(Gelbooru.get().getCompleteRequest(2, "hatsune_miku", 0));
         InputStream stream = new ByteArrayInputStream(xml.getBytes());
         parser.startParse(stream);
 
         assertEquals(2, parser.getResult().size());
+    }
+
+    @Test
+    public void reusable_Test() throws Exception{
+        XmlParser parser = new XmlParser(false);
+
+        parser.startParse(Gelbooru.get().getCompleteRequest(2, "hatsune_miku", 0));
+        assertEquals(2, parser.getResult().size());
+
+        parser.startParse(Gelbooru.get().getCompleteRequest(2, "hatsune_miku", 0));
+        assertEquals(4, parser.getResult().size());
     }
 }

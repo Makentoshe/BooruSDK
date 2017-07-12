@@ -19,12 +19,14 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * Instance of this class can be reused by option in constructor.
  * As default - instance will be reused.
- * TODO: make test for reusing.
+ * If instance not reused - results will be collect in getResult() method.
+ * You will can get all results by one call.
  */
 public class XmlParser extends DefaultHandler {
 
     private final List<HashMap<String, Object>> result = new ArrayList<>();
     private boolean reusable = true;
+    private boolean resultFlag = false;
 
     public XmlParser(boolean reusable){
         this.reusable = reusable;
@@ -39,11 +41,6 @@ public class XmlParser extends DefaultHandler {
      */
     public void startParse(String url) throws BooruEngineException {
 
-//        TODO: test this func
-//        if (!reusable && result.isEmpty()){
-//            throw new BooruEngineException("This instance can't be reused...");
-//        }
-
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             factory.newSAXParser().parse(url, this);
@@ -56,17 +53,11 @@ public class XmlParser extends DefaultHandler {
      * Parses an XML file from stream into memory
      */
     public void startParse(InputStream stream) throws BooruEngineException {
-
-//        TODO: test this func
-//        if (!reusable && result.isEmpty()){
-//            throw new BooruEngineException("This instance can't be reused...");
-//        }
-
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             factory.newSAXParser().parse(stream, this);
         } catch (ParserConfigurationException | IOException | SAXException e) {
-            throw new BooruEngineException(e.getMessage());
+            throw new BooruEngineException(e);
         }
     }
 
@@ -100,5 +91,9 @@ public class XmlParser extends DefaultHandler {
             return list;
         }
         return result;
+    }
+
+    public boolean isReusable(){
+        return reusable;
     }
 }
