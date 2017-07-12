@@ -1,5 +1,6 @@
 package test.source.boor;
 
+import org.junit.Before;
 import org.junit.Test;
 import source.boor.E621;
 import source.еnum.Api;
@@ -9,6 +10,12 @@ import static org.junit.Assert.*;
 
 
 public class E621Test {
+
+    @Before
+    public void setUp(){
+        E621.get().setFormat(Format.JSON);
+    }
+
     @Test
     public void getApi_Test() throws Exception {
         assertEquals(Api.ADVANCED, E621.get().getApi());
@@ -26,6 +33,11 @@ public class E621Test {
         int pid = 0;
         String link = E621.get().getCompleteRequest(itemCount, request, pid);
         String expected = "https://e621.net/post/index.json?limit=100&tags=hatsune_miku&page=0";
+        assertEquals(expected, link);
+
+        E621.get().setFormat(Format.XML);
+        link = E621.get().getCompleteRequest(itemCount, request, pid);
+        expected = "https://e621.net/post/index.xml?limit=100&tags=hatsune_miku&page=0";
         assertEquals(expected, link);
     }
 
