@@ -16,17 +16,34 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * Parser posts from xml from url or stream,
  * which have basic structure - post with data in attributes.
- * Instance of this class can be reused, because after getting result -
- * all data will be reset.
+ *
+ * Instance of this class can be reused by option in constructor.
+ * As default - instance will be reused.
+ * TODO: make test for reusing.
  */
 public class XmlParser extends DefaultHandler {
 
     private final List<HashMap<String, Object>> result = new ArrayList<>();
+    private boolean reusable = true;
+
+    public XmlParser(boolean reusable){
+        this.reusable = reusable;
+    }
+
+    public XmlParser(){
+        reusable = true;
+    }
 
     /**
      * Parses an XML file from url into memory
      */
     public void startParse(String url) throws BooruEngineException {
+
+//        TODO: test this func
+//        if (!reusable && result.isEmpty()){
+//            throw new BooruEngineException("This instance can't be reused...");
+//        }
+
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             factory.newSAXParser().parse(url, this);
@@ -39,6 +56,12 @@ public class XmlParser extends DefaultHandler {
      * Parses an XML file from stream into memory
      */
     public void startParse(InputStream stream) throws BooruEngineException {
+
+//        TODO: test this func
+//        if (!reusable && result.isEmpty()){
+//            throw new BooruEngineException("This instance can't be reused...");
+//        }
+
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             factory.newSAXParser().parse(stream, this);
@@ -67,12 +90,15 @@ public class XmlParser extends DefaultHandler {
 
     /**
      * @return list of posts
-     * We can get result only once.
+     * If reusable flag enable we can get result only once.
      * After, the data will be clear.
      */
     public List getResult() {
-        List list = new ArrayList(result);
-        result.clear();
-        return list;
+        if (reusable) {
+            List list = new ArrayList(result);
+            result.clear();
+            return list;
+        }
+        return result;
     }
 }

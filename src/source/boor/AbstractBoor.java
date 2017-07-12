@@ -4,7 +4,7 @@ import source.еnum.Api;
 import source.еnum.Format;
 
 /**
- * Created by Makentoshe on 09.07.2017.
+ * Abstract class fo boor realisation. Every new boor instance must extend this class.
  */
 abstract class AbstractBoor {
 

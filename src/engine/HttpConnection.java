@@ -10,6 +10,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+/**
+ * Class for downloading XML or JSON raw data from servers.
+ * Use it, when you need to do something with raw data before parsing,
+ * or if you want use your own parser.
+ */
 public class HttpConnection {
 
     private static final String USER_AGENT = "Mozilla/5.0";
