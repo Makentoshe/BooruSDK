@@ -1,12 +1,16 @@
 package engine.item;
 
 import engine.item.еnum.Rating;
+import source.еnum.Boor;
 
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * Simple class which can describe item from all boors.
  * If you want add new boor you can use this class or inherit from it.
+ * You getting item as is. This means, that you can't modify this element after creating.
+ * You can only getting data and work with it.
+ * TODO: create Tests
  */
 public class Item {
 
@@ -14,21 +18,6 @@ public class Item {
      * Item id.
      */
     private int id;
-
-    /**
-     * Url to file.
-     */
-    private String file_url;
-
-    /**
-     * Url to sample.
-     */
-    private String sample_url;
-
-    /**
-     * Url to preview.
-     */
-    private String preview_url;
 
     /**
      * List with tags.
@@ -43,55 +32,98 @@ public class Item {
     private String md5;
 
     /**
+     * From what place this item was get.
+     */
+    private String source;
+
+    /**
      * Scores.
      */
     private int score;
 
     /**
-     * Item extension.
+     * Url in string format with preview address.
      */
-    private String extension;
+    private String preview_url;
 
     /**
-     * Uploader id.
+     * From what boor this item.
      */
-    private int uploader_id;
+    private Boor sourceBoor;
 
     /**
-     * Time, when item was created.
+     * Constructor for basic item entity. Just storage item id, md5, score and sources.
+     *
+     * @param hashMap - map with all attributes. Some of them will be use here.
+     * Another can be used in inherit classes.
+     * @param sourceBoor - from what boor this item will be get.
      */
-    private String created_at;
+    public Item(HashMap<String, String> hashMap, Boor sourceBoor) {
+        setSourceBoor(sourceBoor);
+        defaultConstructor(hashMap);
+    }
+
+    /**
+     * Constructor for basic item entity. Just storage item id, md5, score and sources.
+     * Source boor will be undefined
+     *
+     * @param hashMap - map with all attributes. Some of them will be use here.
+     * Another can be used in inherit classes.
+     */
+    public Item(HashMap<String, String> hashMap) {
+        setSourceBoor(Boor.Undefined);
+        defaultConstructor(hashMap);
+    }
+
+    private void defaultConstructor(HashMap<String, String> hashMap){
+        //create Entry
+        Set<Map.Entry<String, String>> entrySet = hashMap.entrySet();
+        //for each attribute
+        for (Map.Entry<String, String> pair : entrySet) {
+            switch (pair.getKey()) {
+                case "id": {
+                    setId(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "md5": {
+                    setMd5(pair.getValue());
+                    break;
+                }
+                case "rating": {
+                    _setRating(pair.getValue());
+                    break;
+                }
+                case "score": {
+                    setScore(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "source": {
+                    setSource(pair.getValue());
+                    break;
+                }
+                case "preview_url":{
+                    //when http not defined
+                    if (!pair.getValue().contains("http")){
+                        setPreview_url("https:" + pair.getValue());
+                    }else {
+                        setPreview_url(pair.getValue());
+                    }
+                    break;
+                }
+                case "preview_file_url":{
+                    setPreview_url("https://danbooru.donmai.us" + pair.getValue());
+                    break;
+                }
+            }
+        }
+    }
 
     public final int getId() {
         return id;
     }
 
-    public final void setId(int id) {
+    private void setId(int id) {
         this.id = id;
-    }
-
-    public final String getFile_url() {
-        return file_url;
-    }
-
-    public final void setFile_url(String file_url) {
-        this.file_url = file_url;
-    }
-
-    public final String getSample_url() {
-        return sample_url;
-    }
-
-    public final void setSample_url(String sample_url) {
-        this.sample_url = sample_url;
-    }
-
-    public final String getPreview_url() {
-        return preview_url;
-    }
-
-    public final void setPreview_url(String preview_url) {
-        this.preview_url = preview_url;
     }
 
     public final HashSet<String> getTags() {
@@ -106,7 +138,7 @@ public class Item {
         return md5;
     }
 
-    public final void setMd5(String md5) {
+    private void setMd5(String md5) {
         this.md5 = md5;
     }
 
@@ -114,39 +146,56 @@ public class Item {
         return score;
     }
 
-    public final void setScore(int score) {
+    private void setScore(int score) {
         this.score = score;
-    }
-
-    public final String getExtension() {
-        return extension;
-    }
-
-    public final void setExtension(String extension) {
-        this.extension = extension;
-    }
-
-    public final int getUploader_id() {
-        return uploader_id;
-    }
-
-    public final void setUploader_id(int uploader_id) {
-        this.uploader_id = uploader_id;
-    }
-
-    public final String getCreated_at() {
-        return created_at;
-    }
-
-    public final void setCreated_at(String created_at) {
-        this.created_at = created_at;
     }
 
     public final Rating getRating() {
         return rating;
     }
 
-    public final void setRating(Rating rating) {
+    private void setRating(Rating rating) {
         this.rating = rating;
+    }
+
+    public final Boor getSourceBoor() {
+        return sourceBoor;
+    }
+
+    private void setSourceBoor(Boor sourceBoor) {
+        this.sourceBoor = sourceBoor;
+    }
+
+    private void _setRating(String data) {
+        switch (data) {
+            case "s": {
+                setRating(Rating.SAFE);
+                break;
+            }
+            case "q": {
+                setRating(Rating.QUESTIONABLE);
+                break;
+            }
+            case "e": {
+                setRating(Rating.EXPLICIT);
+                break;
+            }
+        }
+    }
+
+    public final String getSource() {
+        return source;
+    }
+
+    private void setSource(String source) {
+        this.source = source;
+    }
+
+    public final String getPreview_url() {
+        return preview_url;
+    }
+
+    private void setPreview_url(String preview_url) {
+        this.preview_url = preview_url;
     }
 }

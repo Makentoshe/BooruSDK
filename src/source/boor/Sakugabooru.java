@@ -42,4 +42,10 @@ public class Sakugabooru extends AbstractBoor {
     public String getCompleteRequest(int itemCount, String request, int pid) {
         return getCustomRequest("limit=" + itemCount + "&tag=" + request + "&page=" + pid, format);
     }
+
+    //override, because request need "tag". Not default "tags".
+    public String getCompleteRequest(int itemCount, String request, int pid, Format format){
+        //in some situations this method must be override: page in some servers also has name "pid"
+        return  getCustomRequest("limit=" + itemCount + "&tag=" + request + "&page=" + pid, format);
+    }
 }

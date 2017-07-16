@@ -26,7 +26,6 @@ public class XmlParser extends DefaultHandler {
 
     private final List<HashMap<String, Object>> result = new ArrayList<>();
     private boolean reusable = true;
-    private boolean resultFlag = false;
 
     public XmlParser(boolean reusable){
         this.reusable = reusable;
