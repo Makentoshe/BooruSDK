@@ -17,5 +17,7 @@
     </orderEntry>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
+    <orderEntry type="library" name="org.apache.clerezza.ext:org.json.simple:0.4" level="project" />
+    <orderEntry type="library" name="com.google.code.gson:gson:2.7" level="application" />
   </component>
 </module>

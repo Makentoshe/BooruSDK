@@ -1,31 +1,30 @@
 import engine.HttpConnection;
-import engine.parser.XmlParser;
-import source.boor.Behoimi;
+import engine.parser.JsonParser;
+import source.boor.*;
 import source.еnum.Format;
 
-import java.io.ByteArrayInputStream;
-
+import java.util.*;
 
 /**
  */
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        String request = Behoimi.get().getCompleteRequest(2, "hatsune_miku", 0, Format.XML);
+        String request = Behoimi.get().getCompleteRequest(1, "hatsune_miku", 0, Format.JSON);
 
         HttpConnection connection = new HttpConnection(false);
         String responseData = connection.getRequest(request);
 
-        //not reusable
-        XmlParser parser = new XmlParser(false);
-        parser.startParse(new ByteArrayInputStream(responseData.getBytes()));
+        JsonParser parser = new JsonParser();
 
-        parser.startParse(new ByteArrayInputStream(responseData.getBytes()));
+        System.out.println(responseData);
 
-        System.out.println(parser.getResult().size());
-        System.out.println(parser.getResult().size());
-
-        //System.out.println(parser.getResult());
+        List<HashMap<String, String>> list = parser.startParse(responseData);
+        HashMap<String, String> data = list.get(0);
+        Set<Map.Entry<String, String>> entrySet = data.entrySet();
+        for (Map.Entry<String,String> pair : entrySet) {
+            System.out.println(pair.getKey() + ": " + pair.getValue());
+        }
 
     }
 }
