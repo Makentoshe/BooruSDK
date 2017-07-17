@@ -20,13 +20,10 @@ public class GelbooruTest {
     }
 
     @Test
-    public void getCompleteRequest_Test() throws Exception {
-        int itemCount = 100;
-        String request = "hatsune_miku";
-        int pid = 0;
-        String link = Gelbooru.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "https://gelbooru.com/index.php?page=dapi&s=post&q=index&limit=100&tags=hatsune_miku&pid=0";
-        assertEquals(expected, link);
+    public void getCustomRequest_Test() throws Exception{
+        String request = Gelbooru.get().getCustomRequest("request");
+        String expected = "https://gelbooru.com/index.php?page=dapi&q=index&s=request";
+        assertEquals(expected, request);
     }
 
 }

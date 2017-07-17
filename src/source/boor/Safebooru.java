@@ -7,7 +7,7 @@ import source.еnum.Format;
  * Singleton.
  * Storage data about Safebooru API and method for getting request
  */
-public class Safebooru extends AbstractBoor {
+public class Safebooru extends AbstractBoorBasic{
 
     private static final Safebooru instance = new Safebooru();
 
@@ -28,15 +28,9 @@ public class Safebooru extends AbstractBoor {
         return format;
     }
 
-
     @Override
-    public String getCompleteRequest(int itemCount, String request, int pid) {
-        return getCustomRequest("limit=" + itemCount + "&tags=" + request + "&pid=" + pid);
-    }
-
-    @Override
-    public String getCustomRequest(String request, Format format) {
-        return "https://safebooru.org/index.php?page=dapi&s=post&q=index&" + request;
+    public String getCustomRequest(String request) {
+        return "https://safebooru.org/index.php?page=dapi&q=index&s=" + request;
     }
 
 }

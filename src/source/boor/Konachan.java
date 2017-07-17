@@ -7,7 +7,7 @@ import source.еnum.Format;
  * Singleton.
  * Storage data about Konachan API and method for getting request.
  */
-public class Konachan extends AbstractBoor {
+public class Konachan extends AbstractBoorAdvanced {
 
     private static final Konachan instance = new Konachan();
 
@@ -15,19 +15,10 @@ public class Konachan extends AbstractBoor {
         return instance;
     }
 
-    private final Api api = Api.ADVANCED;
-
     private Format format = Format.JSON;
-
-
 
     public void setFormat(Format format){
         this.format = format;
-    }
-
-    @Override
-    public Api getApi() {
-        return api;
     }
 
     public Format getFormat() {
@@ -35,8 +26,8 @@ public class Konachan extends AbstractBoor {
     }
 
     @Override
-    public String getCustomRequest(String request, Format format) {
-        return "https://konachan.com/post." + format.toString().toLowerCase() + "?" + request;
+    public String getCustomRequest(String request) {
+        return "https://konachan.com/" + request;
     }
 
 }

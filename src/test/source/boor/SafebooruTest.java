@@ -22,13 +22,10 @@ public class SafebooruTest {
     }
 
     @Test
-    public void getCompleteRequest_Test() throws Exception {
-        int itemCount = 100;
-        String request = "hatsune_miku";
-        int pid = 0;
-        String link = Safebooru.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "https://safebooru.org/index.php?page=dapi&s=post&q=index&limit=100&tags=hatsune_miku&pid=0";
-        assertEquals(expected, link);
+    public void getCustomRequest_Test() throws Exception {
+        String request = Safebooru.get().getCustomRequest("request");
+        String expected = "https://safebooru.org/index.php?page=dapi&q=index&s=request";
+        assertEquals(expected, request);
     }
 
 }

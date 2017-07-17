@@ -27,18 +27,25 @@ public class SakugabooruTest {
     }
 
     @Test
-    public void getCompleteRequest_Test() throws Exception {
-        int itemCount = 100;
-        String request = "hatsune_miku";
-        int pid = 0;
-        String link = Sakugabooru.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "https://sakugabooru.com/post/index.json?limit=100&tag=hatsune_miku&page=0";
-        assertEquals(expected, link);
-
-        Sakugabooru.get().setFormat(Format.XML);
-        link = Sakugabooru.get().getCompleteRequest(itemCount, request, pid);
-        expected = "https://sakugabooru.com/post/index.xml?limit=100&tag=hatsune_miku&page=0";
-        assertEquals(expected, link);
+    public void getCustomRequest_Test() throws Exception {
+        String request = Sakugabooru.get().getCustomRequest("request");
+        String expected = "https://sakugabooru.com/request";
+        assertEquals(expected, request);
     }
+
+//    @Test
+//    public void getCompleteRequest_Test() throws Exception {
+//        int itemCount = 100;
+//        String request = "hatsune_miku";
+//        int pid = 0;
+//        String link = Sakugabooru.get().getCompleteRequest(itemCount, request, pid);
+//        String expected = "https://sakugabooru.com/post/index.json?limit=100&tag=hatsune_miku&page=0";
+//        assertEquals(expected, link);
+//
+//        Sakugabooru.get().setFormat(Format.XML);
+//        link = Sakugabooru.get().getCompleteRequest(itemCount, request, pid);
+//        expected = "https://sakugabooru.com/post/index.xml?limit=100&tag=hatsune_miku&page=0";
+//        assertEquals(expected, link);
+//    }
 
 }

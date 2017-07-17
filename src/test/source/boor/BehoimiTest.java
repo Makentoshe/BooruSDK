@@ -26,18 +26,25 @@ public class BehoimiTest {
     }
 
     @Test
-    public void getCompleteRequest_Test() throws Exception {
-        int itemCount = 100;
-        String request = "hatsune_miku";
-        int pid = 0;
-        String link = Behoimi.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "http://behoimi.org/post/index.json?limit=100&tags=hatsune_miku&page=0";
-        assertEquals(expected, link);
-
-        Behoimi.get().setFormat(Format.XML);
-        link = Behoimi.get().getCompleteRequest(itemCount, request, pid);
-        expected = "http://behoimi.org/post/index.xml?limit=100&tags=hatsune_miku&page=0";
-        assertEquals(expected, link);
+    public void getCustomRequest_Test() throws Exception {
+        String request = Behoimi.get().getCustomRequest("request");
+        String expected = "https://behoimi.org/request";
+        assertEquals(expected, request);
     }
+
+//    @Test
+//    public void getCompleteRequest_Test() throws Exception {
+//        int itemCount = 100;
+//        String request = "hatsune_miku";
+//        int pid = 0;
+//        String link = Behoimi.get().getCompleteRequest(itemCount, request, pid);
+//        String expected = "http://behoimi.org/post/index.json?limit=100&tags=hatsune_miku&page=0";
+//        assertEquals(expected, link);
+//
+//        Behoimi.get().setFormat(Format.XML);
+//        link = Behoimi.get().getCompleteRequest(itemCount, request, pid);
+//        expected = "http://behoimi.org/post/index.xml?limit=100&tags=hatsune_miku&page=0";
+//        assertEquals(expected, link);
+//    }
 
 }

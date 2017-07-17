@@ -7,7 +7,7 @@ import source.еnum.Format;
  * Singleton.
  * Storage data about Rule34 API and method for getting request
  */
-public class Rule34 extends AbstractBoor {
+public class Rule34 extends AbstractBoorBasic{
 
     private static final Rule34 instance = new Rule34();
 
@@ -21,7 +21,7 @@ public class Rule34 extends AbstractBoor {
 
 
 
-    @Override
+
     public Api getApi() {
         return api;
     }
@@ -31,12 +31,8 @@ public class Rule34 extends AbstractBoor {
     }
 
     @Override
-    public String getCustomRequest(String request, Format format) {
-        return "https://rule34.xxx/index.php?page=dapi&s=post&q=index&" + request;
+    public String getCustomRequest(String request) {
+        return "https://rule34.xxx/index.php?page=dapi&q=index&s=" + request;
     }
 
-    @Override
-    public String getCompleteRequest(int itemCount, String request, int pid) {
-        return getCustomRequest("limit=" + itemCount + "&tags=" + request + "&pid=" + pid);
-    }
 }

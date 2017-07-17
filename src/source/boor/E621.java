@@ -7,7 +7,7 @@ import source.еnum.Format;
  * Singleton.
  * Storage data about E621 API and method for getting request
  */
-public class E621 extends AbstractBoor {
+public class E621 extends AbstractBoorAdvanced {
 
     private static final E621 instance = new E621();
 
@@ -17,16 +17,8 @@ public class E621 extends AbstractBoor {
 
     private Format format = Format.JSON;
 
-    private final Api api = Api.ADVANCED;
-
-
     public void setFormat(Format format){
         this.format = format;
-    }
-
-    @Override
-    public Api getApi() {
-        return api;
     }
 
     public Format getFormat() {
@@ -34,8 +26,8 @@ public class E621 extends AbstractBoor {
     }
 
     @Override
-    public String getCustomRequest(String request, Format format) {
-        return "https://e621.net/post/index." + format.toString().toLowerCase() + "?" + request;
+    public String getCustomRequest(String request) {
+        return "https://e621.net/" + request;
     }
 
 }

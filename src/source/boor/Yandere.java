@@ -7,15 +7,13 @@ import source.еnum.Format;
  * Singleton.
  * Storage data about Yandere API and method for getting request.
  */
-public class Yandere extends AbstractBoor {
+public class Yandere extends AbstractBoorAdvanced {
 
     private static final Yandere instance = new Yandere();
 
     public static Yandere get() {
         return instance;
     }
-
-    private final Api api = Api.ADVANCED;
 
     private Format format = Format.JSON;
 
@@ -24,10 +22,6 @@ public class Yandere extends AbstractBoor {
         this.format = format;
     }
 
-    @Override
-    public Api getApi() {
-        return api;
-    }
 
     public Format getFormat() {
         return format;
@@ -36,8 +30,8 @@ public class Yandere extends AbstractBoor {
 
 
     @Override
-    public String getCustomRequest(String request, Format format) {
-        return "https://yande.re/post." + format.toString().toLowerCase() + "?" + request;
+    public String getCustomRequest(String request) {
+        return "https://yande.re/" + request;
     }
 
 }

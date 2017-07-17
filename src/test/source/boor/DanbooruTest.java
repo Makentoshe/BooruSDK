@@ -26,19 +26,10 @@ public class DanbooruTest {
     }
 
     @Test
-    public void getCompleteRequest_Test() throws Exception {
-        int itemCount = 100;
-        String request = "hatsune_miku";
-        int pid = 0;
-        String link = Danbooru.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "https://danbooru.donmai.us/posts.json?limit=100&tags=hatsune_miku&page=0";
-        assertEquals(expected, link);
-
-
-        Danbooru.get().setFormat(Format.XML);
-        link = Danbooru.get().getCompleteRequest(itemCount, request, pid);
-        expected = "https://danbooru.donmai.us/posts.xml?limit=100&tags=hatsune_miku&page=0";
-        assertEquals(expected, link);
+    public void getCustomRequest_Test() throws Exception {
+        String request = Danbooru.get().getCustomRequest("request");
+        String expected = "https://danbooru.donmai.us/request";
+        assertEquals(expected, request);
     }
 
 }

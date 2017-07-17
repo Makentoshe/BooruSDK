@@ -7,24 +7,13 @@ import source.еnum.Format;
  * Singleton.
  * Storage data about Behoimi API, method for getting request and resolving data type.
  */
-public class Behoimi extends AbstractBoor {
+public class Behoimi extends AbstractBoorAdvanced {
 
     private static final Behoimi instance = new Behoimi();
 
     public static Behoimi get() {
         return instance;
     }
-
-
-
-    private final Api api = Api.ADVANCED;
-
-    @Override
-    public Api getApi() {
-        return api;
-    }
-
-
 
     private Format format = Format.JSON;
 
@@ -37,7 +26,8 @@ public class Behoimi extends AbstractBoor {
     }
 
     @Override
-    public String getCustomRequest(String request, Format format) {
-        return "http://behoimi.org/post/index." + format.toString().toLowerCase() + "?" + request;
+    public String getCustomRequest(String request) {
+        return "https://behoimi.org/" + request;
     }
+
 }

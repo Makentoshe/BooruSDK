@@ -27,18 +27,25 @@ public class KonachanTest {
     }
 
     @Test
-    public void getCompleteRequest() throws Exception {
-        int itemCount = 100;
-        String request = "hatsune_miku";
-        int pid = 0;
-        String link = Konachan.get().getCompleteRequest(itemCount, request, pid);
-        String expected = "https://konachan.com/post.json?limit=100&tags=hatsune_miku&page=0";
-        assertEquals(expected, link);
-
-        Konachan.get().setFormat(Format.XML);
-        link = Konachan.get().getCompleteRequest(itemCount, request, pid);
-        expected = "https://konachan.com/post.xml?limit=100&tags=hatsune_miku&page=0";
-        assertEquals(expected, link);
+    public void getCustomRequest_Test() throws Exception {
+        String request = Konachan.get().getCustomRequest("request");
+        String expected = "https://konachan.com/request";
+        assertEquals(expected, request);
     }
+//
+//    @Test
+//    public void getCompleteRequest() throws Exception {
+//        int itemCount = 100;
+//        String request = "hatsune_miku";
+//        int pid = 0;
+//        String link = Konachan.get().getCompleteRequest(itemCount, request, pid);
+//        String expected = "https://konachan.com/post.json?limit=100&tags=hatsune_miku&page=0";
+//        assertEquals(expected, link);
+//
+//        Konachan.get().setFormat(Format.XML);
+//        link = Konachan.get().getCompleteRequest(itemCount, request, pid);
+//        expected = "https://konachan.com/post.xml?limit=100&tags=hatsune_miku&page=0";
+//        assertEquals(expected, link);
+//    }
 
 }

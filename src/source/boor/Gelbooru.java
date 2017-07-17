@@ -7,7 +7,7 @@ import source.еnum.Format;
  * Singleton.
  * Storage data about Gelbooru API and method for getting request
  */
-public class Gelbooru extends AbstractBoor {
+public class Gelbooru extends AbstractBoorBasic {
 
     private static final Gelbooru instance = new Gelbooru();
 
@@ -20,7 +20,7 @@ public class Gelbooru extends AbstractBoor {
     private final Format format = Format.XML;
 
 
-    @Override
+
     public Api getApi() {
         return api;
     }
@@ -30,14 +30,8 @@ public class Gelbooru extends AbstractBoor {
     }
 
     @Override
-    public String getCompleteRequest(int itemCount, String request, int pid) {
-        return getCustomRequest("limit=" + itemCount + "&tags=" + request + "&pid=" + pid);
+    public String getCustomRequest(String request) {
+        return "https://gelbooru.com/index.php?page=dapi&q=index&s=" + request;
     }
-
-    @Override
-    public String getCustomRequest(String request, Format format) {
-        return "https://gelbooru.com/index.php?page=dapi&s=post&q=index&" + request;
-    }
-
 
 }
