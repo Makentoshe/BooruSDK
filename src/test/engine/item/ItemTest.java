@@ -18,7 +18,6 @@ public class ItemTest {
 
     private HashMap<String, String> getDataFromBoorAdvanced(AbstractBoorAdvanced boor, int id) throws Exception {
         String request1 = boor.getIdRequest(id);
-        //System.out.println(request1);
         HttpConnection connection = new HttpConnection(false);
         String responseData1 = connection.getRequest(request1);
 
@@ -29,7 +28,6 @@ public class ItemTest {
 
     private HashMap<String, String> getDataFromBoorBasic(AbstractBoorBasic boor, int id) throws Exception {
         String request1 = boor.getIdRequest(id);
-        //System.out.println(request1);
 
         XmlParser parser = new XmlParser();
 
@@ -41,7 +39,7 @@ public class ItemTest {
     public void constructorDanbooru_Test() throws Exception {
         Item item = new Item(getDataFromBoorAdvanced(Danbooru.get(), 2790300));
 
-        assertEquals(item.getSourceBoor(), Boor.Undefined);
+        assertEquals(item.getSourceBoor(), Boor.Danbooru);
         assertEquals(2790300, item.getId());
         assertEquals("c8191c7018780e6332dc2fb0fb701815", item.getMd5());
         assertEquals(Rating.SAFE, item.getRating());
@@ -56,7 +54,7 @@ public class ItemTest {
     public void constructorGelbooru_Test() throws Exception {
         Item item = new Item(getDataFromBoorBasic(Gelbooru.get(), 3785972));
 
-        assertEquals(item.getSourceBoor(), Boor.Undefined);
+        assertEquals(item.getSourceBoor(), Boor.Gelbooru);
         assertEquals(3785972, item.getId());
         assertEquals("cf589d62afe26ede34c2f4fa802ff70c", item.getMd5());
         assertEquals(Rating.SAFE, item.getRating());
@@ -69,7 +67,7 @@ public class ItemTest {
     public void constructorYandere_Test() throws Exception {
         Item item = new Item(getDataFromBoorAdvanced(Yandere.get(), 401662));
 
-        assertEquals(item.getSourceBoor(), Boor.Undefined);
+        assertEquals(item.getSourceBoor(), Boor.Yandere);
         assertEquals(401662, item.getId());
         assertEquals("a3005b11f1a9fcf9d7e3cdbe04222eb1", item.getMd5());
         assertEquals(Rating.QUESTIONABLE, item.getRating());

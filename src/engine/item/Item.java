@@ -46,6 +46,8 @@ public class Item {
      */
     private String preview_url;
 
+    private String sample_url;
+
     /**
      * From what boor this item.
      */
@@ -59,7 +61,7 @@ public class Item {
      * @param sourceBoor - from what boor this item will be get.
      */
     public Item(HashMap<String, String> hashMap, Boor sourceBoor) {
-        setSourceBoor(sourceBoor);
+        this.sourceBoor = sourceBoor;
         defaultConstructor(hashMap);
     }
 
@@ -71,7 +73,7 @@ public class Item {
      * Another can be used in inherit classes.
      */
     public Item(HashMap<String, String> hashMap) {
-        setSourceBoor(Boor.Undefined);
+        setSourceBoor(hashMap.get("boor"));
         defaultConstructor(hashMap);
     }
 
@@ -114,6 +116,7 @@ public class Item {
                     _setTags(pair.getValue());
                     break;
                 }
+                //file_url, sample_url,
             }
         }
     }
@@ -162,8 +165,48 @@ public class Item {
         return sourceBoor;
     }
 
-    private void setSourceBoor(Boor sourceBoor) {
-        this.sourceBoor = sourceBoor;
+    private void setSourceBoor(String sourceBoor) {
+        switch(sourceBoor){
+            case "Gelbooru":{
+                this.sourceBoor = Boor.Gelbooru;
+                break;
+            }
+            case "Danbooru":{
+                this.sourceBoor = Boor.Danbooru;
+                break;
+            }
+            case "Yandere":{
+                this.sourceBoor = Boor.Yandere;
+                break;
+            }
+            case "E621":{
+                this.sourceBoor = Boor.E621;
+                break;
+            }
+            case "Behoimi":{
+                this.sourceBoor = Boor.Behoimi;
+                break;
+            }
+            case "Sakugabooru":{
+                this.sourceBoor = Boor.Sakugabooru;
+                break;
+            }
+            case "Rule34":{
+                this.sourceBoor = Boor.Rule34;
+                break;
+            }
+            case "SafeBooru":{
+                this.sourceBoor = Boor.SafeBooru;
+                break;
+            }
+            case "Konachan":{
+                this.sourceBoor = Boor.Konachan;
+                break;
+            }
+            default:{
+                this.sourceBoor = Boor.Undefined;
+            }
+        }
     }
 
     private void _setRating(String data) {
@@ -208,5 +251,18 @@ public class Item {
         String[] split = tags.split(" ");
         HashSet<String> set = new HashSet<>(Arrays.asList(split));
         setTags(set);
+    }
+
+    public String getSample_url() {
+        return sample_url;
+    }
+
+    public void setSample_url(String sample_url) {
+        //when http not defined
+        if (!preview_url.contains("http")){
+            this.sample_url = "https:" + sample_url;
+        }else {
+            this.sample_url = sample_url;
+        }
     }
 }

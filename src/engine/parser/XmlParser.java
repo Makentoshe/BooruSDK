@@ -12,6 +12,7 @@ import engine.BooruEngineException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import source.еnum.Boor;
 
 /**
  * Parser posts from xml from url or stream,
@@ -39,7 +40,6 @@ public class XmlParser extends DefaultHandler {
      * Parses an XML file from url into memory
      */
     public void startParse(String url) throws BooruEngineException {
-
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             factory.newSAXParser().parse(url, this);
@@ -66,12 +66,18 @@ public class XmlParser extends DefaultHandler {
     @Override
     public void startElement(String s1, String s2, String elementName, Attributes attributes) throws SAXException {
         if (!"post".equals(elementName)) return;
+        boolean flag = false;
         //all data about one post
         HashMap<String, String> post = new HashMap<>();
         //for all attributes in this post
         for(int i = 0; i < attributes.getLength(); i++) {
             //we put it in hash map
             post.put(attributes.getQName(i), attributes.getValue(i));
+            //setup boor
+            if (attributes.getQName(i).contains("url") && !flag){
+                post.put("boor", extractBoor(attributes.getValue(i)));
+                flag = true;
+            }
         }
         //add post in result
         result.add(post);
@@ -94,5 +100,13 @@ public class XmlParser extends DefaultHandler {
 
     public boolean isReusable(){
         return reusable;
+    }
+
+    private String extractBoor(String url) {
+        String boor = "";
+        if (url.contains("gelbooru")) boor = Boor.Gelbooru.toString();
+        else if (url.contains("rule34")) boor = Boor.Rule34.toString();
+        else if (url.contains("safebooru")) boor = Boor.SafeBooru.toString();
+        return boor;
     }
 }
