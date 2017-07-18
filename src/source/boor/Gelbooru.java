@@ -15,19 +15,6 @@ public class Gelbooru extends AbstractBoorBasic {
         return instance;
     }
 
-    private final Api api = Api.BASICS;
-
-    private final Format format = Format.XML;
-
-
-
-    public Api getApi() {
-        return api;
-    }
-
-    public Format getFormat() {
-        return format;
-    }
 
     @Override
     public String getCustomRequest(String request) {

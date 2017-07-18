@@ -102,16 +102,16 @@ public class Item {
                     break;
                 }
                 case "preview_url":{
-                    //when http not defined
-                    if (!pair.getValue().contains("http")){
-                        setPreview_url("https:" + pair.getValue());
-                    }else {
-                        setPreview_url(pair.getValue());
-                    }
+                    setPreview_url(pair.getValue());
                     break;
                 }
                 case "preview_file_url":{
                     setPreview_url("https://danbooru.donmai.us" + pair.getValue());
+                    break;
+                }
+                case "tags":
+                case "tag_string":{
+                    _setTags(pair.getValue());
                     break;
                 }
             }
@@ -196,6 +196,17 @@ public class Item {
     }
 
     private void setPreview_url(String preview_url) {
-        this.preview_url = preview_url;
+        //when http not defined
+        if (!preview_url.contains("http")){
+            this.preview_url = "https:" + preview_url;
+        }else {
+            this.preview_url = preview_url;
+        }
+    }
+
+    private void _setTags(String tags){
+        String[] split = tags.split(" ");
+        HashSet<String> set = new HashSet<>(Arrays.asList(split));
+        setTags(set);
     }
 }

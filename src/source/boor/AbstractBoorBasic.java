@@ -8,15 +8,15 @@ import source.еnum.Format;
  */
 public abstract class AbstractBoorBasic {
 
-    private Format format = Format.XML;
+    private final Format format = Format.XML;
 
-    public Format getFormat(){
+    public final Format getFormat(){
         return format;
     }
 
-    private final Api api = Api.ADVANCED;
+    private final Api api = Api.BASICS;
 
-    public Api getApi() {
+    public final Api getApi() {
         return api;
     }
 

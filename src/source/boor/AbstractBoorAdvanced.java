@@ -12,7 +12,7 @@ public abstract class AbstractBoorAdvanced {
 
     private final Api api = Api.ADVANCED;
 
-    public Api getApi() {
+    public final Api getApi() {
         return api;
     }
 
