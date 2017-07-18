@@ -28,23 +28,22 @@ public class BehoimiTest {
     @Test
     public void getCustomRequest_Test() throws Exception {
         String request = Behoimi.get().getCustomRequest("request");
-        String expected = "https://behoimi.org/request";
+        String expected = "http://behoimi.org/request";
         assertEquals(expected, request);
     }
 
-//    @Test
-//    public void getCompleteRequest_Test() throws Exception {
-//        int itemCount = 100;
-//        String request = "hatsune_miku";
-//        int pid = 0;
-//        String link = Behoimi.get().getCompleteRequest(itemCount, request, pid);
-//        String expected = "http://behoimi.org/post/index.json?limit=100&tags=hatsune_miku&page=0";
-//        assertEquals(expected, link);
-//
-//        Behoimi.get().setFormat(Format.XML);
-//        link = Behoimi.get().getCompleteRequest(itemCount, request, pid);
-//        expected = "http://behoimi.org/post/index.xml?limit=100&tags=hatsune_miku&page=0";
-//        assertEquals(expected, link);
-//    }
+    @Test
+    public void getIdRequest_Test() throws Exception {
+        String request = Behoimi.get().getIdRequest(637175);
+        String expected = "http://behoimi.org/post/index.json?tags=id:637175";
+        assertEquals(expected, request);
+    }
+
+    @Test
+    public void getPackRequest_Test() throws Exception {
+        String request = Behoimi.get().getPackByTagsRequest(10, "hatsune_miku", 0);
+        String expected = "http://behoimi.org/post/index.json?tags=hatsune_miku&limit=10&page=0";
+        assertEquals(expected, request);
+    }
 
 }

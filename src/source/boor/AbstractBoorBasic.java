@@ -42,11 +42,11 @@ public abstract class AbstractBoorBasic {
      * Create request for getting some items by tags.
      *
      * @param limit - how items must be in page.
-     * @param request - request to server.
+     * @param tags - the tags to search for.
      * @param page - page index(from zero).
      * @return constructed request to this server.
      */
-    public String getPackRequest(int limit, String request, int page){
-        return getCustomRequest("post&limit=" + limit + "&tags=" + request + "&pid=" + page);
+    public String getPackByTagsRequest(int limit, String tags, int page){
+        return getCustomRequest("post&limit=" + limit + "&tags=" + tags + "&pid=" + page);
     }
 }

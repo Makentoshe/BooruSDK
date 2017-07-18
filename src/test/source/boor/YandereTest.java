@@ -34,19 +34,18 @@ public class YandereTest {
         assertEquals(expected, request);
     }
 
-//    @Test
-//    public void getCompleteRequest_Test() throws Exception {
-//        int itemCount = 100;
-//        String request = "hatsune_miku";
-//        int pid = 0;
-//        String link = Yandere.get().getCompleteRequest(itemCount, request, pid);
-//        String expected = "https://yande.re/post.json?limit=100&tags=hatsune_miku&page=0";
-//        assertEquals(expected, link);
-//
-//        Yandere.get().setFormat(Format.XML);
-//        link = Yandere.get().getCompleteRequest(itemCount, request, pid);
-//        expected = "https://yande.re/post.xml?limit=100&tags=hatsune_miku&page=0";
-//        assertEquals(expected, link);
-//    }
+    @Test
+    public void getIdRequest_Test() throws Exception{
+        String request = Yandere.get().getIdRequest(401562);
+        String expected = "https://yande.re/post.json?tags=id:401562";
+        assertEquals(expected, request);
+    }
+
+    @Test
+    public void getPackByTagsRequest_Test() throws Exception{
+        String request = Yandere.get().getPackByTagsRequest(10, "hatsune_miku", 0);
+        String expected = "https://yande.re/post.json?tags=hatsune_miku&limit=10&page=0";
+        assertEquals(expected, request);
+    }
 
 }

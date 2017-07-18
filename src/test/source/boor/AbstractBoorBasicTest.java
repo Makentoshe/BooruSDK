@@ -24,7 +24,7 @@ public class AbstractBoorBasicTest {
 
     @Test
     public void getPackRequest() throws Exception {
-        String request = Gelbooru.get().getPackRequest(10, "touhou", 1);
+        String request = Gelbooru.get().getPackByTagsRequest(10, "touhou", 1);
         String expected = "https://gelbooru.com/index.php?page=dapi&q=index&s=post&limit=10&tags=touhou&pid=1";
         assertEquals(expected, request);
     }

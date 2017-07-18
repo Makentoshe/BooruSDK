@@ -34,4 +34,13 @@ public class Yandere extends AbstractBoorAdvanced {
         return "https://yande.re/" + request;
     }
 
+    @Override
+    public String getPackByTagsRequest(int limit, String tags, int page, Format format) {
+        return getCustomRequest("post."+format.toString().toLowerCase()+"?tags="+tags+"&limit=" + limit + "&page=" + page);
+    }
+
+    @Override
+    public String getIdRequest(int id, Format format) {
+        return getCustomRequest("post." + format.toString().toLowerCase() + "?tags=id:" + id);
+    }
 }

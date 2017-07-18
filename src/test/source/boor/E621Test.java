@@ -33,19 +33,18 @@ public class E621Test {
         assertEquals(expected, request);
     }
 
-//    @Test
-//    public void getCompleteRequest_Test() throws Exception {
-//        int itemCount = 100;
-//        String request = "hatsune_miku";
-//        int pid = 0;
-//        String link = E621.get().getCompleteRequest(itemCount, request, pid);
-//        String expected = "https://e621.net/post/index.json?limit=100&tags=hatsune_miku&page=0";
-//        assertEquals(expected, link);
-//
-//        E621.get().setFormat(Format.XML);
-//        link = E621.get().getCompleteRequest(itemCount, request, pid);
-//        expected = "https://e621.net/post/index.xml?limit=100&tags=hatsune_miku&page=0";
-//        assertEquals(expected, link);
-//    }
+    @Test
+    public void getIdRequest_Test() throws Exception {
+        String request = E621.get().getIdRequest(1263892);
+        String expected = "https://e621.net/post/show.json?id=1263892";
+        assertEquals(expected, request);
+    }
+
+    @Test
+    public void getPackRequest_Test() throws Exception {
+        String request = E621.get().getPackByTagsRequest(10, "hatsune_miku", 0);
+        String expected = "https://e621.net/post/index.json?tags=hatsune_miku&limit=10&page=0";
+        assertEquals(expected, request);
+    }
 
 }

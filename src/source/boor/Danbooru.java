@@ -31,4 +31,8 @@ public class Danbooru extends AbstractBoorAdvanced {
         return "https://danbooru.donmai.us/" + request;
     }
 
+    @Override
+    public String getPackByTagsRequest(int limit, String tags, int page, Format format){
+        return getCustomRequest("posts."+format.toString().toLowerCase()+"?tags="+tags+"&limit=" + limit + "&page=" + page);
+    }
 }

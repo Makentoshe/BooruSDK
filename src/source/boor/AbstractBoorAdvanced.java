@@ -32,7 +32,7 @@ abstract class AbstractBoorAdvanced {
      * @param id - item id.
      * @return complete request for item with id.
      */
-    public String getIdRequest(int id) {
+    public final String getIdRequest(int id) {
         return getIdRequest(id, getFormat());
     }
 
@@ -52,13 +52,13 @@ abstract class AbstractBoorAdvanced {
      * Create request for getting some items by tags.
      *
      * @param limit - how items must be in page.
-     * @param tags - tags.
+     * @param tags - the tags to search for.
      * @param page - page index(from zero).
      * @param format - format result(Can be JSON or XML)
      * @return constructed request to this server.
      */
     public String getPackByTagsRequest(int limit, String tags, int page, Format format){
-        return getCustomRequest("posts."+format.toString().toLowerCase()+"?tags="+tags+"&limit=" + limit + "&page=" + page);
+        return getCustomRequest("post/index."+format.toString().toLowerCase()+"?tags="+tags+"&limit=" + limit + "&page=" + page);
     }
 
     /**
@@ -66,11 +66,11 @@ abstract class AbstractBoorAdvanced {
      * As default there will be JSON format.
      *
      * @param limit - how items must be in page.
-     * @param tags - tags.
+     * @param tags - the tags to search for.
      * @param page - page index(from zero).
      * @return constructed request to this server.
      */
-    public String getPackByTagsRequest(int limit, String tags, int page){
+    public final String getPackByTagsRequest(int limit, String tags, int page){
         return getPackByTagsRequest(limit, tags, page, getFormat());
     }
 }

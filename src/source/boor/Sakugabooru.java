@@ -23,21 +23,19 @@ public class Sakugabooru extends AbstractBoorAdvanced {
     }
 
 
-
-
     @Override
     public String getCustomRequest(String request) {
         return "https://sakugabooru.com/" + request;
     }
 
-//    @Override
-//    public String getCompleteRequest(int itemCount, String request, int pid) {
-//        return getCustomRequest("limit=" + itemCount + "&tag=" + request + "&page=" + pid, format);
-//    }
-//
-//    //override, because request need "tag". Not default "tags".
-//    public String getCompleteRequest(int itemCount, String request, int pid, Format format){
-//        //in some situations this method must be override: page in some servers also has name "pid"
-//        return  getCustomRequest("limit=" + itemCount + "&tag=" + request + "&page=" + pid, format);
-//    }
+    @Override
+    public String getPackByTagsRequest(int limit, String tags, int page, Format format) {
+        return getCustomRequest("post."+format.toString().toLowerCase()+"?tags="+tags+"&limit=" + limit + "&page=" + page);
+    }
+
+    @Override
+    public String getIdRequest(int id, Format format) {
+        return getCustomRequest("post." + format.toString().toLowerCase() + "?tags=id:" + id);
+    }
+
 }

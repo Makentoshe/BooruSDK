@@ -30,4 +30,8 @@ public class Konachan extends AbstractBoorAdvanced {
         return "https://konachan.com/" + request;
     }
 
+    @Override
+    public String getIdRequest(int id, Format format) {
+        return getCustomRequest("post."+format.toString().toLowerCase()+"?tags=id:" + id);
+    }
 }

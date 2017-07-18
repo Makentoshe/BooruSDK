@@ -27,14 +27,14 @@ public class AbstractBoorAdvancedTest {
     @Test
     public void getPackRequest_Test() throws Exception {
         String request = Konachan.get().getPackByTagsRequest(10, "hatsune_miku", 0);
-        String expected = "https://konachan.com/posts.json?tags=hatsune_miku&limit=10&page=0";
+        String expected = "https://konachan.com/post/index.json?tags=hatsune_miku&limit=10&page=0";
         assertEquals(expected, request);
     }
 
     @Test
     public void getPackRequestWithFormat_Test() throws Exception {
         String request = Konachan.get().getPackByTagsRequest(10, "hatsune_miku", 0, Format.XML);
-        String expected = "https://konachan.com/posts.xml?tags=hatsune_miku&limit=10&page=0";
+        String expected = "https://konachan.com/post/index.xml?tags=hatsune_miku&limit=10&page=0";
         assertEquals(expected, request);
     }
 

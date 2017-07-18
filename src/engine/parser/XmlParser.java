@@ -24,7 +24,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class XmlParser extends DefaultHandler {
 
-    private final List<HashMap<String, Object>> result = new ArrayList<>();
+    private final List<HashMap<String, String>> result = new ArrayList<>();
     private boolean reusable = true;
 
     public XmlParser(boolean reusable){
@@ -67,7 +67,7 @@ public class XmlParser extends DefaultHandler {
     public void startElement(String s1, String s2, String elementName, Attributes attributes) throws SAXException {
         if (!"post".equals(elementName)) return;
         //all data about one post
-        HashMap<String, Object> post = new HashMap<>();
+        HashMap<String, String> post = new HashMap<>();
         //for all attributes in this post
         for(int i = 0; i < attributes.getLength(); i++) {
             //we put it in hash map

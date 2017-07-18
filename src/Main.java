@@ -13,30 +13,93 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        //String request = Danbooru.get().getCompleteRequest(1, "hatsune_miku", 0);
-//
-//        HttpConnection connection = new HttpConnection(false);
-//        String responseData = connection.getRequest(request);
-//
-//        System.out.println(connection.getRequest(Danbooru.get().getCustomRequest("md5=cbb9f2e3eeac70328829d248d1f92f50")));
-//
-//        JsonParser parser = new JsonParser();
-//
-//        List<HashMap<String, String>> list = parser.startParse(responseData);
-//        HashMap<String, String> data = list.get(0);
-//        Set<Map.Entry<String, String>> entrySet = data.entrySet();
-////        for (Map.Entry<String,String> pair : entrySet) {
-////            System.out.println(pair.getKey() + ": " + pair.getValue());
-////        }
-//
-//        Item item = new Item(data);
-//        System.out.println(item.getMd5());
-//
-//        XmlParser xmlParser = new XmlParser(false);
-//        xmlParser.startParse(Gelbooru.get().getCompleteRequest(1, "touhou", 0));
-//        List<HashMap<String, String>> list1 = xmlParser.getResult();
-//        HashMap<String, String> data1 = list1.get(0);
-//        Item item1 = new Item(data1);
-//        System.out.println(item1.getPreview_url());
+
+        Item item = new Item(getDataFromGelbooru());
+        System.out.println(item.getPreview_url());
+
+    }
+
+    private static HashMap<String, String> getDataFromDanbooru() throws Exception{
+        String request1 = Danbooru.get().getPackByTagsRequest(1, "hatsune_miku", 0);
+        HttpConnection connection = new HttpConnection(false);
+        String responseData1 = connection.getRequest(request1);
+
+        JsonParser parser = new JsonParser();
+
+        return parser.startParse(responseData1).get(0);
+    }
+
+    private static HashMap<String, String> getDataFromYandere() throws Exception{
+        String request1 = Yandere.get().getPackByTagsRequest(1, "hatsune_miku", 0);
+
+        System.out.println(request1);
+
+        HttpConnection connection = new HttpConnection(false);
+        String responseData1 = connection.getRequest(request1);
+
+        JsonParser parser = new JsonParser();
+
+        return parser.startParse(responseData1).get(0);
+    }
+
+    private static HashMap<String, String> getDataFromSakugabooru() throws Exception{
+        String request1 = Sakugabooru.get().getPackByTagsRequest(1, "fate/apocrypha", 0);
+
+        System.out.println(request1);
+
+        HttpConnection connection = new HttpConnection(false);
+        String responseData1 = connection.getRequest(request1);
+
+        JsonParser parser = new JsonParser();
+
+        return parser.startParse(responseData1).get(0);
+    }
+
+    private static HashMap<String, String> getDataFromKonachan() throws Exception{
+        String request1 = Konachan.get().getPackByTagsRequest(1, "hatsune_miku", 0);
+
+        System.out.println(request1);
+
+        HttpConnection connection = new HttpConnection(false);
+        String responseData1 = connection.getRequest(request1);
+
+        JsonParser parser = new JsonParser();
+
+        return parser.startParse(responseData1).get(0);
+    }
+
+    private static HashMap<String, String> getDataFromE621() throws Exception{
+        String request1 = E621.get().getPackByTagsRequest(1, "hatsune_miku", 0);
+
+        System.out.println(request1);
+
+        HttpConnection connection = new HttpConnection(false);
+        String responseData1 = connection.getRequest(request1);
+
+        JsonParser parser = new JsonParser();
+
+        return parser.startParse(responseData1).get(0);
+    }
+
+    private static HashMap<String, String> getDataFromBehoimi() throws Exception{
+        String request1 = Behoimi.get().getPackByTagsRequest(1, "hatsune_miku", 0);
+
+        System.out.println(request1);
+
+        HttpConnection connection = new HttpConnection(false);
+        String responseData1 = connection.getRequest(request1);
+
+        JsonParser parser = new JsonParser();
+
+        return parser.startParse(responseData1).get(0);
+    }
+
+    private static HashMap<String, String> getDataFromGelbooru() throws Exception{
+        String request1 = Gelbooru.get().getPackByTagsRequest(1, "hatsune_miku", 0);
+
+        System.out.println(request1);
+        XmlParser parser = new XmlParser();
+        parser.startParse(request1);
+        return (HashMap<String, String>)parser.getResult().get(0);
     }
 }

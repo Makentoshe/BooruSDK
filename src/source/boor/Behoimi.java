@@ -27,7 +27,11 @@ public class Behoimi extends AbstractBoorAdvanced {
 
     @Override
     public String getCustomRequest(String request) {
-        return "https://behoimi.org/" + request;
+        return "http://behoimi.org/" + request;
     }
 
+    @Override
+    public String getIdRequest(int id, Format format) {
+        return getCustomRequest("post/index." + format.toString().toLowerCase() + "?tags=id:" + id);
+    }
 }

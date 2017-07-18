@@ -62,7 +62,6 @@ public class HttpConnection {
 
             reader.close();
 
-
         }catch (Exception e){
             throw new BooruEngineException(e.getMessage());
         }

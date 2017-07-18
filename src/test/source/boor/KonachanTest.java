@@ -32,20 +32,20 @@ public class KonachanTest {
         String expected = "https://konachan.com/request";
         assertEquals(expected, request);
     }
-//
-//    @Test
-//    public void getCompleteRequest() throws Exception {
-//        int itemCount = 100;
-//        String request = "hatsune_miku";
-//        int pid = 0;
-//        String link = Konachan.get().getCompleteRequest(itemCount, request, pid);
-//        String expected = "https://konachan.com/post.json?limit=100&tags=hatsune_miku&page=0";
-//        assertEquals(expected, link);
-//
-//        Konachan.get().setFormat(Format.XML);
-//        link = Konachan.get().getCompleteRequest(itemCount, request, pid);
-//        expected = "https://konachan.com/post.xml?limit=100&tags=hatsune_miku&page=0";
-//        assertEquals(expected, link);
-//    }
+
+    @Test
+    public void getIdRequest_Test() throws Exception {
+        String request = Konachan.get().getIdRequest(246852);
+        String expected = "https://konachan.com/post.json?tags=id:246852";
+        assertEquals(expected, request);
+    }
+
+    @Test
+    public void getPackRequest_Test() throws Exception {
+        String request = Konachan.get().getPackByTagsRequest(10, "hatsune_miku", 0);
+        String expected = "https://konachan.com/post/index.json?tags=hatsune_miku&limit=10&page=0";
+        assertEquals(expected, request);
+    }
+
 
 }

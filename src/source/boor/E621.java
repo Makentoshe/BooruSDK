@@ -1,7 +1,10 @@
 package source.boor;
 
+import org.junit.Test;
 import source.еnum.Api;
 import source.еnum.Format;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Singleton.
@@ -30,4 +33,8 @@ public class E621 extends AbstractBoorAdvanced {
         return "https://e621.net/" + request;
     }
 
+    @Override
+    public String getIdRequest(int id, Format format) {
+        return getCustomRequest("post/show."+format.toString().toLowerCase()+"?id=" + id);
+    }
 }
