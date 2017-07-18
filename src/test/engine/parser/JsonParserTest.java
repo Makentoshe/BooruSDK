@@ -1,10 +1,11 @@
 package test.engine.parser;
 
+import engine.HttpConnection;
 import engine.parser.JsonParser;
 import org.junit.Test;
+import source.boor.Danbooru;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -35,6 +36,34 @@ public class JsonParserTest {
         entrySet.stream()
                 .filter(pair -> "created_at".equals(pair.getKey()))
                 .forEach(pair -> assertEquals("{\"n\":52387000,\"s\":1475072859,\"json_class\":\"Time\"}", pair.getValue()));
+    }
+
+    //Need INTERNET Connection
+    @Test
+    public void parseJsonArray_Test() throws Exception{
+        //create connection
+        HttpConnection connection = new HttpConnection(false);
+        //get data from server
+        String responseData = connection.getRequest(Danbooru.get().getPackByTagsRequest(5, "hatsune_miku", 0));
+        //create parser
+        JsonParser parser = new JsonParser();
+        //start parse data
+        List<HashMap<String, String>> data = parser.startParse(responseData);
+        assertEquals(5, data.size());//5 posts
+    }
+
+    //Need INTERNET Connection
+    @Test
+    public void parseJsonElement_Test() throws Exception{
+        //create connection
+        HttpConnection connection = new HttpConnection(false);
+        //get data from server
+        String responseData = connection.getRequest(Danbooru.get().getIdRequest(2790300));
+        //create parser
+        JsonParser parser = new JsonParser();
+        //start parse data
+        List<HashMap<String, String>> data = parser.startParse(responseData);
+        assertEquals(1, data.size());//single post
     }
 
 }

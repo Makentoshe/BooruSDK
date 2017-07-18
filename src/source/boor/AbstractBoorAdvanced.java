@@ -6,7 +6,7 @@ import source.еnum.Format;
 /**
  * Abstract class fo boor realisation with API v1.13.
  */
-abstract class AbstractBoorAdvanced {
+public abstract class AbstractBoorAdvanced {
 
     public abstract Format getFormat();
 
