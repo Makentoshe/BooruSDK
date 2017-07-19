@@ -44,7 +44,7 @@ public class XmlParser extends DefaultHandler {
         try {
             factory.newSAXParser().parse(url, this);
         } catch (ParserConfigurationException | IOException | SAXException e) {
-            throw new BooruEngineException(e.getMessage());
+            throw new BooruEngineException(e);
         }
     }
 

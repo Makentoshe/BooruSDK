@@ -11,6 +11,7 @@ import java.util.*;
  * You getting item as is. This means, that you can't modify this element after creating.
  * You can only getting data and work with it.
  * TODO: create Tests
+ * TODO: доделать конструктор
  */
 public class Item {
 
@@ -48,6 +49,8 @@ public class Item {
 
     private String sample_url;
 
+    private String file_url;
+
     /**
      * From what boor this item.
      */
@@ -82,6 +85,7 @@ public class Item {
         Set<Map.Entry<String, String>> entrySet = hashMap.entrySet();
         //for each attribute
         for (Map.Entry<String, String> pair : entrySet) {
+            //System.out.println(pair.getKey() + " - " + pair.getValue());
             switch (pair.getKey()) {
                 case "id": {
                     setId(Integer.parseInt(pair.getValue()));
@@ -115,6 +119,21 @@ public class Item {
                 case "tag_string":{
                     _setTags(pair.getValue());
                     break;
+                }
+                case "sample_url":{
+                    setSample_url(pair.getValue());
+                    break;
+                }
+                case "file_url":{
+                    if (getSourceBoor().equals(Boor.Danbooru)){
+                        setSample_url("https://danbooru.donmai.us" + pair.getValue());
+                        break;
+                    }
+                    setFile_url(pair.getValue());
+                    break;
+                }
+                case "large_file_url":{
+                    setFile_url("https://danbooru.donmai.us" + pair.getValue());
                 }
                 //file_url, sample_url,
             }
@@ -259,10 +278,23 @@ public class Item {
 
     public void setSample_url(String sample_url) {
         //when http not defined
-        if (!preview_url.contains("http")){
+        if (!sample_url.contains("http")){
             this.sample_url = "https:" + sample_url;
         }else {
             this.sample_url = sample_url;
+        }
+    }
+
+    public String getFile_url() {
+        return file_url;
+    }
+
+    public void setFile_url(String file_url) {
+        //when http not defined
+        if (!file_url.contains("http")){
+            this.file_url = "https:" + file_url;
+        }else {
+            this.file_url = file_url;
         }
     }
 }

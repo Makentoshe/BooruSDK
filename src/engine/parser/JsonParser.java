@@ -9,6 +9,7 @@ import java.util.*;
 
 /**
  * Parse JSONArray to a list of posts, where one post - is a hashmap with all data in it.
+ * TODO: переделать парсер на манер хмл
  */
 public class JsonParser {
 
