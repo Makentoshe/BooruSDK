@@ -3,6 +3,8 @@ package source.boor;
 import source.еnum.Api;
 import source.еnum.Format;
 
+import java.util.HashMap;
+
 /**
  * Abstract class fo boor realisation with API v1.13.
  */
@@ -72,5 +74,16 @@ public abstract class AbstractBoorAdvanced {
      */
     public final String getPackByTagsRequest(int limit, String tags, int page){
         return getPackByTagsRequest(limit, tags, page, getFormat());
+    }
+
+    /**
+     * Empty method for boor.
+     * Here we can create Item and create remote "constructor".
+     *
+     * @param attributes - list of all post attributes
+     * @return Item entity with setted data.
+     */
+    public Item newItemInstance(HashMap<String, String> attributes){
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package engine.item.еnum;
+package source.еnum;
 
 public enum Rating {
     SAFE,

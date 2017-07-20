@@ -1,6 +1,6 @@
-package engine.item;
+package source.boor;
 
-import engine.item.еnum.Rating;
+import source.еnum.Rating;
 import source.еnum.Boor;
 
 import java.util.*;
@@ -10,11 +10,9 @@ import java.util.*;
  * If you want add new boor you can use this class or inherit from it.
  * You getting item as is. This means, that you can't modify this element after creating.
  * You can only getting data and work with it.
- * TODO: create Tests
- * TODO: доделать конструктор
+ *
  */
-public class Item {
-
+public class Item{
     /**
      * Item id.
      */
@@ -52,12 +50,18 @@ public class Item {
     private String file_url;
 
     /**
+     * Id, who's create/upload item.
+     */
+    private int creator_id;
+
+    /**
      * From what boor this item.
      */
     private Boor sourceBoor;
 
     /**
-     * Constructor for basic item entity. Just storage item id, md5, score and sources.
+     * Default constructor for basic item entity.
+     * Setup only most important info. Unstable.
      *
      * @param hashMap - map with all attributes. Some of them will be use here.
      * Another can be used in inherit classes.
@@ -69,8 +73,10 @@ public class Item {
     }
 
     /**
-     * Constructor for basic item entity. Just storage item id, md5, score and sources.
-     * Source boor will be undefined
+     * Constructor for basic item entity.
+     * Setup only most important info.
+     * Source boor will be undefined.
+     * Unstable.
      *
      * @param hashMap - map with all attributes. Some of them will be use here.
      * Another can be used in inherit classes.
@@ -80,12 +86,19 @@ public class Item {
         defaultConstructor(hashMap);
     }
 
+    public Item(Boor sourceBoor){
+        this.sourceBoor = sourceBoor;
+    }
+
+    public Item(){
+        this.sourceBoor = Boor.Undefined;
+    }
+
     private void defaultConstructor(HashMap<String, String> hashMap){
         //create Entry
         Set<Map.Entry<String, String>> entrySet = hashMap.entrySet();
         //for each attribute
         for (Map.Entry<String, String> pair : entrySet) {
-            //System.out.println(pair.getKey() + " - " + pair.getValue());
             switch (pair.getKey()) {
                 case "id": {
                     setId(Integer.parseInt(pair.getValue()));
@@ -96,7 +109,7 @@ public class Item {
                     break;
                 }
                 case "rating": {
-                    _setRating(pair.getValue());
+                    setRating(pair.getValue());
                     break;
                 }
                 case "score": {
@@ -117,7 +130,7 @@ public class Item {
                 }
                 case "tags":
                 case "tag_string":{
-                    _setTags(pair.getValue());
+                    setTags(pair.getValue());
                     break;
                 }
                 case "sample_url":{
@@ -135,7 +148,12 @@ public class Item {
                 case "large_file_url":{
                     setFile_url("https://danbooru.donmai.us" + pair.getValue());
                 }
-                //file_url, sample_url,
+                case "creator_id":
+                case "uploader_id":{
+                    setCreator_id(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+
             }
         }
     }
@@ -144,7 +162,7 @@ public class Item {
         return id;
     }
 
-    private void setId(int id) {
+    final void setId(int id) {
         this.id = id;
     }
 
@@ -152,15 +170,11 @@ public class Item {
         return tags;
     }
 
-    public final void setTags(HashSet<String> tags) {
-        this.tags = tags;
-    }
-
     public final String getMd5() {
         return md5;
     }
 
-    private void setMd5(String md5) {
+    protected final void setMd5(String md5) {
         this.md5 = md5;
     }
 
@@ -168,7 +182,7 @@ public class Item {
         return score;
     }
 
-    private void setScore(int score) {
+    protected final void setScore(int score) {
         this.score = score;
     }
 
@@ -176,15 +190,11 @@ public class Item {
         return rating;
     }
 
-    private void setRating(Rating rating) {
-        this.rating = rating;
-    }
-
     public final Boor getSourceBoor() {
         return sourceBoor;
     }
 
-    private void setSourceBoor(String sourceBoor) {
+    protected final void setSourceBoor(String sourceBoor) {
         switch(sourceBoor){
             case "Gelbooru":{
                 this.sourceBoor = Boor.Gelbooru;
@@ -228,18 +238,18 @@ public class Item {
         }
     }
 
-    private void _setRating(String data) {
+    protected final void setRating(String data) {
         switch (data) {
             case "s": {
-                setRating(Rating.SAFE);
+                this.rating = Rating.SAFE;
                 break;
             }
             case "q": {
-                setRating(Rating.QUESTIONABLE);
+                this.rating = Rating.QUESTIONABLE;
                 break;
             }
             case "e": {
-                setRating(Rating.EXPLICIT);
+                this.rating = Rating.EXPLICIT;
                 break;
             }
         }
@@ -249,7 +259,7 @@ public class Item {
         return source;
     }
 
-    private void setSource(String source) {
+    protected final void setSource(String source) {
         this.source = source;
     }
 
@@ -257,7 +267,7 @@ public class Item {
         return preview_url;
     }
 
-    private void setPreview_url(String preview_url) {
+    protected final void setPreview_url(String preview_url) {
         //when http not defined
         if (!preview_url.contains("http")){
             this.preview_url = "https:" + preview_url;
@@ -266,17 +276,16 @@ public class Item {
         }
     }
 
-    private void _setTags(String tags){
+    protected final void setTags(String tags){
         String[] split = tags.split(" ");
-        HashSet<String> set = new HashSet<>(Arrays.asList(split));
-        setTags(set);
+        this.tags = new HashSet<>(Arrays.asList(split));
     }
 
     public String getSample_url() {
         return sample_url;
     }
 
-    public void setSample_url(String sample_url) {
+    protected final void setSample_url(String sample_url) {
         //when http not defined
         if (!sample_url.contains("http")){
             this.sample_url = "https:" + sample_url;
@@ -289,12 +298,20 @@ public class Item {
         return file_url;
     }
 
-    public void setFile_url(String file_url) {
+    protected final void setFile_url(String file_url) {
         //when http not defined
         if (!file_url.contains("http")){
             this.file_url = "https:" + file_url;
         }else {
             this.file_url = file_url;
         }
+    }
+
+    public int getCreator_id() {
+        return creator_id;
+    }
+
+    protected final void setCreator_id(int creator_id) {
+        this.creator_id = creator_id;
     }
 }

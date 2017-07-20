@@ -1,5 +1,4 @@
 import engine.HttpConnection;
-import engine.item.Item;
 import engine.parser.JsonParser;
 import engine.parser.XmlParser;
 import source.boor.*;
@@ -35,6 +34,7 @@ public class Main {
 
         return parser.startParse(responseData1).get(0);
     }
+
 
     private static HashMap<String, String> getDataFromBoorBasic(AbstractBoorBasic boor, int id) throws Exception {
         String request1 = boor.getIdRequest(id);
