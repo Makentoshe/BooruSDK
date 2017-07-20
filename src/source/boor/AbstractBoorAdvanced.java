@@ -31,7 +31,7 @@ public abstract class AbstractBoorAdvanced {
      * Construct request by id. The format is getting from the getFormat() method.
      * As default there will be JSON format.
      *
-     * @param id - item id.
+     * @param id - post id.
      * @return complete request for item with id.
      */
     public final String getIdRequest(int id) {
@@ -41,7 +41,7 @@ public abstract class AbstractBoorAdvanced {
     /**
      * Construct request by id.
      *
-     * @param id     - item id.
+     * @param id     - post id.
      * @param format - result format.
      * @return complete request for item with id.
      */
@@ -51,9 +51,9 @@ public abstract class AbstractBoorAdvanced {
 
 
     /**
-     * Create request for getting some items by tags.
+     * Create request for getting some posts by tags.
      *
-     * @param limit - how items must be in page.
+     * @param limit - how many posts must be in page.
      * @param tags - the tags to search for.
      * @param page - page index(from zero).
      * @param format - format result(Can be JSON or XML)
@@ -64,10 +64,10 @@ public abstract class AbstractBoorAdvanced {
     }
 
     /**
-     * Create request for getting some items by tags. The format is getting from the getFormat() method.
+     * Create request for getting some posts by tags. The format is getting from the getFormat() method.
      * As default there will be JSON format.
      *
-     * @param limit - how items must be in page.
+     * @param limit - how many items must be in page.
      * @param tags - the tags to search for.
      * @param page - page index(from zero).
      * @return constructed request to this server.
@@ -78,12 +78,12 @@ public abstract class AbstractBoorAdvanced {
 
     /**
      * Empty method for boor.
-     * Here we can create Item and create remote "constructor".
+     * Here we can create Post and create remote "constructor".
      *
      * @param attributes - list of all post attributes
-     * @return Item entity with setted data.
+     * @return Post entity with setted data.
      */
-    public Item newItemInstance(HashMap<String, String> attributes){
+    public Post newPostInstance(HashMap<String, String> attributes){
         return null;
     }
 }

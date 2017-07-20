@@ -6,15 +6,14 @@ import source.еnum.Boor;
 import java.util.*;
 
 /**
- * Simple class which can describe item from all boors.
- * If you want add new boor you can use this class or inherit from it.
- * You getting item as is. This means, that you can't modify this element after creating.
+ * Simple class which can describe post from all boors.
+ * If you want add new boor  you can use this class or inherit from it.
+ * You getting post as is. This means, that you can't modify this element after creating.
  * You can only getting data and work with it.
- *
  */
-public class Item{
+public class Post {
     /**
-     * Item id.
+     * Post id.
      */
     private int id;
 
@@ -24,14 +23,14 @@ public class Item{
     private HashSet<String> tags;
 
     /**
-     * Item rating.
+     * Post rating.
      */
     private Rating rating;
 
     private String md5;
 
     /**
-     * From what place this item was get.
+     * From what place this post was get.
      */
     private String source;
 
@@ -50,30 +49,30 @@ public class Item{
     private String file_url;
 
     /**
-     * Id, who's create/upload item.
+     * Id, who's create/upload post.
      */
     private int creator_id;
 
     /**
-     * From what boor this item.
+     * From what boor this post.
      */
     private Boor sourceBoor;
 
     /**
-     * Default constructor for basic item entity.
+     * Default constructor for basic post entity.
      * Setup only most important info. Unstable.
      *
      * @param hashMap - map with all attributes. Some of them will be use here.
      * Another can be used in inherit classes.
      * @param sourceBoor - from what boor this item will be get.
      */
-    public Item(HashMap<String, String> hashMap, Boor sourceBoor) {
+    public Post(HashMap<String, String> hashMap, Boor sourceBoor) {
         this.sourceBoor = sourceBoor;
         defaultConstructor(hashMap);
     }
 
     /**
-     * Constructor for basic item entity.
+     * Constructor for basic post entity.
      * Setup only most important info.
      * Source boor will be undefined.
      * Unstable.
@@ -81,16 +80,16 @@ public class Item{
      * @param hashMap - map with all attributes. Some of them will be use here.
      * Another can be used in inherit classes.
      */
-    public Item(HashMap<String, String> hashMap) {
+    public Post(HashMap<String, String> hashMap) {
         setSourceBoor(hashMap.get("boor"));
         defaultConstructor(hashMap);
     }
 
-    public Item(Boor sourceBoor){
+    public Post(Boor sourceBoor){
         this.sourceBoor = sourceBoor;
     }
 
-    public Item(){
+    public Post(){
         this.sourceBoor = Boor.Undefined;
     }
 

@@ -21,7 +21,7 @@ import source.еnum.Boor;
  * Instance of this class can be reused by option in constructor.
  * As default - instance will be reused.
  * If instance not reused - results will be collect in getResult() method.
- * You will can get all results by one call.
+ * We will can get all results by one call.
  */
 public class XmlParser extends DefaultHandler {
 

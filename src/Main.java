@@ -21,7 +21,7 @@ public class Main {
         list.add(getDataFromBoorAdvanced(Sakugabooru.get()));
         list.add(getDataFromBoorAdvanced(Behoimi.get()));
 
-        //Item item = new Item(getDataFromGelbooru());
+        //Post item = new Post(getDataFromGelbooru());
         //System.out.println(item.getPreview_url());
     }
 

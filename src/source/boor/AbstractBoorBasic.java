@@ -33,17 +33,17 @@ public abstract class AbstractBoorBasic {
     /**
      * Construct request by id.
      *
-     * @param id     - item id.
-     * @return complete request for item with id.
+     * @param id     - post id.
+     * @return complete request for post with id.
      */
     public String getIdRequest(int id) {
         return getCustomRequest("post&id=" + String.valueOf(id));
     }
 
     /**
-     * Create request for getting some items by tags.
+     * Create request for getting some posts by tags.
      *
-     * @param limit - how items must be in page.
+     * @param limit - how posts must be in page.
      * @param tags - the tags to search for.
      * @param page - page index(from zero).
      * @return constructed request to this server.
@@ -55,12 +55,12 @@ public abstract class AbstractBoorBasic {
 
     /**
      * Empty method for boor.
-     * Here we can create Item and create remote "constructor".
+     * Here we can create Post and create remote "constructor".
      *
      * @param attributes - list of all post attributes
-     * @return Item entity with setted data.
+     * @return Post entity with setted data.
      */
-    public Item newItemInstance(HashMap<String, String> attributes){
+    public Post newPostInstance(HashMap<String, String> attributes){
         return null;
     }
 }

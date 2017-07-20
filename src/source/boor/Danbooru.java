@@ -41,52 +41,52 @@ public class Danbooru extends AbstractBoorAdvanced {
     }
 
 
-    public Item newItemInstance(HashMap<String, String> attributes){
-        Item item = new Item(Boor.Danbooru);
+    public Post newPostInstance(HashMap<String, String> attributes){
+        Post post = new Post(Boor.Danbooru);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
         //for each attribute
         for (Map.Entry<String, String> pair : entrySet) {
             switch (pair.getKey()){
                 case "id":{
-                    item.setId(Integer.parseInt(pair.getValue()));
+                    post.setId(Integer.parseInt(pair.getValue()));
                     break;
                 }
                 case "md5":{
-                    item.setMd5(pair.getValue());
+                    post.setMd5(pair.getValue());
                     break;
                 }
                 case "rating":{
-                    item.setRating(pair.getValue());
+                    post.setRating(pair.getValue());
                     break;
                 }
                 case "score":{
-                    item.setScore(Integer.parseInt(pair.getValue()));
+                    post.setScore(Integer.parseInt(pair.getValue()));
                     break;
                 }
                 case "preview_file_url":{
-                    item.setPreview_url("https://danbooru.donmai.us" + pair.getValue());
+                    post.setPreview_url("https://danbooru.donmai.us" + pair.getValue());
                     break;
                 }
                 case "tag_string":{
-                    item.setTags(pair.getValue());
+                    post.setTags(pair.getValue());
                     break;
                 }
                 case "file_url":{
-                    item.setSample_url("https://danbooru.donmai.us" + pair.getValue());
+                    post.setSample_url("https://danbooru.donmai.us" + pair.getValue());
                     break;
                 }
                 case "large_file_url":{
-                    item.setFile_url("https://danbooru.donmai.us" + pair.getValue());
+                    post.setFile_url("https://danbooru.donmai.us" + pair.getValue());
                     break;
                 }
                 case "source":{
-                    item.setSource(pair.getValue());
+                    post.setSource(pair.getValue());
                     break;
                 }
             }
         }
-        return item;
+        return post;
     }
 
 }

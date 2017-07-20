@@ -36,32 +36,6 @@ public class JsonParser {
             //and parse as array
             return parseArray(array);
         }
-//        //for each post
-//        for (JsonElement object : posts){
-//            //create the hashmap for storing data
-//            HashMap<String, String> postData = new HashMap<>();
-//            //for each attribute
-//            for (Object object1 : object.getAsJsonObject().entrySet()) {
-//                //get all data in one string
-//                String attribute = object1.toString();
-//                //if attribute not contains { or } - Behoimi check
-//                if (!attribute.contains("{") || !attribute.contains("{")) {
-//                    //we remove all quotes
-//                    attribute = attribute.replaceAll("\"", "");
-//                }
-//                //split this string to key and value
-//                String[] split = attribute.split("=");
-//                //check splith length - when some values equals "" and we removing quotes - we must track this.
-//                if (split.length == 2) {
-//                    postData.put(split[0], split[1]);
-//                } else {
-//                    postData.put(split[0], "");
-//                }
-//            }
-//            //put hashmap to result list
-//            result.add(postData);
-//        }
-
     }
 
     private List<HashMap<String, String>> parseArray(JsonArray array) {
