@@ -189,11 +189,11 @@ public class Post {
         return rating;
     }
 
-    public final Boor getSourceBoor() {
-        return sourceBoor;
+    public String getSourceBoor() {
+        return sourceBoor.toString();
     }
 
-    protected final void setSourceBoor(String sourceBoor) {
+    final void setSourceBoor(String sourceBoor) {
         switch(sourceBoor){
             case "Gelbooru":{
                 this.sourceBoor = Boor.Gelbooru;

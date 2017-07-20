@@ -40,7 +40,7 @@ public class PostTest {
     public void constructorDanbooru_Test() throws Exception {
         Post post = Danbooru.get().newPostInstance(getDataFromBoorAdvanced(Danbooru.get(), 2790300));
 
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.Danbooru);
+        assertEquals("Boor source ", post.getSourceBoor(), Boor.Danbooru.toString());
         assertEquals("Id ", 2790300, post.getId());
         assertEquals("Md5 ", "c8191c7018780e6332dc2fb0fb701815", post.getMd5());
         assertEquals("Rating ", Rating.SAFE, post.getRating());
@@ -56,7 +56,7 @@ public class PostTest {
     public void constructorGelbooru_Test() throws Exception {
         Post post = Gelbooru.get().newPostInstance(getDataFromBoorBasic(Gelbooru.get(), 3785972));
 
-        assertEquals(post.getSourceBoor(), Boor.Gelbooru);
+        assertEquals(post.getSourceBoor(), Boor.Gelbooru.toString());
         assertEquals(3785972, post.getId());
         assertEquals("cf589d62afe26ede34c2f4fa802ff70c", post.getMd5());
         assertEquals(Rating.SAFE, post.getRating());
@@ -73,7 +73,7 @@ public class PostTest {
     public void constructorSafebooru_Test() throws Exception {
         Post post = Safebooru.get().newPostInstance(getDataFromBoorBasic(Safebooru.get(), 2278871));
 
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.SafeBooru);
+        assertEquals("Boor source ", post.getSourceBoor(), Boor.SafeBooru.toString());
         assertEquals("Id ", 2278871, post.getId());
         assertEquals("Md5 ","b5e3bdd52dbcbf8f8715bec584ee87e8", post.getMd5());
         assertEquals("Rating ",Rating.SAFE, post.getRating());
@@ -89,7 +89,7 @@ public class PostTest {
     public void constructorRule34_Test() throws Exception {
         Post post = Rule34.get().newPostInstance(getDataFromBoorBasic(Rule34.get(), 2421106));
 
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.Rule34);
+        assertEquals("Boor source ", post.getSourceBoor(), Boor.Rule34.toString());
         assertEquals("Id ", 2421106, post.getId());
         assertEquals("Md5 ","23b64b698780463545dac889883d83c0", post.getMd5());
         assertEquals("Rating ",Rating.EXPLICIT, post.getRating());
@@ -105,7 +105,7 @@ public class PostTest {
     public void constructorYandere_Test() throws Exception {
         Post post = Yandere.get().newPostInstance(getDataFromBoorAdvanced(Yandere.get(), 401662));
 
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.Yandere);
+        assertEquals("Boor source ", post.getSourceBoor(), Boor.Yandere.toString());
         assertEquals("Id ", 401662, post.getId());
         assertEquals("Md5 ", "a3005b11f1a9fcf9d7e3cdbe04222eb1", post.getMd5());
         assertEquals(Rating.QUESTIONABLE, post.getRating());
@@ -123,7 +123,7 @@ public class PostTest {
     public void constructorKonachan_Test() throws Exception {
         Post post = Konachan.get().newPostInstance(getDataFromBoorAdvanced(Konachan.get(), 246946));
 
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.Konachan);
+        assertEquals("Boor source ", post.getSourceBoor(), Boor.Konachan.toString());
         assertEquals("Id ", 246946, post.getId());
         assertEquals("Md5 ", "6707b3867e49b5d0be6c0a3242ef6776", post.getMd5());
         assertEquals(Rating.SAFE, post.getRating());
@@ -145,7 +145,7 @@ public class PostTest {
     public void constructorBehoimi_Test() throws Exception {
         Post post = Behoimi.get().newPostInstance(getDataFromBoorAdvanced(Behoimi.get(), 633053));
 
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.Behoimi);
+        assertEquals("Boor source ", post.getSourceBoor(), Boor.Behoimi.toString());
         assertEquals("Id ", 633053, post.getId());
         assertEquals("Md5 ", "7cb1161617a3a9d9f56d7772cde0f090", post.getMd5());
         assertEquals(Rating.SAFE, post.getRating());
@@ -161,7 +161,7 @@ public class PostTest {
     public void constructorSakugabooru_Test() throws Exception {
         Post post = Sakugabooru.get().newPostInstance(getDataFromBoorAdvanced(Sakugabooru.get(), 36635));
 
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.Sakugabooru);
+        assertEquals("Boor source ", post.getSourceBoor(), Boor.Sakugabooru.toString());
         assertEquals("Id ", 36635, post.getId());
         assertEquals("Md5 ", "a86bb01d16934d71eeb0bf34cae5d58a", post.getMd5());
         assertEquals(Rating.SAFE, post.getRating());
@@ -176,7 +176,7 @@ public class PostTest {
     public void constructorE621_Test() throws Exception {
         Post post = E621.get().newPostInstance(getDataFromBoorAdvanced(E621.get(), 1263892));
 
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.E621);
+        assertEquals("Boor source ", post.getSourceBoor(), Boor.E621.toString());
         assertEquals("Id ", 1263892, post.getId());
         assertEquals("Md5 ", "165b0269a416acb18243bb851249b9b3", post.getMd5());
         assertEquals(Rating.QUESTIONABLE, post.getRating());
