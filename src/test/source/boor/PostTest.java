@@ -23,7 +23,9 @@ public class PostTest {
 
         JsonParser parser = new JsonParser();
 
-        return parser.startParse(responseData1).get(0);
+        parser.startParse(responseData1);
+
+        return parser.getResult().get(0);
     }
 
     private HashMap<String, String> getDataFromBoorBasic(AbstractBoorBasic boor, int id) throws Exception {

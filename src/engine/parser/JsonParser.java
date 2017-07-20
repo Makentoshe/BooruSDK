@@ -13,20 +13,31 @@ import java.util.*;
  */
 public class JsonParser {
 
+    private final List<HashMap<String, String>> result = new ArrayList<>();
+    private boolean reusable;
+
+    public JsonParser(){
+        reusable = true;
+    }
+
+    public JsonParser(boolean isReusable){
+        reusable = isReusable;
+    }
+
     /**
      * Parsing json with gson help.
      *
      * @param dataToParse - string, which describe json array.
      * @return list of Hashmaps, where the hashmap is a post.
      */
-    public List<HashMap<String, String>> startParse(String dataToParse) {
+    public void startParse(String dataToParse) {
         //create gson parser
         com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
         try {
             //get all data in posts array
             JsonArray posts = parser.parse(dataToParse).getAsJsonArray();
             //start parse
-            return parseArray(posts);
+            parseArray(posts);
         } catch (IllegalStateException notArray) {
             //when the data not JSON Array
             JsonElement object = parser.parse(dataToParse).getAsJsonObject();
@@ -34,12 +45,30 @@ public class JsonParser {
             JsonArray array = new JsonArray();
             array.add(object);
             //and parse as array
-            return parseArray(array);
+            parseArray(array);
         }
     }
 
-    private List<HashMap<String, String>> parseArray(JsonArray array) {
-        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+    /**
+     * @return list of posts
+     * If reusable flag enable we can get result only once.
+     * After, the data will be clear.
+     */
+    public List<HashMap<String, String>> getResult(){
+        if (reusable) {
+            List list = new ArrayList(result);
+            result.clear();
+            return list;
+        }
+        return result;
+    }
+
+    public boolean isReusable(){
+        return reusable;
+    }
+
+
+    private void parseArray(JsonArray array) {
         //for each post
         for (JsonElement object : array) {
             //for extracting boor name
@@ -74,7 +103,6 @@ public class JsonParser {
             result.add(postData);
 
         }
-        return result;
     }
 
     private String extractBoor(String url) {
@@ -87,5 +115,4 @@ public class JsonParser {
         else boor = Boor.Danbooru.toString();
         return boor;
     }
-
 }

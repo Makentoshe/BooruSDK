@@ -26,7 +26,7 @@ import source.еnum.Boor;
 public class XmlParser extends DefaultHandler {
 
     private final List<HashMap<String, String>> result = new ArrayList<>();
-    private boolean reusable = true;
+    private boolean reusable;
 
     public XmlParser(boolean reusable){
         this.reusable = reusable;

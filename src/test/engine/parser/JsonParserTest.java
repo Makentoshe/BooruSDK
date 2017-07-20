@@ -18,8 +18,11 @@ public class JsonParserTest {
 
         JsonParser parser = new JsonParser();
 
+        parser.startParse(responseData);
+
+
         //get EntrySet for first element
-        Set<Map.Entry<String, String>> entrySet = parser.startParse(responseData).get(0).entrySet();
+        Set<Map.Entry<String, String>> entrySet = parser.getResult().get(0).entrySet();
         entrySet.stream()
                 .filter(pair -> "id".equals(pair.getKey()))
                 .forEach(pair -> assertEquals(Integer.toString(2788904), pair.getValue()));
@@ -30,9 +33,10 @@ public class JsonParserTest {
         String responseData = "[{\"status\":\"active\",\"creator_id\":1,\"preview_width\":99,\"source\":\"\",\"author\":\"nil!\",\"width\":665,\"score\":0,\"preview_height\":150,\"has_comments\":false,\"sample_width\":665,\"has_children\":false,\"sample_url\":\"http://behoimi.org/data/7c/b1/7cb1161617a3a9d9f56d7772cde0f090.jpg\",\"file_url\":\"http://behoimi.org/data/7c/b1/7cb1161617a3a9d9f56d7772cde0f090.jpg\",\"parent_id\":null,\"sample_height\":1000,\"md5\":\"7cb1161617a3a9d9f56d7772cde0f090\",\"tags\":\"apron aqua_hair bear_hat colorful_pop_star!! cosplay dress haruka hatsune_miku hood thighhighs twintails\",\"change\":1209924,\"has_notes\":false,\"rating\":\"s\",\"id\":633053,\"height\":1000,\"preview_url\":\"http://behoimi.org/data/preview/7c/b1/7cb1161617a3a9d9f56d7772cde0f090.jpg\",\"file_size\":627398,\"created_at\":{\"n\":52387000,\"s\":1475072859,\"json_class\":\"Time\"}}]\n";
 
         JsonParser parser = new JsonParser();
+        parser.startParse(responseData);
 
         //get EntrySet for first element
-        Set<Map.Entry<String, String>> entrySet = parser.startParse(responseData).get(0).entrySet();
+        Set<Map.Entry<String, String>> entrySet = parser.getResult().get(0).entrySet();
         entrySet.stream()
                 .filter(pair -> "created_at".equals(pair.getKey()))
                 .forEach(pair -> assertEquals("{\"n\":52387000,\"s\":1475072859,\"json_class\":\"Time\"}", pair.getValue()));
@@ -48,7 +52,9 @@ public class JsonParserTest {
         //create parser
         JsonParser parser = new JsonParser();
         //start parse data
-        List<HashMap<String, String>> data = parser.startParse(responseData);
+        parser.startParse(responseData);
+        //get result
+        List<HashMap<String, String>> data = parser.getResult();
         assertEquals(5, data.size());//5 posts
     }
 
@@ -62,7 +68,9 @@ public class JsonParserTest {
         //create parser
         JsonParser parser = new JsonParser();
         //start parse data
-        List<HashMap<String, String>> data = parser.startParse(responseData);
+        parser.startParse(responseData);
+        //get result
+        List<HashMap<String, String>> data = parser.getResult();
         assertEquals(1, data.size());//single post
     }
 

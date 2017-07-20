@@ -31,8 +31,9 @@ public class Main {
         String responseData1 = connection.getRequest(request1);
 
         JsonParser parser = new JsonParser();
+        parser.startParse(responseData1);
 
-        return parser.startParse(responseData1).get(0);
+        return parser.getResult().get(0);
     }
 
 
@@ -52,7 +53,9 @@ public class Main {
 
         JsonParser parser = new JsonParser();
 
-        return parser.startParse(responseData1).get(0);
+        parser.startParse(responseData1);
+
+        return parser.getResult().get(0);
     }
 
     private static HashMap<String, String> getDataFromYandere() throws Exception {
@@ -65,7 +68,9 @@ public class Main {
 
         JsonParser parser = new JsonParser();
 
-        return parser.startParse(responseData1).get(0);
+        parser.startParse(responseData1);
+
+        return parser.getResult().get(0);
     }
 
     private static HashMap<String, String> getDataFromSakugabooru() throws Exception {
@@ -78,7 +83,9 @@ public class Main {
 
         JsonParser parser = new JsonParser();
 
-        return parser.startParse(responseData1).get(0);
+        parser.startParse(responseData1);
+
+        return parser.getResult().get(0);
     }
 
     private static HashMap<String, String> getDataFromKonachan() throws Exception {
@@ -91,7 +98,9 @@ public class Main {
 
         JsonParser parser = new JsonParser();
 
-        return parser.startParse(responseData1).get(0);
+        parser.startParse(responseData1);
+
+        return parser.getResult().get(0);
     }
 
     private static HashMap<String, String> getDataFromE621() throws Exception {
@@ -104,7 +113,9 @@ public class Main {
 
         JsonParser parser = new JsonParser();
 
-        return parser.startParse(responseData1).get(0);
+        parser.startParse(responseData1);
+
+        return parser.getResult().get(0);
     }
 
     private static HashMap<String, String> getDataFromBehoimi() throws Exception {
@@ -117,7 +128,9 @@ public class Main {
 
         JsonParser parser = new JsonParser();
 
-        return parser.startParse(responseData1).get(0);
+        parser.startParse(responseData1);
+
+        return parser.getResult().get(0);
     }
 
     private static HashMap<String, String> getDataFromGelbooru() throws Exception {
