@@ -39,7 +39,7 @@ public class PostTest {
     }
 
     @Test
-    public void constructorDanbooru_Test() throws Exception {
+    public void constructorPostInDanbooru_Test() throws Exception {
         Post post = Danbooru.get().newPostInstance(getDataFromBoorAdvanced(Danbooru.get(), 2790300));
 
         assertEquals("Boor source ", post.getSourceBoor(), Boor.Danbooru.toString());
@@ -52,6 +52,23 @@ public class PostTest {
         assertEquals("Sample ", "https://danbooru.donmai.us/data/__hatsune_miku_vocaloid_drawn_by_yue_yue__c8191c7018780e6332dc2fb0fb701815.jpg", post.getSample_url());
         assertEquals("File ","https://danbooru.donmai.us/data/sample/__hatsune_miku_vocaloid_drawn_by_yue_yue__sample-c8191c7018780e6332dc2fb0fb701815.jpg", post.getFile_url());
 //        assertEquals("Creator_id ", 497614, post.getCreator_id());
+    }
+
+    @Test
+    public void constructorDanbooru_Test() throws Exception {
+        Post post = new Post(getDataFromBoorAdvanced(Danbooru.get(), 2790300));
+
+        assertEquals("Boor source ", post.getSourceBoor(), Boor.Danbooru.toString());
+        assertEquals("Id ", 2790300, post.getId());
+        assertEquals("Md5 ", "c8191c7018780e6332dc2fb0fb701815", post.getMd5());
+        assertEquals("Rating ", Rating.SAFE, post.getRating());
+        assertEquals("Source ", "https://i.pximg.net/img-original/img/2017/06/07/23/51/29/63264741_p0.jpg", post.getSource());
+        assertEquals("Preview ", "https://danbooru.donmai.us/data/preview/c8191c7018780e6332dc2fb0fb701815.jpg", post.getPreview_url());
+        assertTrue("Tags ", post.getTags().contains("hatsune_miku"));
+        assertEquals("Sample ", "https://danbooru.donmai.us/data/__hatsune_miku_vocaloid_drawn_by_yue_yue__c8191c7018780e6332dc2fb0fb701815.jpg", post.getSample_url());
+        assertEquals("File ","https://danbooru.donmai.us/data/sample/__hatsune_miku_vocaloid_drawn_by_yue_yue__sample-c8191c7018780e6332dc2fb0fb701815.jpg", post.getFile_url());
+        assertEquals("Creator_id ", 497614, post.getCreator_id());
+        assertFalse("Has comments", post.isHas_comments());
     }
 
     @Test

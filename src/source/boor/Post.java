@@ -7,9 +7,10 @@ import java.util.*;
 
 /**
  * Simple class which can describe post from all boors.
- * If you want add new boor  you can use this class or inherit from it.
- * You getting post as is. This means, that you can't modify this element after creating.
+ * <p>If you want add new boor  you can use this class or inherit from it.
+ * <p>You getting post as is. This means, that you can't modify this element after creating.
  * You can only getting data and work with it.
+ * TODO: yandere and sakugabooru is not support searching comments by post_id. Try to find something else...
  */
 public class Post {
     /**
@@ -54,16 +55,26 @@ public class Post {
     private int creator_id;
 
     /**
+     * Are there any comments on the post.
+     */
+    private boolean has_comments;
+
+    /**
+     * Url for comments request.
+     */
+    private String comments_url;
+
+    /**
      * From what boor this post.
      */
     private Boor sourceBoor;
 
     /**
      * Default constructor for basic post entity.
-     * Setup only most important info. Unstable.
+     * <p>Setup only most important info. Unstable.
      *
-     * @param hashMap - map with all attributes. Some of them will be use here.
-     * Another can be used in inherit classes.
+     * @param hashMap    - map with all attributes. Some of them will be use here.
+     *                   Another can be used in inherit classes.
      * @param sourceBoor - from what boor this item will be get.
      */
     public Post(HashMap<String, String> hashMap, Boor sourceBoor) {
@@ -73,27 +84,65 @@ public class Post {
 
     /**
      * Constructor for basic post entity.
-     * Setup only most important info.
-     * Source boor will be undefined.
-     * Unstable.
+     * <p>Setup only most important info.
+     * <p>Source boor will be undefined.
+     * <p>Unstable.
      *
      * @param hashMap - map with all attributes. Some of them will be use here.
-     * Another can be used in inherit classes.
+     *                Another can be used in inherit classes.
      */
     public Post(HashMap<String, String> hashMap) {
         setSourceBoor(hashMap.get("boor"));
         defaultConstructor(hashMap);
     }
 
-    public Post(Boor sourceBoor){
+    /**
+     * Constructor for special boor. It creating in special method "newPostInstance".
+     *
+     * @param sourceBoor - from what boor this item will be get.
+     */
+    public Post(Boor sourceBoor) {
         this.sourceBoor = sourceBoor;
     }
 
-    public Post(){
+    /**
+     * Constructor for special boor. It creating in special method "newPostInstance".
+     * <p>But the boor will be have Undefined status.
+     */
+    public Post() {
         this.sourceBoor = Boor.Undefined;
     }
 
-    private void defaultConstructor(HashMap<String, String> hashMap){
+
+    /**
+     * Default constructor for Posts. It support some formats attributes.
+     * <p>Be careful, if your attributes has specific names -
+     * you must create Post entity in special method {@code newPostInstance(Hashmap&lt;String, String&gt;)} in you boor.
+     * <p>
+     * <p>Support attributes:
+     * <p>    <i>id</i> - post id in boor.
+     * <p>    <i>md5</i> - post hash.
+     * <p>    <i>rating</i> - image rating in post.
+     * <p>    <i>score</i> - post rating.
+     * <p>    <i>source</i> - from what place this post was get.
+     * <p>    <i>preview_url</i> - url to preview image.
+     * <p>    <i>preview_url_file</i> - attribute from danbooru,
+     * so in the start there will be append string "https://danbooru.donmai.us".
+     * <p>    <i>tags</i> - this describes the contents of the message and allow to find similar posts.
+     * <p>    <i>tag_string</i> - same as "<i>tags</i>".
+     * <p>    <i>sample_url</i> - url to sample image view.
+     * <p>    <i>file_url</i> - url to file with high resolution. But for danbooru API there is sample url.
+     * <p>    <i>large_file_url</i> - url to file with high resolution for danbooru API.
+     * <p>    <i>creator_id</i> - id, who's create/upload this post.
+     * <p>    <i>uploader_id</i> - id, who's create/upload this post.
+     * <p>    <i>has_comments</i> - boolean value, which describes, have this post comments or not.
+     * <p>    <i>last_commented_at</i> - same as "<i>has_comments</i>",
+     * but the flag will be {@code true} only if the value will not {@code null}.
+     *
+     * @param hashMap - all post attributes contains here. It has the next structure:
+     *                HashMap&lt;Attribute_name, Attribute_value&gt;.
+     */
+    private void defaultConstructor(HashMap<String, String> hashMap) {
         //create Entry
         Set<Map.Entry<String, String>> entrySet = hashMap.entrySet();
         //for each attribute
@@ -119,40 +168,49 @@ public class Post {
                     setSource(pair.getValue());
                     break;
                 }
-                case "preview_url":{
+                case "preview_url": {
                     setPreview_url(pair.getValue());
                     break;
                 }
-                case "preview_file_url":{
+                case "preview_file_url": {
                     setPreview_url("https://danbooru.donmai.us" + pair.getValue());
                     break;
                 }
                 case "tags":
-                case "tag_string":{
+                case "tag_string": {
                     setTags(pair.getValue());
                     break;
                 }
-                case "sample_url":{
+                case "sample_url": {
                     setSample_url(pair.getValue());
                     break;
                 }
-                case "file_url":{
-                    if (getSourceBoor().equals(Boor.Danbooru)){
+                case "file_url": {
+                    if (getSourceBoor().equals(Boor.Danbooru.toString())) {
                         setSample_url("https://danbooru.donmai.us" + pair.getValue());
                         break;
                     }
                     setFile_url(pair.getValue());
                     break;
                 }
-                case "large_file_url":{
+                case "large_file_url": {
                     setFile_url("https://danbooru.donmai.us" + pair.getValue());
+                    break;
                 }
                 case "creator_id":
-                case "uploader_id":{
+                case "uploader_id": {
                     setCreator_id(Integer.parseInt(pair.getValue()));
                     break;
                 }
+                case "has_comments":
+                case "last_commented_at": {
+                    if (!"null".equals(pair.getValue()) || "true".equals(pair.getValue())) {
+                        setHas_comments(true);
 
+                    } else {
+                        setHas_comments(false);
+                    }
+                }
             }
         }
     }
@@ -194,44 +252,44 @@ public class Post {
     }
 
     final void setSourceBoor(String sourceBoor) {
-        switch(sourceBoor){
-            case "Gelbooru":{
+        switch (sourceBoor) {
+            case "Gelbooru": {
                 this.sourceBoor = Boor.Gelbooru;
                 break;
             }
-            case "Danbooru":{
+            case "Danbooru": {
                 this.sourceBoor = Boor.Danbooru;
                 break;
             }
-            case "Yandere":{
+            case "Yandere": {
                 this.sourceBoor = Boor.Yandere;
                 break;
             }
-            case "E621":{
+            case "E621": {
                 this.sourceBoor = Boor.E621;
                 break;
             }
-            case "Behoimi":{
+            case "Behoimi": {
                 this.sourceBoor = Boor.Behoimi;
                 break;
             }
-            case "Sakugabooru":{
+            case "Sakugabooru": {
                 this.sourceBoor = Boor.Sakugabooru;
                 break;
             }
-            case "Rule34":{
+            case "Rule34": {
                 this.sourceBoor = Boor.Rule34;
                 break;
             }
-            case "SafeBooru":{
+            case "SafeBooru": {
                 this.sourceBoor = Boor.SafeBooru;
                 break;
             }
-            case "Konachan":{
+            case "Konachan": {
                 this.sourceBoor = Boor.Konachan;
                 break;
             }
-            default:{
+            default: {
                 this.sourceBoor = Boor.Undefined;
             }
         }
@@ -268,14 +326,14 @@ public class Post {
 
     protected final void setPreview_url(String preview_url) {
         //when http not defined
-        if (!preview_url.contains("http")){
+        if (!preview_url.contains("http")) {
             this.preview_url = "https:" + preview_url;
-        }else {
+        } else {
             this.preview_url = preview_url;
         }
     }
 
-    protected final void setTags(String tags){
+    protected final void setTags(String tags) {
         String[] split = tags.split(" ");
         this.tags = new HashSet<>(Arrays.asList(split));
     }
@@ -286,9 +344,9 @@ public class Post {
 
     protected final void setSample_url(String sample_url) {
         //when http not defined
-        if (!sample_url.contains("http")){
+        if (!sample_url.contains("http")) {
             this.sample_url = "https:" + sample_url;
-        }else {
+        } else {
             this.sample_url = sample_url;
         }
     }
@@ -299,9 +357,9 @@ public class Post {
 
     protected final void setFile_url(String file_url) {
         //when http not defined
-        if (!file_url.contains("http")){
+        if (!file_url.contains("http")) {
             this.file_url = "https:" + file_url;
-        }else {
+        } else {
             this.file_url = file_url;
         }
     }
@@ -312,5 +370,21 @@ public class Post {
 
     protected final void setCreator_id(int creator_id) {
         this.creator_id = creator_id;
+    }
+
+    public String getComments_url() {
+        return comments_url;
+    }
+
+    public void setComments_url(String comments_url) {
+        this.comments_url = comments_url;
+    }
+
+    public boolean isHas_comments() {
+        return has_comments;
+    }
+
+    public void setHas_comments(boolean has_comments) {
+        this.has_comments = has_comments;
     }
 }

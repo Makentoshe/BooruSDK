@@ -1,15 +1,21 @@
 package engine.parser;
 
-
 import com.google.gson.*;
-import source.boor.Behoimi;
 import source.еnum.Boor;
 
 import java.util.*;
 
 /**
- * Parse JSONArray to a list of posts, where one post - is a hashmap with all data in it.
- * TODO: переделать парсер на манер хмл
+ * This class has one control parameter - {@code reusable} flag. You activate it in constructor,
+ * but if you want, you can set the default value with default constructor help.
+ * As default, this {@code reusable} flag will be true. That means, that after {@code getResult()} method
+ * all data will be reset.
+ *
+ * <p><strong>Note that you can call get {@code getResult()} once. After all data will be reset!.</strong>
+ *
+ * <p>If you set {@code reusable} flag as false, after {@code getResult()} method, all data will be safe
+ * and you can call method endlessly. You can start new parsing process and the parsed data will be append to result.
+ * You can't clear result in this mode. TODO: fix it. Create clear method.
  */
 public class JsonParser {
 
@@ -26,9 +32,11 @@ public class JsonParser {
 
     /**
      * Parsing json with gson help.
+     * It parse two objects - {@code JsonArray} or {@code JsonElement}.
+     * Another objects can be processing incorrectly.
+     * <p>The parse result can be get with {@code getResult()} method help.
      *
      * @param dataToParse - string, which describe json array.
-     * @return list of Hashmaps, where the hashmap is a post.
      */
     public void startParse(String dataToParse) {
         //create gson parser
@@ -50,8 +58,9 @@ public class JsonParser {
     }
 
     /**
-     * @return list of posts
-     * If reusable flag enable we can get result only once.
+     * @return list of Hashmaps, where each hashmap describe one post.
+     * Hashmap has next structure - &lt;Attribute_name, Attrubute_value&gt;.
+     * <p>If reusable flag enable we can get result only once.
      * After, the data will be clear.
      */
     public List<HashMap<String, String>> getResult(){
