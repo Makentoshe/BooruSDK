@@ -1,21 +1,18 @@
-import engine.HttpConnection;
-import engine.parser.JsonParser;
-import engine.parser.XmlParser;
 import source.boor.*;
-
-
-import java.util.*;
 
 /**
  * TODO: create Comment.class and put comments to default Item constructor
+ * TODO: for each boor create comment API access
  */
 public class Main {
 
-
     public static void main(String[] args) {
-        JsonParser parser = new JsonParser();
-
-        parser.startParse("sas");
+        Post post = new Post();
+        System.out.println(post.getMd5());
+        post.setMd5("SAS");
+        System.out.println(post.getMd5());
+        post.setMd5("ASA");
+        System.out.println(post.getMd5());
     }
 
 }

@@ -36,7 +36,7 @@ public class JsonParser {
      * Another objects can be processing incorrectly.
      * <p>The parse result can be get with {@code getResult()} method help.
      *
-     * @param dataToParse - string, which describe json array.
+     * @param dataToParse string, which describe json array.
      */
     public void startParse(String dataToParse) {
         //create gson parser
@@ -58,10 +58,11 @@ public class JsonParser {
     }
 
     /**
-     * @return list of Hashmaps, where each hashmap describe one post.
-     * Hashmap has next structure - &lt;Attribute_name, Attrubute_value&gt;.
-     * <p>If reusable flag enable we can get result only once.
+     * If reusable flag enable we can get result only once.
      * After, the data will be clear.
+     *
+     * @return list of Hashmaps, where each Hashmap describe one post.
+     * Hashmap has next structure - &lt;Attribute_name, Attrubute_value&gt;.
      */
     public List<HashMap<String, String>> getResult(){
         if (reusable) {
