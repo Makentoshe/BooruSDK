@@ -13,11 +13,11 @@ import java.util.HashMap;
  * <tt>getPostByIdRequest</tt>, <tt>getPackByTagsRequest</tt> and
  * <tt>newPostInstance</tt>.
  * <p>
- *     You also need to implement <tt>getFormat</tt> and <tt>getApi</tt>.
- *     So, you need to create 2 fields - {@code Format} and {@code Api}.
- *     They should be explicitly set <strong>and not be null</strong>.
- *     But then you can change them by custom methods.
- *     <tt>getFormat</tt> and <tt>getApi</tt> implements must return this fields.
+ * You also need to implement <tt>getFormat</tt> and <tt>getApi</tt>.
+ * So, you need to create 2 fields - {@code Format} and {@code Api}.
+ * They should be explicitly set <strong>and not be null</strong>.
+ * But then you can change them by custom methods.
+ * <tt>getFormat</tt> and <tt>getApi</tt> implements must return this fields.
  */
 public abstract class AbstractBoor {
 
@@ -57,8 +57,8 @@ public abstract class AbstractBoor {
     /**
      * Construct request by id.
      *
-     * @param id      post id.
-     * @param format  result format.
+     * @param id     post id.
+     * @param format result format.
      * @return complete request for item with id.
      */
     public abstract String getPostByIdRequest(int id, Format format);
@@ -67,29 +67,29 @@ public abstract class AbstractBoor {
      * Create request for getting some posts by tags.
      *
      * @param limit  how many posts must be in page.
-     * @param tags  the tags to search for.
-     * @param page  page index(from zero).
-     * @param format  format result(Can be JSON or XML)
+     * @param tags   the tags to search for.
+     * @param page   page index(from zero).
+     * @param format format result(Can be JSON or XML)
      * @return constructed request to this server.
      */
     public abstract String getPackByTagsRequest(int limit, String tags, int page, Format format);
 
     /**
-     * Create request for getting some posts by tags. The format is getting from the getFormat() method.
-     * As default there will be JSON format.
+     * Create request for getting some posts by tags.
+     * The format is getting from the getFormat() method.
      *
      * @param limit - how many items must be in page.
-     * @param tags - the tags to search for.
-     * @param page - page index(from zero).
+     * @param tags  - the tags to search for.
+     * @param page  - page index(from zero).
      * @return constructed request to this server.
      */
-    public final String getPackByTagsRequest(int limit, String tags, int page){
+    public final String getPackByTagsRequest(int limit, String tags, int page) {
         return getPackByTagsRequest(limit, tags, page, getFormat());
     }
 
     /**
      * Empty method for boor.
-     * Here we can create Post and create remote "constructor".
+     * Here you can create Post and create remote "constructor".
      *
      * @param attributes list of all post attributes
      * @return Post entity with setted data.

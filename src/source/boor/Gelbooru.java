@@ -26,7 +26,7 @@ public class Gelbooru extends AbstractBoorBasic {
 
     @Override
     public Post newPostInstance(HashMap<String, String> attributes){
-        Post post = new Post(Boor.Gelbooru);
+        Post post = new Post(instance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
         //for each attribute

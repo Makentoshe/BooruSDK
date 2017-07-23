@@ -106,7 +106,7 @@ public class XmlParser extends DefaultHandler {
         String boor = "";
         if (url.contains("gelbooru")) boor = Boor.Gelbooru.toString();
         else if (url.contains("rule34")) boor = Boor.Rule34.toString();
-        else if (url.contains("safebooru")) boor = Boor.SafeBooru.toString();
+        else if (url.contains("safebooru")) boor = Boor.Safebooru.toString();
         return boor;
     }
 }

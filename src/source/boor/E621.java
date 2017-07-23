@@ -42,7 +42,7 @@ public class E621 extends AbstractBoorAdvanced {
 
     @Override
     public Post newPostInstance(HashMap<String, String> attributes){
-        Post post = new Post(Boor.E621);
+        Post post = new Post(instance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
         //for each attribute

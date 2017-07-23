@@ -1,5 +1,6 @@
 package source;
 
+import source.boor.AbstractBoor;
 import source.еnum.Rating;
 import source.еnum.Boor;
 
@@ -69,7 +70,9 @@ public class Post {
 
     private String comments_url = null;
 
-    private Boor sourceBoor = null;
+    private String sourceBoor = null;
+
+    private AbstractBoor sourceBoorRef = null;
 
     /**
      * Default constructor for basic post entity.
@@ -79,8 +82,10 @@ public class Post {
      *                   Another can be used in inherit classes.
      * @param sourceBoor from what boor this item will be get.
      */
-    public Post(HashMap<String, String> hashMap, Boor sourceBoor) {
-        this.sourceBoor = sourceBoor;
+    public Post(HashMap<String, String> hashMap, AbstractBoor sourceBoor) {
+        sourceBoorRef = sourceBoor;
+        this.sourceBoor = sourceBoorRef.getClass().getSimpleName();
+
         defaultConstructor(hashMap);
     }
 
@@ -102,8 +107,9 @@ public class Post {
      *
      * @param sourceBoor from what boor this item will be get.
      */
-    public Post(Boor sourceBoor) {
-        this.sourceBoor = sourceBoor;
+    public Post(AbstractBoor sourceBoor) {
+        sourceBoorRef = sourceBoor;
+        this.sourceBoor = sourceBoorRef.getClass().getSimpleName();
     }
 
     /**
@@ -111,7 +117,7 @@ public class Post {
      * <p>But the boor will be have {@code Undefined} status.
      */
     public Post() {
-        this.sourceBoor = Boor.Undefined;
+        this.sourceBoor = Boor.Undefined.toString();
     }
 
 
@@ -186,6 +192,13 @@ public class Post {
                 }
             }
         }
+        //after all check comments flag
+        if (has_comments[0]){
+            //and if true - setup comments url.
+            System.out.println("SAS");
+
+            comments_url = "put url here";
+        }
 
     }
 
@@ -249,7 +262,7 @@ public class Post {
      * Getting string with name, from where boor  this post. If data will not defined - method return {@code null}.
      */
     public String getSourceBoor() {
-        return sourceBoor.toString();
+        return sourceBoor;
     }
 
     /**
@@ -257,48 +270,7 @@ public class Post {
      */
     public final void setSourceBoor(String sourceBoor) {
         if (this.sourceBoor != null) return;
-
-        switch (sourceBoor) {
-            case "Gelbooru": {
-                this.sourceBoor = Boor.Gelbooru;
-                break;
-            }
-            case "Danbooru": {
-                this.sourceBoor = Boor.Danbooru;
-                break;
-            }
-            case "Yandere": {
-                this.sourceBoor = Boor.Yandere;
-                break;
-            }
-            case "E621": {
-                this.sourceBoor = Boor.E621;
-                break;
-            }
-            case "Behoimi": {
-                this.sourceBoor = Boor.Behoimi;
-                break;
-            }
-            case "Sakugabooru": {
-                this.sourceBoor = Boor.Sakugabooru;
-                break;
-            }
-            case "Rule34": {
-                this.sourceBoor = Boor.Rule34;
-                break;
-            }
-            case "SafeBooru": {
-                this.sourceBoor = Boor.SafeBooru;
-                break;
-            }
-            case "Konachan": {
-                this.sourceBoor = Boor.Konachan;
-                break;
-            }
-            default: {
-                this.sourceBoor = Boor.Undefined;
-            }
-        }
+        this.sourceBoor = sourceBoor;
     }
 
     /**

@@ -1,4 +1,4 @@
-package test.source.boor;
+package test.source;
 
 import engine.HttpConnection;
 import source.Post;
@@ -17,7 +17,7 @@ public class PostTest {
 
     private HashMap<String, String> getDataFromBoorAdvanced(AbstractBoorAdvanced boor, int id) throws Exception {
         String request1 = boor.getPostByIdRequest(id);
-        System.out.println(request1);
+        //System.out.println(request1);
         HttpConnection connection = new HttpConnection(false);
         String responseData1 = connection.getRequest(request1);
 
@@ -30,7 +30,7 @@ public class PostTest {
 
     private HashMap<String, String> getDataFromBoorBasic(AbstractBoorBasic boor, int id) throws Exception {
         String request1 = boor.getPostByIdRequest(id);
-        System.out.println(request1);
+        //System.out.println(request1);
 
         XmlParser parser = new XmlParser();
 
@@ -93,7 +93,7 @@ public class PostTest {
     public void constructorPostInSafebooru_Test() throws Exception {
         Post post = Safebooru.get().newPostInstance(getDataFromBoorBasic(Safebooru.get(), 2278871));
 
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.SafeBooru.toString());
+        assertEquals("Boor source ", post.getSourceBoor(), Boor.Safebooru.toString());
         assertEquals("Id ", 2278871, post.getId());
         assertEquals("Md5 ","b5e3bdd52dbcbf8f8715bec584ee87e8", post.getMd5());
         assertEquals("Rating ",Rating.SAFE, post.getRating());

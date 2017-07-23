@@ -26,7 +26,7 @@ public class Rule34 extends AbstractBoorBasic{
     }
 
     public Post newPostInstance(HashMap<String, String> attributes){
-        Post post = new Post(Boor.Rule34);
+        Post post = new Post(instance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
         //for each attribute

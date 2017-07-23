@@ -10,7 +10,7 @@ public enum  Boor {
     Gelbooru,
     Konachan,
     Rule34,
-    SafeBooru,
+    Safebooru,
     Sakugabooru,
     Yandere,
     Undefined
