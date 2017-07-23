@@ -38,7 +38,8 @@ public class Danbooru extends AbstractBoorAdvanced {
         return getCustomRequest("posts."+format.toString().toLowerCase()+"?tags="+tags+"&limit=" + limit + "&page=" + page);
     }
 
-    public String getCommentByPostIdRequest(int post_id, Format format){
+    @Override
+    public String getCommentsByPostIdRequest(int post_id, Format format){
         return getCustomRequest("comments."+format.toString().toLowerCase()+"?group_by=comment&search[post_id]=" + post_id);
     }
 

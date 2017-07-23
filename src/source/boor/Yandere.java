@@ -44,6 +44,11 @@ public class Yandere extends AbstractBoorAdvanced {
     }
 
     @Override
+    public String getCommentsByPostIdRequest(int post_id, Format format) {
+        return null;
+    }
+
+    @Override
     public Post newPostInstance(HashMap<String, String> attributes){
         Post post = new Post(instance);
         //create Entry

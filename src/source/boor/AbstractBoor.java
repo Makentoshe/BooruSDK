@@ -78,13 +78,35 @@ public abstract class AbstractBoor {
      * Create request for getting some posts by tags.
      * The format is getting from the getFormat() method.
      *
-     * @param limit - how many items must be in page.
-     * @param tags  - the tags to search for.
-     * @param page  - page index(from zero).
+     * @param limit how many items must be in page.
+     * @param tags  the tags to search for.
+     * @param page  page index(from zero).
      * @return constructed request to this server.
      */
     public final String getPackByTagsRequest(int limit, String tags, int page) {
         return getPackByTagsRequest(limit, tags, page, getFormat());
+    }
+
+
+    /**
+     * Create request for getting comments by post id.
+     *
+     * @param post_id post, for which comment will be searching
+     * @param format in what format must be result output.
+     * @return constructed request to server.
+     */
+    public abstract String getCommentsByPostIdRequest(int post_id, Format format);
+
+
+    /**
+     * Create request for getting comments by post id.
+     * The format is getting from the getFormat() method.
+     *
+     * @param post_id post, for which comment will be searching
+     * @return constructed request to server.
+     */
+    public final String getCommentsByPostIdRequest(int post_id){
+        return getCommentsByPostIdRequest(post_id, getFormat());
     }
 
     /**

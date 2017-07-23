@@ -2,6 +2,7 @@ package source.boor;
 
 import source.Post;
 import source.еnum.Boor;
+import source.еnum.Format;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,11 @@ public class Rule34 extends AbstractBoorBasic{
     @Override
     public String getCustomRequest(String request) {
         return "https://rule34.xxx/index.php?page=dapi&q=index&s=" + request;
+    }
+
+    @Override
+    public String getCommentsByPostIdRequest(int post_id, Format format) {
+        return getCustomRequest("comment&post_id=" + post_id);
     }
 
     public Post newPostInstance(HashMap<String, String> attributes){

@@ -2,6 +2,7 @@ package source.boor;
 
 import source.Post;
 import source.еnum.Boor;
+import source.еnum.Format;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,4 +74,8 @@ public class Gelbooru extends AbstractBoorBasic {
         return post;
     }
 
+    @Override
+    public String getCommentsByPostIdRequest(int post_id, Format ignored) {
+        return getCustomRequest("comment&post_id=" + post_id);
+    }
 }

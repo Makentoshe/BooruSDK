@@ -80,7 +80,7 @@ public class Post {
      *
      * @param hashMap map with all attributes. Some of them will be use here.
      *                   Another can be used in inherit classes.
-     * @param sourceBoor from what boor this item will be get.
+     * @param sourceBoor reference to boor, from what this post.
      */
     public Post(HashMap<String, String> hashMap, AbstractBoor sourceBoor) {
         sourceBoorRef = sourceBoor;
@@ -91,7 +91,8 @@ public class Post {
 
     /**
      * Constructor for basic post entity.
-     * <p>Source boor will be undefined.
+     * <p>Source boor will be undefined in start,
+     * but in the constructor ending the source will be defined.
      * <p>Unstable.
      *
      * @param hashMap map with all attributes. Some of them will be use here.
@@ -105,7 +106,7 @@ public class Post {
     /**
      * Constructor for special boor. It creating in special method {@code newPostInstance(Hashmap&lt;String, String&gt;)}.
      *
-     * @param sourceBoor from what boor this item will be get.
+     * @param sourceBoor reference to boor, from what this post.
      */
     public Post(AbstractBoor sourceBoor) {
         sourceBoorRef = sourceBoor;
@@ -195,9 +196,7 @@ public class Post {
         //after all check comments flag
         if (has_comments[0]){
             //and if true - setup comments url.
-            System.out.println("SAS");
-
-            comments_url = "put url here";
+            comments_url = sourceBoorRef.getCommentsByPostIdRequest(id);
         }
 
     }

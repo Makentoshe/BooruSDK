@@ -36,6 +36,11 @@ public class Sakugabooru extends AbstractBoorAdvanced {
     }
 
     @Override
+    public String getCommentsByPostIdRequest(int post_id, Format format) {
+        return null;
+    }
+
+    @Override
     public String getPostByIdRequest(int id, Format format) {
         return getCustomRequest("post." + format.toString().toLowerCase() + "?tags=id:" + id);
     }
