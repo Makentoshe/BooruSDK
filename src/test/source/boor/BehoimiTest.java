@@ -34,7 +34,7 @@ public class BehoimiTest {
 
     @Test
     public void getIdRequest_Test() throws Exception {
-        String request = Behoimi.get().getIdRequest(637175);
+        String request = Behoimi.get().getPostByIdRequest(637175);
         String expected = "http://behoimi.org/post/index.json?tags=id:637175";
         assertEquals(expected, request);
     }

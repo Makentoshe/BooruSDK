@@ -1,4 +1,4 @@
-import source.boor.*;
+import source.Post;
 
 /**
  * TODO: create Comment.class and put comments to default Item constructor

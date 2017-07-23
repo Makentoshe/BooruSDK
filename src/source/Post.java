@@ -1,4 +1,4 @@
-package source.boor;
+package source;
 
 import source.еnum.Rating;
 import source.еnum.Boor;
@@ -186,6 +186,7 @@ public class Post {
                 }
             }
         }
+
     }
 
     /**

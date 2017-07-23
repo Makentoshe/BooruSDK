@@ -35,7 +35,7 @@ public class SakugabooruTest {
 
     @Test
     public void getIdRequest_Test() throws Exception{
-        String request = Sakugabooru.get().getIdRequest(401562);
+        String request = Sakugabooru.get().getPostByIdRequest(401562);
         String expected = "https://sakugabooru.com/post.json?tags=id:401562";
         assertEquals(expected, request);
     }

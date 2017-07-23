@@ -1,5 +1,6 @@
 package source.boor;
 
+import source.Post;
 import source.еnum.Api;
 import source.еnum.Format;
 
@@ -8,58 +9,33 @@ import java.util.HashMap;
 /**
  * Abstract class fo boor realisation with Basic API.
  */
-public abstract class AbstractBoorBasic {
+public abstract class AbstractBoorBasic extends AbstractBoor{
 
-    private final Format format = Format.XML;
+    protected final Format format = Format.XML;
 
+    protected final Api api = Api.BASICS;
+
+    @Override
     public final Format getFormat(){
         return format;
     }
 
-    private final Api api = Api.BASICS;
-
+    @Override
     public final Api getApi() {
         return api;
     }
 
-    /**
-     * Construct custom request.
-     *
-     * @param request - request.
-     * @return complete get request
-     */
-    public abstract String getCustomRequest(String request);
-
-    /**
-     * Construct request by id.
-     *
-     * @param id     - post id.
-     * @return complete request for post with id.
-     */
-    public String getIdRequest(int id) {
+    @Override
+    public String getPostByIdRequest(int id, Format ignored) {
         return getCustomRequest("post&id=" + String.valueOf(id));
     }
 
-    /**
-     * Create request for getting some posts by tags.
-     *
-     * @param limit - how posts must be in page.
-     * @param tags - the tags to search for.
-     * @param page - page index(from zero).
-     * @return constructed request to this server.
-     */
-    public String getPackByTagsRequest(int limit, String tags, int page){
+    @Override
+    public String getPackByTagsRequest(int limit, String tags, int page, Format ignored){
         return getCustomRequest("post&limit=" + limit + "&tags=" + tags + "&pid=" + page);
     }
 
-
-    /**
-     * Empty method for boor.
-     * Here we can create Post and create remote "constructor".
-     *
-     * @param attributes - list of all post attributes
-     * @return Post entity with setted data.
-     */
+    @Override
     public Post newPostInstance(HashMap<String, String> attributes){
         return null;
     }

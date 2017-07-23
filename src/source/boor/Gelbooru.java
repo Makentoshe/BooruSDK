@@ -1,5 +1,6 @@
 package source.boor;
 
+import source.Post;
 import source.еnum.Boor;
 
 import java.util.HashMap;

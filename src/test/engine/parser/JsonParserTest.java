@@ -64,7 +64,7 @@ public class JsonParserTest {
         //create connection
         HttpConnection connection = new HttpConnection(false);
         //get data from server
-        String responseData = connection.getRequest(Danbooru.get().getIdRequest(2790300));
+        String responseData = connection.getRequest(Danbooru.get().getPostByIdRequest(2790300));
         //create parser
         JsonParser parser = new JsonParser();
         //start parse data

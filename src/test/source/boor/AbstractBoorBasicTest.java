@@ -17,7 +17,7 @@ public class AbstractBoorBasicTest {
 
     @Test
     public void getIdRequest() throws Exception {
-        String request = Gelbooru.get().getIdRequest(2281488);
+        String request = Gelbooru.get().getPostByIdRequest(2281488);
         String expected = "https://gelbooru.com/index.php?page=dapi&q=index&s=post&id=2281488";
         assertEquals(expected, request);
     }

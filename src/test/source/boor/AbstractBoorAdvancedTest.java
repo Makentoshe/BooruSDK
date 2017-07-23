@@ -12,14 +12,14 @@ public class AbstractBoorAdvancedTest {
 
     @Test
     public void getIdRequest_Test() throws Exception {
-        String request = Danbooru.get().getIdRequest(2281488);
+        String request = Danbooru.get().getPostByIdRequest(2281488);
         String expected = "https://danbooru.donmai.us/posts/2281488.json";
         assertEquals(expected, request);
     }
 
     @Test
     public void getIdRequestWithFormat_Test() throws Exception {
-        String request = Danbooru.get().getIdRequest(2281488, Format.XML);
+        String request = Danbooru.get().getPostByIdRequest(2281488, Format.XML);
         String expected = "https://danbooru.donmai.us/posts/2281488.xml";
         assertEquals(expected, request);
     }

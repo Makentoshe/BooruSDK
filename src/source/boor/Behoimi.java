@@ -1,5 +1,6 @@
 package source.boor;
 
+import source.Post;
 import source.еnum.Boor;
 import source.еnum.Format;
 
@@ -19,15 +20,13 @@ public class Behoimi extends AbstractBoorAdvanced {
         return instance;
     }
 
-    private Format format = Format.JSON;
+
 
     public void setFormat(Format format) {
         this.format = format;
     }
 
-    public Format getFormat() {
-        return format;
-    }
+
 
     @Override
     public String getCustomRequest(String request) {
@@ -35,7 +34,7 @@ public class Behoimi extends AbstractBoorAdvanced {
     }
 
     @Override
-    public String getIdRequest(int id, Format format) {
+    public String getPostByIdRequest(int id, Format format) {
         return getCustomRequest("post/index." + format.toString().toLowerCase() + "?tags=id:" + id);
     }
 

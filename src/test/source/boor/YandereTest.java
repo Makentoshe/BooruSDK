@@ -2,7 +2,6 @@ package test.source.boor;
 
 import org.junit.Before;
 import org.junit.Test;
-import source.boor.Sakugabooru;
 import source.boor.Yandere;
 import source.еnum.Api;
 import source.еnum.Format;
@@ -36,7 +35,7 @@ public class YandereTest {
 
     @Test
     public void getIdRequest_Test() throws Exception{
-        String request = Yandere.get().getIdRequest(401562);
+        String request = Yandere.get().getPostByIdRequest(401562);
         String expected = "https://yande.re/post.json?tags=id:401562";
         assertEquals(expected, request);
     }

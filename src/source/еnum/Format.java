@@ -6,4 +6,5 @@ package source.еnum;
 public enum Format {
     XML, //basic content - all post data is storing is an attributes
     JSON, //for each data seg new tag
+    UNDEFINED
 }

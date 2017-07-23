@@ -1,5 +1,6 @@
 package source.boor;
 
+import source.Post;
 import source.еnum.Boor;
 import source.еnum.Format;
 
@@ -20,15 +21,12 @@ public class Danbooru extends AbstractBoorAdvanced {
     }
 
 
-    private Format format = Format.JSON;
 
     public void setFormat(Format format){
         this.format = format;
     }
 
-    public Format getFormat() {
-        return format;
-    }
+
 
     @Override
     public String getCustomRequest(String request) {
@@ -40,7 +38,11 @@ public class Danbooru extends AbstractBoorAdvanced {
         return getCustomRequest("posts."+format.toString().toLowerCase()+"?tags="+tags+"&limit=" + limit + "&page=" + page);
     }
 
+    public String getCommentByPostIdRequest(int post_id, Format format){
+        return getCustomRequest("comments."+format.toString().toLowerCase()+"?group_by=comment&search[post_id]=" + post_id);
+    }
 
+    @Override
     public Post newPostInstance(HashMap<String, String> attributes){
         Post post = new Post(Boor.Danbooru);
         //create Entry

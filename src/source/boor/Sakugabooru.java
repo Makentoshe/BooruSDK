@@ -1,5 +1,6 @@
 package source.boor;
 
+import source.Post;
 import source.еnum.Boor;
 import source.еnum.Format;
 
@@ -16,15 +17,12 @@ public class Sakugabooru extends AbstractBoorAdvanced {
         return instance;
     }
 
-    private Format format = Format.JSON;
+
 
     public void setFormat(Format format){
         this.format = format;
     }
 
-    public Format getFormat() {
-        return format;
-    }
 
 
     @Override
@@ -38,10 +36,11 @@ public class Sakugabooru extends AbstractBoorAdvanced {
     }
 
     @Override
-    public String getIdRequest(int id, Format format) {
+    public String getPostByIdRequest(int id, Format format) {
         return getCustomRequest("post." + format.toString().toLowerCase() + "?tags=id:" + id);
     }
 
+    @Override
     public Post newPostInstance(HashMap<String, String> attributes){
         Post post = new Post(Boor.Sakugabooru);
         //create Entry

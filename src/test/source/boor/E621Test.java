@@ -35,7 +35,7 @@ public class E621Test {
 
     @Test
     public void getIdRequest_Test() throws Exception {
-        String request = E621.get().getIdRequest(1263892);
+        String request = E621.get().getPostByIdRequest(1263892);
         String expected = "https://e621.net/post/show.json?id=1263892";
         assertEquals(expected, request);
     }

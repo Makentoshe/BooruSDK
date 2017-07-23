@@ -35,7 +35,7 @@ public class KonachanTest {
 
     @Test
     public void getIdRequest_Test() throws Exception {
-        String request = Konachan.get().getIdRequest(246852);
+        String request = Konachan.get().getPostByIdRequest(246852);
         String expected = "https://konachan.com/post.json?tags=id:246852";
         assertEquals(expected, request);
     }
