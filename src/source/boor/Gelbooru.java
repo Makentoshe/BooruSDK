@@ -69,7 +69,28 @@ public class Gelbooru extends AbstractBoorBasic {
                     post.setSource(pair.getValue());
                     break;
                 }
+                case "creator_id": {
+                    post.setCreator_id(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "has_comments": {
+                    if ("true".equals(pair.getValue())) {
+                        post.setHas_comments(true);
+                    } else {
+                        post.setHas_comments(false);
+                    }
+                    break;
+                }
+                case "created_at":{
+                    post.setCreate_time(pair.getValue());
+                    break;
+                }
             }
+        }
+        //after all check comments flag
+        if (post.isHas_comments()){
+            //and if true - setup comments url.
+            post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
         }
         return post;
     }

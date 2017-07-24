@@ -44,6 +44,7 @@ import java.util.*;
  *
  */
 //TODO: yandere and sakugabooru is not support searching comments by post_id. Try to find something else...
+//TODO they have "last_commented_at" attribute. Check what is it.
 public class Post {
 
     private int id = Integer.MIN_VALUE;
@@ -74,6 +75,8 @@ public class Post {
 
     private AbstractBoor sourceBoorRef = null;
 
+    private String create_time = null;
+
     /**
      * Default constructor for basic post entity.
      * <p>Unstable.
@@ -89,22 +92,23 @@ public class Post {
         defaultConstructor(hashMap);
     }
 
-    /**
-     * Constructor for basic post entity.
-     * <p>Source boor will be undefined in start,
-     * but in the constructor ending the source will be defined.
-     * <p>Unstable.
-     *
-     * @param hashMap map with all attributes. Some of them will be use here.
-     *                Another can be used in inherit classes.
-     */
-    public Post(HashMap<String, String> hashMap) {
-        setSourceBoor(hashMap.get("boor"));
-        defaultConstructor(hashMap);
-    }
+//    /**
+//     * Constructor for basic post entity.
+//     * <p>Source boor will be undefined in start,
+//     * but in the constructor ending the source will be defined.
+//     * <p>Unstable.
+//     *
+//     * @param hashMap map with all attributes. Some of them will be use here.
+//     *                Another can be used in inherit classes.
+//     */
+//    public Post(HashMap<String, String> hashMap) {
+//        setSourceBoor(hashMap.get("boor"));
+//        defaultConstructor(hashMap);
+//    }
 
     /**
-     * Constructor for special boor. It creating in special method {@code newPostInstance(Hashmap&lt;String, String&gt;)}.
+     * Constructor for special boor.
+     * It creating in special method {@code newPostInstance(Hashmap&lt;String, String&gt;)}.
      *
      * @param sourceBoor reference to boor, from what this post.
      */
@@ -190,6 +194,7 @@ public class Post {
                     } else {
                         setHas_comments(false);
                     }
+                    break;
                 }
             }
         }
@@ -422,5 +427,21 @@ public class Post {
     public void setHas_comments(boolean has_comments) {
         if (this.has_comments != null) return;
         this.has_comments = new boolean[]{has_comments};
+    }
+
+    /**
+     * Getting String value - raw data form the attribute, responsible for the creation time.
+     * If data will not defined - method return {@code null}.
+     */
+    public String getCreate_time() {
+        return create_time;
+    }
+
+    /**
+     * Method will be success only if data was not defined yet.
+     */
+    public void setCreate_time(String create_time) {
+        if (this.create_time != null) return;
+        this.create_time = create_time;
     }
 }

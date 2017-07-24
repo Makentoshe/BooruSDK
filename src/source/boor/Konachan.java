@@ -87,6 +87,14 @@ public class Konachan extends AbstractBoorAdvanced {
                     post.setSource(pair.getValue());
                     break;
                 }
+                case "creator_id": {
+                    post.setCreator_id(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "created_at":{
+                    post.setCreate_time(pair.getValue());
+                    break;
+                }
             }
         }
         return post;

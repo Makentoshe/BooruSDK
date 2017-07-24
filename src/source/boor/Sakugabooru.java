@@ -8,7 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-
+/**
+ * Singleton.
+ * Storage data about Sakugabooru API and methods for getting request.
+ * Not supported "has_comments" and comment searching.
+ */
 public class Sakugabooru extends AbstractBoorAdvanced {
 
     private final static Sakugabooru instance = new Sakugabooru();
@@ -87,6 +91,14 @@ public class Sakugabooru extends AbstractBoorAdvanced {
                 }
                 case "source":{
                     post.setSource(pair.getValue());
+                    break;
+                }
+                case "creator_id": {
+                    post.setCreator_id(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "created_at":{
+                    post.setCreate_time(pair.getValue());
                     break;
                 }
             }
