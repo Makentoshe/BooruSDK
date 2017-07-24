@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 public class PostTest {
 
-    private HashMap<String, String> getDataFromBoorAdvanced(AbstractBoorAdvanced boor, int id) throws Exception {
+    public static HashMap<String, String> getDataFromBoorAdvanced(AbstractBoorAdvanced boor, int id) throws Exception {
         String request1 = boor.getPostByIdRequest(id);
         //System.out.println(request1);
         HttpConnection connection = new HttpConnection(false);
@@ -28,7 +28,7 @@ public class PostTest {
         return parser.getResult().get(0);
     }
 
-    private HashMap<String, String> getDataFromBoorBasic(AbstractBoorBasic boor, int id) throws Exception {
+    public static HashMap<String, String> getDataFromBoorBasic(AbstractBoorBasic boor, int id) throws Exception {
         String request1 = boor.getPostByIdRequest(id);
         //System.out.println(request1);
 
@@ -39,46 +39,8 @@ public class PostTest {
     }
 
     @Test
-    public void constructorPostInDanbooru_Test() throws Exception {
-        Post post = Danbooru.get().newPostInstance(getDataFromBoorAdvanced(Danbooru.get(), 2794154));
-
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.Danbooru.toString());
-        assertEquals("Id ", 2794154, post.getId());
-        assertEquals("Md5 ", "caf360797479bc7ba19eff236c51f533", post.getMd5());
-        assertEquals("Rating ", Rating.SAFE, post.getRating());
-        assertEquals("Source ", "https://e-hentai.org/s/700eced279/851542-9", post.getSource());
-        assertEquals("Preview ", "https://danbooru.donmai.us/data/preview/caf360797479bc7ba19eff236c51f533.jpg", post.getPreview_url());
-        assertTrue("Tags ", post.getTags().contains("touhou"));
-        assertEquals("Sample ", "https://danbooru.donmai.us/data/__flandre_scarlet_patchouli_knowledge_remilia_scarlet_and_wakasagihime_touhou_drawn_by_makako_yume_bouei_shoujo_tai__caf360797479bc7ba19eff236c51f533.png", post.getSample_url());
-        assertEquals("File ","https://danbooru.donmai.us/data/sample/__flandre_scarlet_patchouli_knowledge_remilia_scarlet_and_wakasagihime_touhou_drawn_by_makako_yume_bouei_shoujo_tai__sample-caf360797479bc7ba19eff236c51f533.jpg", post.getFile_url());
-        assertEquals("Creator_id ", 485320, post.getCreator_id());
-        assertTrue("Has comments", post.isHas_comments());
-        assertEquals("Comment url", "https://danbooru.donmai.us/comments.json?group_by=comment&search[post_id]=2794154", post.getComments_url());
-        assertEquals("Create Time", "2017-07-21T04:18:16.598-04:00", post.getCreate_time());
-    }
-
-    @Test
-    public void constructorDanbooru_Test() throws Exception {
-        Post post = new Post(getDataFromBoorAdvanced(Danbooru.get(), 2794154), Danbooru.get());
-
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.Danbooru.toString());
-        assertEquals("Id ", 2794154, post.getId());
-        assertEquals("Md5 ", "caf360797479bc7ba19eff236c51f533", post.getMd5());
-        assertEquals("Rating ", Rating.SAFE, post.getRating());
-        assertEquals("Source ", "https://e-hentai.org/s/700eced279/851542-9", post.getSource());
-        assertEquals("Preview ", "https://danbooru.donmai.us/data/preview/caf360797479bc7ba19eff236c51f533.jpg", post.getPreview_url());
-        assertTrue("Tags ", post.getTags().contains("touhou"));
-        assertEquals("Sample ", "https://danbooru.donmai.us/data/__flandre_scarlet_patchouli_knowledge_remilia_scarlet_and_wakasagihime_touhou_drawn_by_makako_yume_bouei_shoujo_tai__caf360797479bc7ba19eff236c51f533.png", post.getSample_url());
-        assertEquals("File ","https://danbooru.donmai.us/data/sample/__flandre_scarlet_patchouli_knowledge_remilia_scarlet_and_wakasagihime_touhou_drawn_by_makako_yume_bouei_shoujo_tai__sample-caf360797479bc7ba19eff236c51f533.jpg", post.getFile_url());
-        assertEquals("Creator_id ", 485320, post.getCreator_id());
-        assertTrue("Has comments", post.isHas_comments());
-        assertEquals("Comment url", "https://danbooru.donmai.us/comments.json?group_by=comment&search[post_id]=2794154", post.getComments_url());
-        assertEquals("Create Time", "2017-07-21T04:18:16.598-04:00", post.getCreate_time());
-    }
-
-    @Test
-    public void constructorPostInGelbooru_Test() throws Exception {
-        Post post = Gelbooru.get().newPostInstance(getDataFromBoorBasic(Gelbooru.get(), 3785972));
+    public void constructorGelbooru_Test() throws Exception {
+        Post post = new Post(getDataFromBoorBasic(Gelbooru.get(), 3785972), Gelbooru.get());
 
         assertEquals(post.getSourceBoor(), Boor.Gelbooru.toString());
         assertEquals(3785972, post.getId());

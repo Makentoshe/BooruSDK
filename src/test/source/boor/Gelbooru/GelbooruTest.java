@@ -1,4 +1,4 @@
-package test.source.boor;
+package test.source.boor.Gelbooru;
 
 import org.junit.Test;
 import source.boor.Gelbooru;
@@ -7,6 +7,7 @@ import source.еnum.Format;
 
 import static org.junit.Assert.*;
 
+//default test for correct basic methods.
 public class GelbooruTest {
 
     @Test

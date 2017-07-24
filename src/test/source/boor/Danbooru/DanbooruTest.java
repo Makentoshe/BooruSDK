@@ -1,4 +1,4 @@
-package test.source.boor;
+package test.source.boor.Danbooru;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +8,8 @@ import source.еnum.Format;
 
 import static org.junit.Assert.*;
 
+
+//default test for correct basic methods.
 public class DanbooruTest {
 
     @Before

@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * Simple class which can describe post from all boors.
  * <p>
- *     If you want add new boor you can use this class or inherit from it.
+ *     If you want add new boor you can use this class or extend it.
  * <p>
  *     You getting post as is. This means, that you can't modify this element after creating.
  * You can dynamically add data to entity, but if the data is already defined, you can't change it.
@@ -41,10 +41,12 @@ import java.util.*;
  * <p>    <i>has_comments</i> - boolean value, which describes, have this post comments or not.
  * <p>    <i>last_commented_at</i> - same as "<i>has_comments</i>",
  * but the flag will be {@code true} only if the value will not {@code null}.
+ * <p>    <i>created_at</i> - show time, when post was created. Each boor storage this data in onw format,
+ * so, method <tt>getCreate_time</tt> return a raw data from server in String. You must process it alone.
  *
+ * @see Comment
  */
 //TODO: yandere and sakugabooru is not support searching comments by post_id. Try to find something else...
-//TODO they have "last_commented_at" attribute. Check what is it.
 public class Post {
 
     private int id = Integer.MIN_VALUE;
@@ -188,11 +190,10 @@ public class Post {
                 }
                 case "has_comments":
                 case "last_commented_at": {
-                    if (!"null".equals(pair.getValue()) || "true".equals(pair.getValue())) {
-                        setHas_comments(true);
-
-                    } else {
+                    if ("null".equals(pair.getValue()) || "0".equals(pair.getValue()) || "false".equals(pair.getValue())) {
                         setHas_comments(false);
+                    } else {
+                        setHas_comments(true);
                     }
                     break;
                 }
