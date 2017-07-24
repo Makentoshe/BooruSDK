@@ -1,4 +1,4 @@
-package test.source.boor;
+package test.source.boor.Rule34;
 
 import org.junit.Test;
 import source.boor.Rule34;
@@ -7,7 +7,7 @@ import source.еnum.Format;
 
 import static org.junit.Assert.*;
 
-
+//default test for correct basic methods.
 public class Rule34Test {
 
     @Test
