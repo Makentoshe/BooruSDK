@@ -196,6 +196,10 @@ public class Post {
                     }
                     break;
                 }
+                case "created_at":{
+                    setCreate_time(pair.getValue());
+                    break;
+                }
             }
         }
         //after all check comments flag

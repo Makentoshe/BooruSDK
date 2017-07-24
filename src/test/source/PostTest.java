@@ -73,7 +73,7 @@ public class PostTest {
         assertEquals("Creator_id ", 485320, post.getCreator_id());
         assertTrue("Has comments", post.isHas_comments());
         assertEquals("Comment url", "https://danbooru.donmai.us/comments.json?group_by=comment&search[post_id]=2794154", post.getComments_url());
-        //assertEquals("Create Time", "2017-07-21T04:18:16.598-04:00", post.getCreate_time());
+        assertEquals("Create Time", "2017-07-21T04:18:16.598-04:00", post.getCreate_time());
     }
 
     @Test
