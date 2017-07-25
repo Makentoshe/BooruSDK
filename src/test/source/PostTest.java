@@ -142,23 +142,4 @@ public class PostTest {
         assertEquals("Comment url", null, post.getComments_url());
         assertEquals("Create Time", "1500566775", post.getCreate_time());
     }
-
-    @Test
-    public void constructorPostInE621_Test() throws Exception {
-        Post post = E621.get().newPostInstance(getDataFromBoorAdvanced(E621.get(), 1263892));
-
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.E621.toString());
-        assertEquals("Id ", 1263892, post.getId());
-        assertEquals("Md5 ", "165b0269a416acb18243bb851249b9b3", post.getMd5());
-        assertEquals(Rating.QUESTIONABLE, post.getRating());
-        assertEquals("http://iwillbuckyou.tumblr.com/post/152616940313", post.getSource());
-        assertEquals("https://static1.e621.net/data/preview/16/5b/165b0269a416acb18243bb851249b9b3.jpg", post.getPreview_url());
-        assertTrue(post.getTags().contains("underwear"));
-        assertEquals("https://static1.e621.net/data/sample/16/5b/165b0269a416acb18243bb851249b9b3.jpg", post.getSample_url());
-        assertEquals("https://static1.e621.net/data/16/5b/165b0269a416acb18243bb851249b9b3.png", post.getFile_url());
-        assertEquals("Creator_id ", 33842, post.getCreator_id());
-        assertFalse("Has comments", post.isHas_comments());
-        assertEquals("Comment url", null, post.getComments_url());
-        assertEquals("Create Time", "{\"json_class\":\"Time\",\"s\":1498954819,\"n\":842844000}", post.getCreate_time());
-    }
 }

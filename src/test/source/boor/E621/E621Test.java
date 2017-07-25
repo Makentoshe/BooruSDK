@@ -1,4 +1,4 @@
-package test.source.boor;
+package test.source.boor.E621;
 
 import org.junit.Before;
 import org.junit.Test;

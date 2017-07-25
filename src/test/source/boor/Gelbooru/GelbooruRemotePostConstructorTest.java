@@ -87,6 +87,4 @@ public class GelbooruRemotePostConstructorTest {
     public void getCreateTime() throws Exception {
         assertEquals("Create Time", "Mon Jul 17 09:30:20 -0500 2017", post.getCreate_time());
     }
-
-
 }
