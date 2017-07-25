@@ -1,4 +1,4 @@
-package test.source.boor;
+package test.source.boor.Konachan;
 
 import org.junit.Before;
 import org.junit.Test;

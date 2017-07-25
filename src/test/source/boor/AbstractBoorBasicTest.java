@@ -5,7 +5,6 @@ import source.boor.Gelbooru;
 
 import static org.junit.Assert.*;
 
-
 public class AbstractBoorBasicTest {
 
     @Test

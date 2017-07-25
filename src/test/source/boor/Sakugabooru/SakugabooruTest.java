@@ -1,4 +1,4 @@
-package test.source.boor;
+package test.source.boor.Sakugabooru;
 
 import org.junit.Before;
 import org.junit.Test;

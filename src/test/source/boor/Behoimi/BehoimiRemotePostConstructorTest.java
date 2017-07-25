@@ -1,9 +1,9 @@
-package test.source.boor.E621;
+package test.source.boor.Behoimi;
 
 import org.junit.Before;
 import org.junit.Test;
 import source.Post;
-import source.boor.E621;
+import source.boor.Behoimi;
 import source.еnum.Boor;
 import source.еnum.Rating;
 import test.source.PostTest;
@@ -12,64 +12,63 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-
-public class E621RemotePostConstructorTest {
+public class BehoimiRemotePostConstructorTest {
 
     private Post post;
 
     @Before
     public void setUp() throws Exception {
-        post = E621.get().newPostInstance(PostTest.getDataFromBoorAdvanced(E621.get(), 1263892));
+        post = Behoimi.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Behoimi.get(), 633053));
     }
 
     @Test
     public void getSourceBoor() throws Exception {
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.E621.toString());
+        assertEquals("Boor source ", post.getSourceBoor(), Boor.Behoimi.toString());
     }
 
     @Test
     public void getId() throws Exception {
-        assertEquals("Id ", 1263892, post.getId());
+        assertEquals("Id ", 633053, post.getId());
     }
 
     @Test
     public void getMd5() throws Exception {
-        assertEquals("Md5 ", "165b0269a416acb18243bb851249b9b3", post.getMd5());
+        assertEquals("Md5 ", "7cb1161617a3a9d9f56d7772cde0f090", post.getMd5());
     }
 
     @Test
     public void getRating() throws Exception {
-        assertEquals(Rating.QUESTIONABLE, post.getRating());
+        assertEquals(Rating.SAFE, post.getRating());
     }
 
     @Test
     public void getSource() throws Exception {
-        assertEquals("http://iwillbuckyou.tumblr.com/post/152616940313", post.getSource());
+        assertEquals("", post.getSource());
     }
 
     @Test
     public void getPreview() throws Exception {
-        assertEquals("https://static1.e621.net/data/preview/16/5b/165b0269a416acb18243bb851249b9b3.jpg", post.getPreview_url());
+        assertEquals("http://behoimi.org/data/preview/7c/b1/7cb1161617a3a9d9f56d7772cde0f090.jpg", post.getPreview_url());
     }
 
     @Test
     public void getTags() throws Exception {
-        assertTrue(post.getTags().contains("underwear"));
+        assertTrue(post.getTags().contains("hatsune_miku"));
     }
 
     @Test
     public void getSample() throws Exception {
-        assertEquals("https://static1.e621.net/data/sample/16/5b/165b0269a416acb18243bb851249b9b3.jpg", post.getSample_url());
+        assertEquals("http://behoimi.org/data/7c/b1/7cb1161617a3a9d9f56d7772cde0f090.jpg", post.getSample_url());
     }
 
     @Test
     public void getFile() throws Exception {
-        assertEquals("https://static1.e621.net/data/16/5b/165b0269a416acb18243bb851249b9b3.png", post.getFile_url());
+        assertEquals("http://behoimi.org/data/7c/b1/7cb1161617a3a9d9f56d7772cde0f090.jpg", post.getFile_url());
     }
 
     @Test
     public void getCreatorId() throws Exception {
-        assertEquals("Creator_id ", 33842, post.getCreator_id());
+        assertEquals("Creator_id ", 1, post.getCreator_id());
     }
 
     @Test
@@ -84,6 +83,8 @@ public class E621RemotePostConstructorTest {
 
     @Test
     public void getCreateTime() throws Exception {
-        assertEquals("Create Time", "{\"json_class\":\"Time\",\"s\":1498954819,\"n\":842844000}", post.getCreate_time());
+        assertTrue("Create Time", post.getCreate_time().contains("\"json_class\":\"Time\"") &&
+                        post.getCreate_time().contains("\"s\":1475072859") &&
+                        post.getCreate_time().contains("\"n\":52387000"));
     }
 }

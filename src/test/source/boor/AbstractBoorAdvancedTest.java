@@ -7,7 +7,6 @@ import source.еnum.Format;
 
 import static org.junit.Assert.*;
 
-
 public class AbstractBoorAdvancedTest {
 
     @Test

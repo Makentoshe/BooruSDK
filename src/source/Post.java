@@ -204,7 +204,7 @@ public class Post {
             }
         }
         //after all check comments flag
-        if (has_comments[0]){
+        if (has_comments != null && has_comments[0]){
             //and if true - setup comments url.
             comments_url = sourceBoorRef.getCommentsByPostIdRequest(id);
         }
