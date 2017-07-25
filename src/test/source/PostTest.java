@@ -59,26 +59,6 @@ public class PostTest {
     }
 
     @Test
-    public void constructorPostInSafebooru_Test() throws Exception {
-        Post post = Safebooru.get().newPostInstance(getDataFromBoorBasic(Safebooru.get(), 2278871));
-
-        assertEquals("Boor source ", post.getSourceBoor(), Boor.Safebooru.toString());
-        assertEquals("Id ", 2278871, post.getId());
-        assertEquals("Md5 ","b5e3bdd52dbcbf8f8715bec584ee87e8", post.getMd5());
-        assertEquals("Rating ",Rating.SAFE, post.getRating());
-        assertEquals("Source ","", post.getSource());
-        assertEquals("Preview ","https://safebooru.org/thumbnails/2187/thumbnail_b5e3bdd52dbcbf8f8715bec584ee87e8.jpeg", post.getPreview_url());
-        assertTrue("Tags ", post.getTags().contains("hatsune_miku"));
-        assertEquals("Sample ","https://safebooru.org/images/2187/b5e3bdd52dbcbf8f8715bec584ee87e8.jpeg", post.getSample_url());
-        assertEquals("File ", "https://safebooru.org/images/2187/b5e3bdd52dbcbf8f8715bec584ee87e8.jpeg", post.getFile_url());
-        assertEquals("Creator_id ", 8970, post.getCreator_id());
-        assertFalse("Has comments", post.isHas_comments());
-        assertEquals("Comment url", null, post.getComments_url());
-        assertEquals("Create Time", "Mon Jul 17 09:06:24 +0200 2017", post.getCreate_time());
-
-    }
-
-    @Test
     public void constructorPostInYandere_Test() throws Exception {
         Post post = Yandere.get().newPostInstance(getDataFromBoorAdvanced(Yandere.get(), 401662));
 

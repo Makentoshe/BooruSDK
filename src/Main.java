@@ -1,4 +1,12 @@
+import engine.HttpConnection;
+import engine.parser.JsonParser;
+import source.Comment;
 import source.Post;
+import source.boor.Danbooru;
+import test.source.PostTest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 /**
  * TODO: create Comment.class and put comments to default Item constructor
@@ -6,13 +14,22 @@ import source.Post;
  */
 public class Main {
 
-    public static void main(String[] args) {
-        Post post = new Post();
-        System.out.println(post.getMd5());
-        post.setMd5("SAS");
-        System.out.println(post.getMd5());
-        post.setMd5("ASA");
-        System.out.println(post.getMd5());
+    public static void main(String[] args) throws Exception{
+        Post post = Danbooru.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Danbooru.get(), 2794154));
+
+        HttpConnection connection = new HttpConnection(false);
+
+        JsonParser parser = new JsonParser();
+        parser.startParse(connection.getRequest(post.getComments_url()));
+
+        ArrayList<HashMap<String, String>> list = (ArrayList<HashMap<String, String>>) parser.getResult();
+
+        ArrayList<Comment> comments = new ArrayList<>(list.size());
+        comments.addAll(list.stream().map(Comment::new).collect(Collectors.toList()));
+
+        for (Comment comment : comments){
+            System.out.println(comment.getCreator_name());
+        }
     }
 
 }

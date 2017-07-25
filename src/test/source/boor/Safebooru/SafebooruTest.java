@@ -1,4 +1,4 @@
-package test.source.boor;
+package test.source.boor.Safebooru;
 
 import org.junit.Assert;
 import org.junit.Test;
