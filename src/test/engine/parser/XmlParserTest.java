@@ -18,9 +18,7 @@ public class XmlParserTest {
         XmlParser parser = new XmlParser();
 
         parser.startParse(Gelbooru.get().getPackByTagsRequest(count, "hatsune_miku", 0));
-        assertEquals(count, parser.getResult().size()); //after this result will be reset
-
-        assertEquals(0, parser.getResult().size());
+        assertEquals(count, parser.getResult().size());
     }
 
     @Test
@@ -43,5 +41,16 @@ public class XmlParserTest {
 
         parser.startParse(Gelbooru.get().getPackByTagsRequest(8, "hatsune_miku", 0));
         assertEquals(10, parser.getResult().size());
+    }
+
+    @Test
+    public void notReusable_Test() throws Exception{
+        XmlParser parser = new XmlParser(true);
+
+        parser.startParse(Gelbooru.get().getPackByTagsRequest(2, "hatsune_miku", 0));
+        assertEquals(2, parser.getResult().size());
+
+        parser.startParse(Gelbooru.get().getPackByTagsRequest(8, "hatsune_miku", 0));
+        assertEquals(8, parser.getResult().size());
     }
 }

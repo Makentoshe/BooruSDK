@@ -16,13 +16,18 @@ import org.xml.sax.helpers.DefaultHandler;
 import source.еnum.Boor;
 
 /**
- * Parser posts and comments from xml from url or stream,
- * which have basic structure - post with data in attributes.
- *
- * Instance of this class can be reused by option in constructor.
+ * Parsing posts and comments xml, from url or stream, which has 2 structure types -
+ * the data storage in attributes and the data storage in elements.
+ * That mean, that you can parse xml as effectively as JSON.
+ * <p>
+ * When you create new instance of this class, you can specify in constructor,
+ * will be the result data of this instance reusable or not.
+ * If data reusable - when you start new parsing process(call <tt>startParse()</tt> again)
+ * all data from last parsing process will be cleared.
+ * If instance not reused -  results will be collect in <tt>getResult()</tt> method.
+ * You will can get all results by one call.
+ * And, of course, you can't start new process from zero.
  * As default - instance will be reused.
- * If instance not reused - results will be collect in getResult() method.
- * We will can get all results by one call.
  */
 public class XmlParser extends DefaultHandler {
 
@@ -33,19 +38,29 @@ public class XmlParser extends DefaultHandler {
     //for parsing elements value
     private boolean isParsing = false;
 
-
+    /**
+     * @param reusable you can specify reusability.
+     */
     public XmlParser(boolean reusable){
         this.reusable = reusable;
     }
 
+    /**
+     * Default constructor - reusability is enable.
+     */
     public XmlParser(){
         reusable = true;
     }
 
     /**
      * Parses an XML file from url into memory
+     *
+     * @param url - url to data.
+     * @throws BooruEngineException - when parsing is going wrong.
      */
     public void startParse(String url) throws BooruEngineException {
+        if (reusable && result.size() > 0) result.clear();
+
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             factory.newSAXParser().parse(url, this);
@@ -56,8 +71,13 @@ public class XmlParser extends DefaultHandler {
 
     /**
      * Parses an XML file from stream into memory
+     *
+     * @param stream - data stream.
+     * @throws BooruEngineException - when parsing is going wrong.
      */
     public void startParse(InputStream stream) throws BooruEngineException {
+        if (reusable) result.clear();
+
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             factory.newSAXParser().parse(stream, this);
@@ -81,12 +101,18 @@ public class XmlParser extends DefaultHandler {
         isParsing = true;
     }
 
+    /**
+     * Event: Parser reading an element data.
+     */
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         //while element not end - append all characters to value.
         if (isParsing) builder.append(new String(ch, start, length));
     }
 
+    /**
+     * Event: Parser ends reading an element
+     */
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (isParsing) {
@@ -95,7 +121,7 @@ public class XmlParser extends DefaultHandler {
             data.put(qName, builder.toString());
             builder.delete(0, builder.length());
         }
-        if ("post".equals(qName) || "comment".equals(qName)) {
+        if (("post".equals(qName) || "comment".equals(qName)) && data.size() != 0) {
             result.add(new HashMap<>(data));
             data.clear();
         }
@@ -107,14 +133,12 @@ public class XmlParser extends DefaultHandler {
      * After, the data will be clear.
      */
     public List getResult() {
-        if (reusable) {
-            List list = new ArrayList(result);
-            result.clear();
-            return list;
-        }
         return result;
     }
 
+    /**
+     * @return is parser reusable or not.
+     */
     public boolean isReusable(){
         return reusable;
     }
