@@ -50,7 +50,7 @@ public class GelbooruRemotePostConstructorTest {
 
     @Test
     public void getPreview() throws Exception {
-        assertEquals("https://assets.gelbooru.com/thumbnails/cf/58/thumbnail_cf589d62afe26ede34c2f4fa802ff70c.jpg", post.getPreview_url());
+        assertTrue(post.getPreview_url().contains("gelbooru.com/thumbnails/cf/58/thumbnail_cf589d62afe26ede34c2f4fa802ff70c.jpg"));
     }
 
     @Test
@@ -60,12 +60,12 @@ public class GelbooruRemotePostConstructorTest {
 
     @Test
     public void getSample() throws Exception {
-        assertEquals("https://gelbooru.com/samples/cf/58/sample_cf589d62afe26ede34c2f4fa802ff70c.jpg", post.getSample_url());
+        assertTrue(post.getSample_url().contains("gelbooru.com/samples/cf/58/sample_cf589d62afe26ede34c2f4fa802ff70c.jpg"));
     }
 
     @Test
     public void getFile() throws Exception {
-        assertEquals("https://gelbooru.com/images/cf/58/cf589d62afe26ede34c2f4fa802ff70c.jpg", post.getFile_url());
+        assertTrue(post.getFile_url().contains("gelbooru.com/images/cf/58/cf589d62afe26ede34c2f4fa802ff70c.jpg"));
     }
 
     @Test

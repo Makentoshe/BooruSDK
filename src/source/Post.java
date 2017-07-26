@@ -28,18 +28,15 @@ import java.util.*;
  * <p>    <i>rating</i> - image rating in post.
  * <p>    <i>score</i> - post rating.
  * <p>    <i>source</i> - from what place this post was get.
- * <p>    <i>preview_url</i> - url to preview image.
- * <p>    <i>preview_url_file</i> - attribute from danbooru,
+ * <p>    <i>preview_url/preview-url</i> - url to preview image.
+ * <p>    <i>preview_url_file/preview-url-file</i> - attribute from danbooru,
  * so in the start there will be append string "https://danbooru.donmai.us".
- * <p>    <i>tags</i> - this describes the contents of the message and allow to find similar posts.
- * <p>    <i>tag_string</i> - same as "<i>tags</i>".
+ * <p>    <i>tags/tag_string/tag-string</i> - this describes the contents of the message and allow to find similar posts.
  * <p>    <i>sample_url</i> - url to sample image view.
- * <p>    <i>file_url</i> - url to file with high resolution. But for danbooru API there is sample url.
- * <p>    <i>large_file_url</i> - url to file with high resolution for danbooru API.
- * <p>    <i>creator_id</i> - id, who's create/upload this post.
- * <p>    <i>uploader_id</i> - id, who's create/upload this post.
- * <p>    <i>has_comments</i> - boolean value, which describes, have this post comments or not.
- * <p>    <i>last_commented_at</i> - same as "<i>has_comments</i>",
+ * <p>    <i>file_url/file-url</i> - url to file with high resolution. But for danbooru API there is sample url.
+ * <p>    <i>large_file_url/large-file-url</i> - url to file with high resolution for danbooru API.
+ * <p>    <i>creator_id/uploader_id/uploader-id</i> - id, who's create/upload this post.
+ * <p>    <i>has_comments/last_commented_at</i> - boolean value, which describes, have this post comments or not.
  * but the flag will be {@code true} only if the value will not {@code null}.
  * <p>    <i>created_at</i> - show time, when post was created. Each boor storage this data in onw format,
  * so, method <tt>getCreate_time</tt> return a raw data from server in String. You must process it alone.
@@ -133,6 +130,7 @@ public class Post {
         Set<Map.Entry<String, String>> entrySet = hashMap.entrySet();
         //for each attribute
         for (Map.Entry<String, String> pair : entrySet) {
+            System.out.println(pair.getKey() + "   " + pair.getValue());
             switch (pair.getKey()) {
                 case "id": {
                     setId(Integer.parseInt(pair.getValue()));
@@ -158,11 +156,13 @@ public class Post {
                     setPreview_url(pair.getValue());
                     break;
                 }
+                case "preview-file-url":
                 case "preview_file_url": {
                     setPreview_url("https://danbooru.donmai.us" + pair.getValue());
                     break;
                 }
                 case "tags":
+                case "tag-string":
                 case "tag_string": {
                     setTags(pair.getValue());
                     break;
@@ -171,6 +171,7 @@ public class Post {
                     setSample_url(pair.getValue());
                     break;
                 }
+                case "file-url":
                 case "file_url": {
                     if (getSourceBoor().equals(Boor.Danbooru.toString())) {
                         setSample_url("https://danbooru.donmai.us" + pair.getValue());
@@ -179,16 +180,19 @@ public class Post {
                     setFile_url(pair.getValue());
                     break;
                 }
+                case "large-file-url":
                 case "large_file_url": {
                     setFile_url("https://danbooru.donmai.us" + pair.getValue());
                     break;
                 }
                 case "creator_id":
+                case "uploader-id":
                 case "uploader_id": {
                     setCreator_id(Integer.parseInt(pair.getValue()));
                     break;
                 }
                 case "has_comments":
+                case "last-commented-at":
                 case "last_commented_at": {
                     if ("null".equals(pair.getValue()) || "0".equals(pair.getValue()) || "false".equals(pair.getValue())) {
                         setHas_comments(false);
@@ -197,6 +201,7 @@ public class Post {
                     }
                     break;
                 }
+                case "updated-at":
                 case "created_at":{
                     setCreate_time(pair.getValue());
                     break;

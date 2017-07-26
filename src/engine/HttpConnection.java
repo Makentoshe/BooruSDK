@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class HttpConnection {
 
-    private static final String USER_AGENT = "Mozilla/5.0";
+    private static final String USER_AGENT = "BooruEngineLib(mkliverout@gmail.com)/1.0";
     private static final Logger logger = Logger.getLogger(HttpConnection.class.getName());
     private int responseCode;
 

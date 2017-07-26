@@ -1,35 +1,27 @@
 import engine.HttpConnection;
 import engine.parser.JsonParser;
+import engine.parser.XmlParser;
 import source.Comment;
 import source.Post;
 import source.boor.Danbooru;
+import source.boor.Gelbooru;
+import source.еnum.Format;
 import test.source.PostTest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
 /**
- * TODO: create Comment.class and put comments to default Item constructor
  * TODO: for each boor create comment API access
  */
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        Post post = Danbooru.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Danbooru.get(), 2794154));
-
-        HttpConnection connection = new HttpConnection(false);
-
-        JsonParser parser = new JsonParser();
-        parser.startParse(connection.getRequest(post.getComments_url()));
-
-        ArrayList<HashMap<String, String>> list = (ArrayList<HashMap<String, String>>) parser.getResult();
-
-        ArrayList<Comment> comments = new ArrayList<>(list.size());
-        comments.addAll(list.stream().map(Comment::new).collect(Collectors.toList()));
-
-        for (Comment comment : comments){
-            System.out.println(comment.getCreator_name());
-        }
+        String request = Danbooru.get().getPackByTagsRequest(1, "hatsune_miku",0, Format.XML);
+        XmlParser parser = new XmlParser();
+        parser.startParse(request);
+        Post post = new Post((HashMap<String, String>) parser.getResult().get(0), Danbooru.get());
+        System.out.println(post.getPreview_url());
     }
 
 }
