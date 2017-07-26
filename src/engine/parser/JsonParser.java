@@ -6,26 +6,32 @@ import source.еnum.Boor;
 import java.util.*;
 
 /**
- * This class has one control parameter - {@code reusable} flag. You activate it in constructor,
- * but if you want, you can set the default value with default constructor help.
- * As default, this {@code reusable} flag will be true. That means, that after {@code getResult()} method
- * all data will be reset.
- *
- * <p><strong>Note that you can call get {@code getResult()} once. After all data will be reset!.</strong>
- *
- * <p>If you set {@code reusable} flag as false, after {@code getResult()} method, all data will be safe
- * and you can call method endlessly. You can start new parsing process and the parsed data will be append to result.
- * You can't clear result in this mode. TODO: fix it. Create clear method.
+ * Parsing JSON arrays and elements. Another JSON Objects can be parse incorrectly.
+ * <p>
+ * When you create new instance of this class, you can specify in constructor,
+ * will be the result data of this instance reusable or not.
+ * If data reusable - when you start new parsing process(call <tt>startParse()</tt> again)
+ * all data from last parsing process will be cleared.
+ * If instance not reused - results will be collect in <tt>getResult()</tt> method.
+ * You will can get all results by one call.
+ * And, of course, you can't start new process from zero.
+ * As default - instance will be reused.
  */
 public class JsonParser {
 
     private final List<HashMap<String, String>> result = new ArrayList<>();
     private boolean reusable;
 
+    /**
+     * Default constructor - reusability is enable.
+     */
     public JsonParser(){
         reusable = true;
     }
 
+    /**
+     * @param isReusable you can specify reusability.
+     */
     public JsonParser(boolean isReusable){
         reusable = isReusable;
     }
@@ -39,6 +45,7 @@ public class JsonParser {
      * @param dataToParse string, which describe json array.
      */
     public void startParse(String dataToParse) {
+        if (reusable) result.clear();
         //create gson parser
         com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
         try {
@@ -58,25 +65,19 @@ public class JsonParser {
     }
 
     /**
-     * If reusable flag enable we can get result only once.
-     * After, the data will be clear.
-     *
      * @return list of Hashmaps, where each Hashmap describe one post.
      * Hashmap has next structure - &lt;Attribute_name, Attrubute_value&gt;.
      */
     public List<HashMap<String, String>> getResult(){
-        if (reusable) {
-            List list = new ArrayList(result);
-            result.clear();
-            return list;
-        }
         return result;
     }
 
+    /**
+     * @return is parser reusable or not.
+     */
     public boolean isReusable(){
         return reusable;
     }
-
 
     private void parseArray(JsonArray array) {
         //for each post

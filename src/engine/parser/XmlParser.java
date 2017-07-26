@@ -8,7 +8,6 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import engine.BooruEngineException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -39,10 +38,10 @@ public class XmlParser extends DefaultHandler {
     private boolean isParsing = false;
 
     /**
-     * @param reusable you can specify reusability.
+     * @param isReusable you can specify reusability.
      */
-    public XmlParser(boolean reusable){
-        this.reusable = reusable;
+    public XmlParser(boolean isReusable){
+        reusable = isReusable;
     }
 
     /**
@@ -53,7 +52,9 @@ public class XmlParser extends DefaultHandler {
     }
 
     /**
-     * Parses an XML file from url into memory
+     * Parses an XML file from url into memory.
+     * <p>
+     * The parse result can be get with {@code getResult()} method help.
      *
      * @param url - url to data.
      * @throws BooruEngineException - when parsing is going wrong.
@@ -70,7 +71,9 @@ public class XmlParser extends DefaultHandler {
     }
 
     /**
-     * Parses an XML file from stream into memory
+     * Parses an XML file from stream into memory.
+     * <p>
+     * The parse result can be get with {@code getResult()} method help.
      *
      * @param stream - data stream.
      * @throws BooruEngineException - when parsing is going wrong.
@@ -87,7 +90,7 @@ public class XmlParser extends DefaultHandler {
     }
 
     /**
-     * Event: Parser starts reading an element
+     * Event: Parser starts reading an element.
      */
     @Override
     public void startElement(String uri, String localName, String elementName, Attributes attributes) throws SAXException {
@@ -111,7 +114,7 @@ public class XmlParser extends DefaultHandler {
     }
 
     /**
-     * Event: Parser ends reading an element
+     * Event: Parser ends reading an element.
      */
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
@@ -128,9 +131,8 @@ public class XmlParser extends DefaultHandler {
     }
 
     /**
-     * @return list of posts
-     * If reusable flag enable we can get result only once.
-     * After, the data will be clear.
+     * @return list of Hashmaps, where each Hashmap describe one post.
+     * Hashmap has next structure - &lt;Attribute_name, Attrubute_value&gt;.
      */
     public List getResult() {
         return result;
