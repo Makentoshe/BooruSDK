@@ -16,10 +16,11 @@ import static org.junit.Assert.assertTrue;
 //Create Rule34 post with default Post constructor in Rule34.
 public class Rule34RemotePostConstructorTest {
 
-    private Post post;
+    private static Post post;
 
     @Before
     public void setUp() throws Exception {
+        if (post != null) return;
         post = Rule34.get().newPostInstance(PostTest.getDataFromBoorBasic(Rule34.get(), 2421106));
     }
 

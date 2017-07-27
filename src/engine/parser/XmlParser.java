@@ -134,7 +134,7 @@ public class XmlParser extends DefaultHandler {
      * @return list of Hashmaps, where each Hashmap describe one post.
      * Hashmap has next structure - &lt;Attribute_name, Attrubute_value&gt;.
      */
-    public List getResult() {
+    public List<HashMap<String, String>> getResult() {
         return result;
     }
 

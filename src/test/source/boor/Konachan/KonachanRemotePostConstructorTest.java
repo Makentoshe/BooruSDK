@@ -15,10 +15,11 @@ import static org.junit.Assert.assertTrue;
 
 public class KonachanRemotePostConstructorTest {
 
-    private Post post;
+    private static Post post;
 
     @Before
     public void setUp() throws Exception {
+        if (post != null) return;
         post = Konachan.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Konachan.get(), 246946));
     }
 

@@ -17,7 +17,6 @@ public class HttpConnection {
 
     private static final String USER_AGENT = "BooruEngineLib(mkliverout@gmail.com)/1.0";
     private static final Logger logger = Logger.getLogger(HttpConnection.class.getName());
-    private int responseCode;
 
     public HttpConnection(boolean logging){
         logger.setFilter(record -> logging);
@@ -42,7 +41,7 @@ public class HttpConnection {
             //add request header
             connection.setRequestProperty("User-Agent", USER_AGENT);
 
-            responseCode = connection.getResponseCode();
+            int responseCode = connection.getResponseCode();
             logger.log(Level.INFO, "Get request to url: " + u);
 
 
@@ -61,7 +60,7 @@ public class HttpConnection {
             reader.close();
 
         }catch (Exception e){
-            throw new BooruEngineException(e.getMessage());
+            throw new BooruEngineException(e);
         }
         return result.toString();
     }
@@ -114,9 +113,5 @@ public class HttpConnection {
                 throw new BooruEngineException(responseCode + " - Unknown Error.");
             }
         }
-    }
-
-    public int getResponseCode() {
-        return responseCode;
     }
 }

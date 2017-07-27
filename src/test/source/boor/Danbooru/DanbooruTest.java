@@ -1,6 +1,5 @@
 package test.source.boor.Danbooru;
 
-import org.junit.Before;
 import org.junit.Test;
 import source.boor.Danbooru;
 import source.еnum.Api;
@@ -11,11 +10,6 @@ import static org.junit.Assert.*;
 
 //default test for correct basic methods.
 public class DanbooruTest {
-
-    @Before
-    public void setUp(){
-        Danbooru.get().setFormat(Format.JSON);
-    }
 
     @Test
     public void getApi_Test() throws Exception {

@@ -1,6 +1,5 @@
 package test.source.boor.Behoimi;
 
-import org.junit.Before;
 import org.junit.Test;
 import source.Post;
 import source.boor.Behoimi;
@@ -12,10 +11,10 @@ import static org.junit.Assert.*;
 
 public class BehoimiPostConstructorTest {
 
-    private Post post;
+    private static Post post;
 
-    @Before
-    public void setUp() throws Exception {
+    public BehoimiPostConstructorTest() throws Exception {
+        if (post != null) return;
         post = new Post(PostTest.getDataFromBoorAdvanced(Behoimi.get(), 633053), Behoimi.get());
     }
 

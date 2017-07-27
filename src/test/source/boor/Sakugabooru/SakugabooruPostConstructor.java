@@ -12,10 +12,11 @@ import static org.junit.Assert.*;
 
 public class SakugabooruPostConstructor {
 
-    private Post post;
+    private static Post post;
 
     @Before
     public void setUp() throws Exception {
+        if (post != null) return;
         post = new Post(PostTest.getDataFromBoorAdvanced(Sakugabooru.get(), 36635), Sakugabooru.get());
     }
 

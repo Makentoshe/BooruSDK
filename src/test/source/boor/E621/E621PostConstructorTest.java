@@ -1,6 +1,5 @@
 package test.source.boor.E621;
 
-import org.junit.Before;
 import org.junit.Test;
 import source.Post;
 import source.boor.E621;
@@ -13,10 +12,10 @@ import static org.junit.Assert.*;
 
 public class E621PostConstructorTest {
 
-    private Post post;
+    private static Post post;
 
-    @Before
-    public void setUp() throws Exception {
+    public E621PostConstructorTest() throws Exception{
+        if (post != null) return;
         post = new Post(PostTest.getDataFromBoorAdvanced(E621.get(), 1263892), E621.get());
     }
 

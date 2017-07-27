@@ -15,12 +15,11 @@ import static org.junit.Assert.assertTrue;
 //Create Gelbooru post with default Post constructor in Gelbooru.
 public class GelbooruRemotePostConstructorTest {
 
-    private Post post;
+    private static Post post;
 
-    @Before
-    public void setUp() throws Exception{
-        post= Gelbooru.get().newPostInstance(PostTest.getDataFromBoorBasic(Gelbooru.get(), 3785972));
-
+    public GelbooruRemotePostConstructorTest() throws Exception {
+        if (post != null) return;
+        post = Gelbooru.get().newPostInstance(PostTest.getDataFromBoorBasic(Gelbooru.get(), 3785972));
     }
 
     @Test

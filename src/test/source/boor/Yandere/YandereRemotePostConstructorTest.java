@@ -16,10 +16,11 @@ import static org.junit.Assert.assertTrue;
 
 public class YandereRemotePostConstructorTest {
 
-    private Post post;
+    private static Post post;
 
     @Before
     public void setUp() throws Exception {
+        if (post != null) return;
         post = Yandere.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Yandere.get(), 401662));
     }
 

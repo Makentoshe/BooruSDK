@@ -14,10 +14,11 @@ import static org.junit.Assert.assertTrue;
 
 public class SakugabooruRemotePostConstructor {
 
-    private Post post;
+    private static Post post;
 
     @Before
     public void setUp() throws Exception {
+        if (post != null) return;
         post = Sakugabooru.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Sakugabooru.get(), 36635));
     }
 

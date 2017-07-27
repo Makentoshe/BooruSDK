@@ -13,10 +13,11 @@ import static org.junit.Assert.*;
 //Create Rule34 post with default Post constructor in Rule34.
 public class Rule34PostConstructorTest {
 
-    private Post post;
+    private static Post post;
 
     @Before
     public void setUp() throws Exception {
+        if (post != null) return;
         post = new Post(PostTest.getDataFromBoorBasic(Rule34.get(), 2421106), Rule34.get());
     }
 

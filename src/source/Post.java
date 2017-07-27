@@ -130,7 +130,7 @@ public class Post {
         Set<Map.Entry<String, String>> entrySet = hashMap.entrySet();
         //for each attribute
         for (Map.Entry<String, String> pair : entrySet) {
-            System.out.println(pair.getKey() + "   " + pair.getValue());
+            //System.out.println(pair.getKey() + "   " + pair.getValue());
             switch (pair.getKey()) {
                 case "id": {
                     setId(Integer.parseInt(pair.getValue()));
@@ -209,11 +209,16 @@ public class Post {
             }
         }
         //after all check comments flag
-        if (has_comments != null && has_comments[0]){
+        //when comments not defined - try to create comments address.
+        if (has_comments == null){
+            comments_url = sourceBoorRef.getCommentsByPostIdRequest(id);
+            return;
+        }
+        //when has comments
+        if (has_comments[0]){
             //and if true - setup comments url.
             comments_url = sourceBoorRef.getCommentsByPostIdRequest(id);
         }
-
     }
 
     /**
@@ -426,9 +431,12 @@ public class Post {
 
     /**
      * Getting boolean value - has post comments or not. If data will not defined - method return {@code false}.
+     * When value not defined - method return {@code null}.
+     * That means, if something go wrong in constructor or in input data and constructor can't defined value.
      */
-    public boolean isHas_comments() {
-        return this.has_comments != null && has_comments[0];
+    public Boolean isHas_comments() {
+        if (has_comments == null) return null;
+        return has_comments[0];
     }
 
     /**

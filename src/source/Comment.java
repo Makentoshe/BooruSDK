@@ -28,7 +28,7 @@ import java.util.Set;
  * @see Post
  */
 public class Comment {
-
+//TODO add to constructor XML attributes
     private int id = Integer.MIN_VALUE;
 
     private String created_at = null;
@@ -58,10 +58,13 @@ public class Comment {
                     setId(Integer.parseInt(pair.getValue()));
                     break;
                 }
+                case "creator-id":
                 case "creator_id" :{
                     setCreator_id(Integer.parseInt(pair.getValue()));
                     break;
                 }
+                case "creator":
+                case "creator-name":
                 case "creator_name":{
                     setCreator_name(pair.getValue());
                     break;
@@ -70,10 +73,12 @@ public class Comment {
                     setBody(pair.getValue());
                     break;
                 }
+                case "created-at":
                 case "created_at" :{
                     setCreated_at(pair.getValue());
                     break;
                 }
+                case "post-id":
                 case "post_id":{
                     setPost_id(Integer.parseInt(pair.getValue()));
                     break;

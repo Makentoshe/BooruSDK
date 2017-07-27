@@ -14,7 +14,12 @@ import static org.junit.Assert.assertTrue;
 
 public class BehoimiRemotePostConstructorTest {
 
-    private Post post;
+    private static Post post;
+
+    public BehoimiRemotePostConstructorTest() throws Exception {
+        if (post != null) return;
+        post = Behoimi.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Behoimi.get(), 633053));
+    }
 
     @Before
     public void setUp() throws Exception {

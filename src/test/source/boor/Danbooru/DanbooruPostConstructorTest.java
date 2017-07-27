@@ -1,6 +1,5 @@
 package test.source.boor.Danbooru;
 
-import org.junit.Before;
 import org.junit.Test;
 import source.Post;
 import source.boor.Danbooru;
@@ -14,10 +13,10 @@ import static org.junit.Assert.assertTrue;
 //Create Danbooru post with default Post constructor.
 public class DanbooruPostConstructorTest {
 
-    private Post post;
+    private static Post post;
 
-    @Before
-    public void setUp() throws Exception {
+    public DanbooruPostConstructorTest() throws Exception{
+        if (post != null)return;
         post = new Post(PostTest.getDataFromBoorAdvanced(Danbooru.get(), 2794154), Danbooru.get());
     }
 

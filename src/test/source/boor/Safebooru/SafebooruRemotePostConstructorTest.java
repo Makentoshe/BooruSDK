@@ -16,10 +16,11 @@ import static org.junit.Assert.assertTrue;
 
 public class SafebooruRemotePostConstructorTest {
 
-    private Post post;
+    private static Post post;
 
     @Before
     public void setUp() throws Exception {
+        if (post != null)  return;
         post = Safebooru.get().newPostInstance(PostTest.getDataFromBoorBasic(Safebooru.get(), 2278871));
     }
 

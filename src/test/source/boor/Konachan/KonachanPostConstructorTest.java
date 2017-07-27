@@ -13,10 +13,10 @@ import static org.junit.Assert.*;
 
 public class KonachanPostConstructorTest {
 
-    private Post post;
+    private static Post post;
 
-    @Before
-    public void setUp() throws Exception {
+    public KonachanPostConstructorTest() throws Exception{
+        if (post != null) return;
         post = new Post(PostTest.getDataFromBoorAdvanced(Konachan.get(), 246946), Konachan.get());
     }
 

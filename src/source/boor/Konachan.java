@@ -97,6 +97,7 @@ public class Konachan extends AbstractBoorAdvanced {
                 }
             }
         }
+        post.setComments_url(getCommentsByPostIdRequest(post.getId()));
         return post;
     }
 }
