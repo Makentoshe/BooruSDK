@@ -79,7 +79,7 @@ public class YandereRemotePostConstructorTest {
 
     @Test
     public void getHasComment() throws Exception {
-        assertFalse("Has comments", post.isHas_comments());
+        assertEquals("Has comments", null, post.isHas_comments());
     }
 
     @Test

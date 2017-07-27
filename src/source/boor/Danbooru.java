@@ -20,13 +20,9 @@ public class Danbooru extends AbstractBoorAdvanced {
         return instance;
     }
 
-
-
     public void setFormat(Format format){
         this.format = format;
     }
-
-
 
     @Override
     public String getCustomRequest(String request) {

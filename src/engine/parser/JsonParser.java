@@ -37,7 +37,7 @@ public class JsonParser {
     }
 
     /**
-     * Parsing json with gson help.
+     * Parsing json with GSON help.
      * It parse two objects - {@code JsonArray} or {@code JsonElement}.
      * Another objects can be processing incorrectly.
      * <p>The parse result can be get with {@code getResult()} method help.
@@ -65,8 +65,8 @@ public class JsonParser {
     }
 
     /**
-     * @return list of Hashmaps, where each Hashmap describe one post.
-     * Hashmap has next structure - &lt;Attribute_name, Attrubute_value&gt;.
+     * @return list of Hash maps, where each Hash map describe one post.
+     * Hash map has next structure - &lt;Attribute_name, Attribute_value&gt;.
      */
     public List<HashMap<String, String>> getResult(){
         return result;
@@ -84,7 +84,7 @@ public class JsonParser {
         for (JsonElement object : array) {
             //for extracting boor name
             boolean flag = false;
-            //create the hashmap for storing data
+            //create the hash map for storing data
             HashMap<String, String> postData = new HashMap<>();
             //for each attribute
             for (Object object1 : object.getAsJsonObject().entrySet()) {
@@ -98,19 +98,24 @@ public class JsonParser {
                 //split this string to key and value
                 String[] split = attribute.split("=");
                 //check split length - when some values equals "" and we removing quotes - we must track this.
-                if (split.length == 2) {
+                if (split.length >= 2) {
+                    //when data contains more than one "=", the array will be split more than the 2 parts.
+                    // So we append all data to one
+                    if (split.length > 2) for (int i = 2; i < split.length; i++) split[1] += "=" + split[i];
+                    //and then put data to hash map
                     postData.put(split[0], split[1]);
                 } else {
                     postData.put(split[0], "");
                 }
-
+                //trying to identify boor
+                //when we do it - flag will be true and next accesses will be deny.
                 if (split[0].contains("url") && !flag) {
                     String boor = extractBoor(split[1]);
                     postData.put("boor", boor);
                     flag = true;
                 }
             }
-            //put hashmap(one post) to result list
+            //put hash map to result list
             result.add(postData);
 
         }

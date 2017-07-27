@@ -42,7 +42,7 @@ public class KonachanPostConstructorTest {
 
     @Test
     public void getSource() throws Exception {
-        assertEquals(/*"https://www.pixiv.net/member_illust.php?mode=medium\\u0026illust_id=63950855" + */"", post.getSource());
+        assertEquals("https://www.pixiv.net/member_illust.php?mode=medium&illust_id=63950855", post.getSource());
     }
 
     @Test
@@ -78,12 +78,12 @@ public class KonachanPostConstructorTest {
 
     @Test
     public void getHasComment() throws Exception {
-        assertFalse("Has comments", post.isHas_comments());
+        assertEquals("Has comments", null, post.isHas_comments());
     }
 
     @Test
     public void getComment() throws Exception {
-        assertEquals("Comment url", null, post.getComments_url());
+        assertEquals("Comment url", "https://konachan.com/comment.json?post_id=246946", post.getComments_url());
     }
 
     @Test

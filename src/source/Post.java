@@ -124,7 +124,6 @@ public class Post {
         this.sourceBoor = Boor.Undefined.toString();
     }
 
-
     protected void defaultConstructor(HashMap<String, String> hashMap) {
         //create Entry
         Set<Map.Entry<String, String>> entrySet = hashMap.entrySet();

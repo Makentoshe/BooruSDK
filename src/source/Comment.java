@@ -19,16 +19,15 @@ import java.util.Set;
  * <p>
  * <p>Support attributes:
  * <p>    <i>id</i> - comment id in the boor.
- * <p>    <i>creator_id</i> - id, who's create this comment.
- * <p>    <i>creator_name</i> - name, who's create this comment.
+ * <p>    <i>creator_id/creator-id</i> - id, who's create this comment.
+ * <p>    <i>creator/creator_name/creator-name</i> - name, who's create this comment.
  * <p>    <i>body</i> - comment as is without any modifications.
- * <p>    <i>created_at</i> - in what time comment was create. Each boor have own date-time format.
- * <p>    <i>post_id</i> - for what post comment was created.
+ * <p>    <i>created_at/created-at</i> - in what time comment was create. Each boor have own date-time format.
+ * <p>    <i>post_id/post-id</i> - for what post comment was created.
  *
  * @see Post
  */
 public class Comment {
-//TODO add to constructor XML attributes
     private int id = Integer.MIN_VALUE;
 
     private String created_at = null;
