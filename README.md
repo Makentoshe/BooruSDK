@@ -1,7 +1,7 @@
 # BooruEngineLib
 
 Java library for fast and easy access to *boor APIs. 
-It has simple functionality - you can create request to *boor and recieve all data about request.
+It has simple functionality - you can create request to *boor and receive data.
 At this moment BEL supports only GET requests - you can search posts by id, by tags, create custom requests and searching comments by post_id.
 But with high integrity level for new boors. 
 
