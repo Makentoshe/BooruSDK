@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * Class for downloading XML or JSON raw data from servers.
  * Use it, when you need to do something with raw data before parsing,
@@ -18,8 +17,12 @@ public class HttpConnection {
     private static final String USER_AGENT = "BooruEngineLib(mkliverout@gmail.com)/1.0";
     private static final Logger logger = Logger.getLogger(HttpConnection.class.getName());
 
-    public HttpConnection(boolean logging){
-        logger.setFilter(record -> logging);
+    public HttpConnection(boolean isLogging){
+        logger.setFilter(record -> isLogging);
+    }
+
+    public HttpConnection(){
+        logger.setFilter(record -> false);
     }
 
     /**

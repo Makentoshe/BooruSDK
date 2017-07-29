@@ -1,13 +1,23 @@
 
-import source.Post;
-import source.boor.Konachan;
-import test.source.PostTest;
+import engine.HttpConnection;
+import engine.parser.JsonParser;
+import engine.parser.XmlParser;
+
+import source.boor.Danbooru;
+import source.boor.Safebooru;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        Post post = new Post(PostTest.getDataFromBoorAdvanced(Konachan.get(), 246946), Konachan.get());
-        System.out.println(post.getSource());
+        HttpConnection connection = new HttpConnection();
+        String response = connection.getRequest(Danbooru.get().getPostByIdRequest(2794154));
+        JsonParser parser = new JsonParser();
+        parser.startParse(response);
+        List<HashMap<String, String>> result = parser.getResult();
+        System.out.println(result.size());
     }
 
 }
