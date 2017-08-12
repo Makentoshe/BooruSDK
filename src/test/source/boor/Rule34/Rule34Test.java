@@ -23,7 +23,7 @@ public class Rule34Test {
     @Test
     public void getCustomRequest_Test() throws Exception{
         String request = Rule34.get().getCustomRequest("request");
-        String expected = "https://rule34.xxx/index.php?page=dapi&q=index&s=request";
+        String expected = "https://rule34.xxx/request";
         assertEquals(expected, request);
     }
 }
