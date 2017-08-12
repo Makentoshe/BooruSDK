@@ -22,7 +22,7 @@ public class Gelbooru extends AbstractBoorBasic {
 
     @Override
     public String getCustomRequest(String request) {
-        return "https://gelbooru.com/index.php?page=dapi&q=index&s=" + request;
+        return "https://gelbooru.com/" + request;
     }
 
     @Override
@@ -97,6 +97,6 @@ public class Gelbooru extends AbstractBoorBasic {
 
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format ignored) {
-        return getCustomRequest("comment&post_id=" + post_id);
+        return getCustomRequest("index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
     }
 }

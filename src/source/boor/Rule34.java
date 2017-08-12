@@ -23,12 +23,12 @@ public class Rule34 extends AbstractBoorBasic{
 
     @Override
     public String getCustomRequest(String request) {
-        return "https://rule34.xxx/index.php?page=dapi&q=index&s=" + request;
+        return "https://rule34.xxx/" + request;
     }
 
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
-        return getCustomRequest("comment&post_id=" + post_id);
+        return getCustomRequest("index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
     }
 
     public Post newPostInstance(HashMap<String, String> attributes){
