@@ -15,6 +15,7 @@ import java.util.logging.Logger;
  * Use it, when you need to do something with raw data before parsing,
  * or if you want use your own parser.
  */
+//TODO remove this class and replace all usages by HttpsConnection
 public class HttpConnection {
 
     private static final String USER_AGENT = "BooruEngineLib(mkliverout@gmail.com)/1.0";
@@ -189,6 +190,7 @@ public class HttpConnection {
         } catch (Exception e) {
             throw new BooruEngineException("Exception in GET request method.", e);
         }
+
     }
 
     public String getResponse() {
