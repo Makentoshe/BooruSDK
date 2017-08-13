@@ -30,6 +30,6 @@ public class PostTest {
         XmlParser parser = new XmlParser();
 
         parser.startParse(request1);
-        return (HashMap<String, String>) parser.getResult().get(0);
+        return parser.getResult().get(0);
     }
 }

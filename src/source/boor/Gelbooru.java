@@ -1,7 +1,6 @@
 package source.boor;
 
 import source.Post;
-import source.еnum.Boor;
 import source.еnum.Format;
 
 import java.util.HashMap;
@@ -14,10 +13,25 @@ import java.util.Set;
  */
 public class Gelbooru extends AbstractBoorBasic {
 
-    private static final Gelbooru instance = new Gelbooru();
+    private static final Gelbooru mInstance = new Gelbooru();
 
     public static Gelbooru get() {
-        return instance;
+        return mInstance;
+    }
+
+    private String mPassHash;
+    private int mUserId = -1;
+
+    public void setCookies(String passHash, int userId){
+        this.mPassHash = passHash;
+        this.mUserId = userId;
+    }
+
+    public String getCookies(){
+        if (this.mPassHash != null && !this.mPassHash.equals("") && this.mUserId != -1){
+            return "pass_hash=" + this.mPassHash + "; user_id=" + this.mUserId;
+        }
+        return null;
     }
 
     @Override
@@ -27,7 +41,7 @@ public class Gelbooru extends AbstractBoorBasic {
 
     @Override
     public Post newPostInstance(HashMap<String, String> attributes){
-        Post post = new Post(instance);
+        Post post = new Post(mInstance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
         //for each attribute
@@ -90,7 +104,7 @@ public class Gelbooru extends AbstractBoorBasic {
         //after all check comments flag
         if (post.isHas_comments()){
             //and if true - setup comments url.
-            post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
+            post.setComments_url(mInstance.getCommentsByPostIdRequest(post.getId()));
         }
         return post;
     }
