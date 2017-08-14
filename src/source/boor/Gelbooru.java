@@ -19,17 +19,17 @@ public class Gelbooru extends AbstractBoorBasic {
         return mInstance;
     }
 
-    private String mPassHash;
-    private int mUserId = -1;
+    private String pass_hash;
+    private int user_id = -1;
 
-    public void setCookies(String passHash, int userId){
-        this.mPassHash = passHash;
-        this.mUserId = userId;
+    public void setCookies(final String pass_hash, final int user_id){
+        this.pass_hash = pass_hash;
+        this.user_id = user_id;
     }
 
     public String getCookies(){
-        if (this.mPassHash != null && !this.mPassHash.equals("") && this.mUserId != -1){
-            return "pass_hash=" + this.mPassHash + "; user_id=" + this.mUserId;
+        if (this.pass_hash != null && !this.pass_hash.equals("") && this.user_id != -1){
+            return "pass_hash=" + this.pass_hash + "; user_id=" + this.user_id;
         }
         return null;
     }
@@ -40,7 +40,7 @@ public class Gelbooru extends AbstractBoorBasic {
     }
 
     @Override
-    public Post newPostInstance(HashMap<String, String> attributes){
+    public Post newPostInstance(final HashMap<String, String> attributes){
         Post post = new Post(mInstance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
@@ -110,7 +110,7 @@ public class Gelbooru extends AbstractBoorBasic {
     }
 
     @Override
-    public String getCommentsByPostIdRequest(int post_id, Format ignored) {
+    public String getCommentsByPostIdRequest(final int post_id, final Format ignored) {
         return getCustomRequest("index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
     }
 }
