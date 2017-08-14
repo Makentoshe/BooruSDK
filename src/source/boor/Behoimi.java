@@ -1,5 +1,6 @@
 package source.boor;
 
+import module.LoginModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -11,7 +12,7 @@ import java.util.Set;
  * Singleton.
  * Storage data about Behoimi API, method for getting request and resolving data type.
  */
-public class Behoimi extends AbstractBoorAdvanced {
+public class Behoimi extends AbstractBoorAdvanced implements LoginModule{
 
     private static final Behoimi instance = new Behoimi();
 
@@ -24,18 +25,6 @@ public class Behoimi extends AbstractBoorAdvanced {
 
     public void setFormat(Format format) {
         this.format = format;
-    }
-
-    public void setCookies(final String login, final String pass_hash){
-        this.login = login;
-        this.pass_hash = pass_hash;
-    }
-
-    public String getCookies(){
-        if (this.pass_hash != null && !this.pass_hash.equals("") && this.login != null && !this.login.equals("")){
-            return "pass_hash=" + this.pass_hash + "; login=" + this.login;
-        }
-        return null;
     }
 
     @Override
@@ -121,5 +110,19 @@ public class Behoimi extends AbstractBoorAdvanced {
             post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
         }
         return post;
+    }
+
+    @Override
+    public void setUserData(String identify, String pass) {
+        this.login = identify;
+        this.pass_hash = pass;
+    }
+
+    @Override
+    public String getUserData() {
+        if (this.pass_hash != null && this.login != null ){
+            return "pass_hash=" + this.pass_hash + "; login=" + this.login;
+        }
+        return null;
     }
 }

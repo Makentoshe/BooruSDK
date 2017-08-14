@@ -5,8 +5,6 @@ import engine.HttpsConnection;
 import org.junit.Test;
 import source.boor.*;
 
-import javax.management.BadAttributeValueExpException;
-
 import static org.junit.Assert.*;
 
 public class BoorsAvailabilityTest {

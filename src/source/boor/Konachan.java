@@ -1,5 +1,6 @@
 package source.boor;
 
+import module.LoginModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -11,7 +12,7 @@ import java.util.Set;
  * Singleton.
  * Storage data about Konachan API and method for getting request.
  */
-public class Konachan extends AbstractBoorAdvanced {
+public class Konachan extends AbstractBoorAdvanced implements LoginModule{
 
     private static final Konachan instance = new Konachan();
 
@@ -24,18 +25,6 @@ public class Konachan extends AbstractBoorAdvanced {
 
     public void setFormat(Format format){
         this.format = format;
-    }
-
-    public void setCookies(final String login, final String pass_hash){
-        this.login = login;
-        this.pass_hash = pass_hash;
-    }
-
-    public String getCookies(){
-        if (this.pass_hash != null && !this.pass_hash.equals("") && this.login != null && !this.login.equals("")){
-            return "pass_hash=" + this.pass_hash + "; login=" + this.login;
-        }
-        return null;
     }
 
     @Override
@@ -109,5 +98,19 @@ public class Konachan extends AbstractBoorAdvanced {
         }
         post.setComments_url(getCommentsByPostIdRequest(post.getId()));
         return post;
+    }
+
+    @Override
+    public void setUserData(String identify, String pass) {
+        this.login = identify;
+        this.pass_hash = pass;
+    }
+
+    @Override
+    public String getUserData() {
+        if (this.pass_hash != null && this.login != null){
+            return "pass_hash=" + this.pass_hash + "; login=" + this.login;
+        }
+        return null;
     }
 }

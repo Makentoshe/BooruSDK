@@ -1,5 +1,6 @@
 package source.boor;
 
+import module.LoginModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -12,7 +13,7 @@ import java.util.Set;
  * Storage data about Danbooru API and method for getting request
  */
 //LOGIN NOT TESTED
-public class Danbooru extends AbstractBoorAdvanced {
+public class Danbooru extends AbstractBoorAdvanced implements LoginModule {
 
     private static final Danbooru instance = new Danbooru();
 
@@ -27,13 +28,16 @@ public class Danbooru extends AbstractBoorAdvanced {
         this.format = format;
     }
 
+    @Override
     public void setUserData(final String login, final String pass) {
         this.login = login;
         this.pass = pass;
     }
 
+    @Override
     public String getUserData() {
-        return this.login + ":" + this.pass;
+        if (this.login != null && this.pass != null) return this.login + ":" + this.pass;
+        return null;
     }
 
     @Override

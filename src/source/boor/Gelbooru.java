@@ -1,5 +1,6 @@
 package source.boor;
 
+import module.LoginModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -11,7 +12,7 @@ import java.util.Set;
  * Singleton.
  * Storage data about Gelbooru API and method for getting request
  */
-public class Gelbooru extends AbstractBoorBasic {
+public class Gelbooru extends AbstractBoorBasic implements LoginModule{
 
     private static final Gelbooru mInstance = new Gelbooru();
 
@@ -20,19 +21,7 @@ public class Gelbooru extends AbstractBoorBasic {
     }
 
     private String pass_hash;
-    private int user_id = -1;
-
-    public void setCookies(final String pass_hash, final int user_id){
-        this.pass_hash = pass_hash;
-        this.user_id = user_id;
-    }
-
-    public String getCookies(){
-        if (this.pass_hash != null && !this.pass_hash.equals("") && this.user_id != -1){
-            return "pass_hash=" + this.pass_hash + "; user_id=" + this.user_id;
-        }
-        return null;
-    }
+    private String user_id;
 
     @Override
     public String getCustomRequest(String request) {
@@ -112,5 +101,19 @@ public class Gelbooru extends AbstractBoorBasic {
     @Override
     public String getCommentsByPostIdRequest(final int post_id, final Format ignored) {
         return getCustomRequest("index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
+    }
+
+    @Override
+    public void setUserData(String identify, String pass) {
+        this.user_id = identify;
+        this.pass_hash = pass;
+    }
+
+    @Override
+    public String getUserData() {
+        if (this.pass_hash != null && this.user_id != null) {
+            return "pass_hash=" + this.pass_hash + "; user_id=" + this.user_id;
+        }
+        return null;
     }
 }

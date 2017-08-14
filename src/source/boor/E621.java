@@ -1,5 +1,6 @@
 package source.boor;
 
+import module.LoginModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertEquals;
  * Singleton.
  * Storage data about E621 API and method for getting request
  */
-public class E621 extends AbstractBoorAdvanced {
+public class E621 extends AbstractBoorAdvanced implements LoginModule{
 
     private String login;
     private String pass_hash;
@@ -26,18 +27,6 @@ public class E621 extends AbstractBoorAdvanced {
 
     public void setFormat(Format format){
         this.format = format;
-    }
-
-    public void setCookies(final String login, final String pass_hash){
-        this.login = login;
-        this.pass_hash = pass_hash;
-    }
-
-    public String getCookies(){
-        if (this.pass_hash != null && !this.pass_hash.equals("") && this.login != null && !this.login.equals("")){
-            return "pass_hash=" + this.pass_hash + "; login=" + this.login;
-        }
-        return null;
     }
 
     @Override
@@ -123,5 +112,19 @@ public class E621 extends AbstractBoorAdvanced {
             post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
         }
         return post;
+    }
+
+    @Override
+    public void setUserData(String identify, String pass) {
+        this.login = identify;
+        this.pass_hash = pass;
+    }
+
+    @Override
+    public String getUserData() {
+        if (this.pass_hash != null && this.login != null){
+            return "pass_hash=" + this.pass_hash + "; login=" + this.login;
+        }
+        return null;
     }
 }

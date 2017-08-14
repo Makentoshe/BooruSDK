@@ -1,5 +1,6 @@
 package source.boor;
 
+import module.LoginModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -12,7 +13,7 @@ import java.util.Set;
  * Storage data about Rule34 API and method for getting request
  */
 //Cookies not tested!!!
-public class Rule34 extends AbstractBoorBasic{
+public class Rule34 extends AbstractBoorBasic implements LoginModule {
 
     private static final Rule34 instance = new Rule34();
 
@@ -21,19 +22,7 @@ public class Rule34 extends AbstractBoorBasic{
     }
 
     private String pass_hash;
-    private int user_id = -1;
-
-    public void setCookies(final String pass_hash, final int user_id){
-        this.pass_hash = pass_hash;
-        this.user_id = user_id;
-    }
-
-    public String getCookies(){
-        if (this.pass_hash != null && !this.pass_hash.equals("") && this.user_id != -1){
-            return "pass_hash=" + this.pass_hash + "; user_id=" + this.user_id;
-        }
-        return null;
-    }
+    private String user_id;
 
     @Override
     public String getCustomRequest(String request) {
@@ -113,4 +102,17 @@ public class Rule34 extends AbstractBoorBasic{
         return post;
     }
 
+    @Override
+    public void setUserData(String identify, String pass) {
+        this.pass_hash = pass;
+        this.user_id = identify;
+    }
+
+    @Override
+    public String getUserData() {
+        if (this.pass_hash != null && this.user_id != null){
+            return "pass_hash=" + this.pass_hash + "; user_id=" + this.user_id;
+        }
+        return null;
+    }
 }
