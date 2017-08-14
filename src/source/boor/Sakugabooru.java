@@ -14,6 +14,9 @@ import java.util.Set;
  */
 public class Sakugabooru extends AbstractBoorAdvanced {
 
+    private String pass_hash;
+    private String login;
+
     private final static Sakugabooru instance = new Sakugabooru();
 
     public static Sakugabooru get(){
@@ -22,6 +25,18 @@ public class Sakugabooru extends AbstractBoorAdvanced {
 
     public void setFormat(Format format){
         this.format = format;
+    }
+
+    public void setCookies(final String login, final String pass_hash){
+        this.login = login;
+        this.pass_hash = pass_hash;
+    }
+
+    public String getCookies(){
+        if (this.pass_hash != null && !this.pass_hash.equals("") && this.login != null && !this.login.equals("")){
+            return "pass_hash=" + this.pass_hash + "; login=" + this.login;
+        }
+        return null;
     }
 
     @Override

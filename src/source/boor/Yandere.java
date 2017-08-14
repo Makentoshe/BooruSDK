@@ -16,12 +16,28 @@ public class Yandere extends AbstractBoorAdvanced {
 
     private static final Yandere instance = new Yandere();
 
+    private String pass_hash;
+
+    private int user_id = -1;
+
     public static Yandere get() {
         return instance;
     }
 
     public void setFormat(Format format){
         this.format = format;
+    }
+
+    public void setCookies(final String pass_hash, final int user_id){
+        this.pass_hash = pass_hash;
+        this.user_id = user_id;
+    }
+
+    public String getCookies(){
+        if (this.pass_hash != null && !this.pass_hash.equals("") && this.user_id != -1){
+            return "pass_hash=" + this.pass_hash + "; user_id=" + this.user_id;
+        }
+        return null;
     }
 
     @Override

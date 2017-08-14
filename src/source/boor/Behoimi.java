@@ -19,13 +19,24 @@ public class Behoimi extends AbstractBoorAdvanced {
         return instance;
     }
 
-
+    private String login;
+    private String pass_hash;
 
     public void setFormat(Format format) {
         this.format = format;
     }
 
+    public void setCookies(final String login, final String pass_hash){
+        this.login = login;
+        this.pass_hash = pass_hash;
+    }
 
+    public String getCookies(){
+        if (this.pass_hash != null && !this.pass_hash.equals("") && this.login != null && !this.login.equals("")){
+            return "pass_hash=" + this.pass_hash + "; login=" + this.login;
+        }
+        return null;
+    }
 
     @Override
     public String getCustomRequest(String request) {
