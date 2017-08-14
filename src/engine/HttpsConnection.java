@@ -5,6 +5,7 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class HttpsConnection {
         return this;
     }
 
-    private void setHeadersToConnection(final HttpsURLConnection connection, final Map<String, String> headers) {
+    private void setHeadersToConnection(final HttpURLConnection connection, final Map<String, String> headers) {
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             connection.setRequestProperty(entry.getKey(), entry.getValue());
         }
@@ -93,7 +94,14 @@ public class HttpsConnection {
 
     private void GET(final URL url) throws BooruEngineException {
         try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            HttpURLConnection connection;
+            if (url.getProtocol().equals("https")) {
+                connection = (HttpsURLConnection) url.openConnection();
+                log.log(Level.INFO, "Using HTTPS protocol.");
+            } else {
+                connection = (HttpURLConnection) url.openConnection();
+                log.log(Level.INFO, "Using HTTP protocol.");
+            }
 
             connection.setRequestMethod("GET");
             setHeadersToConnection(connection, this.mHeaders);
