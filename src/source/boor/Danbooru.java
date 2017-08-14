@@ -11,6 +11,7 @@ import java.util.Set;
  * Singleton.
  * Storage data about Danbooru API and method for getting request
  */
+//LOGIN NOT TESTED
 public class Danbooru extends AbstractBoorAdvanced {
 
     private static final Danbooru instance = new Danbooru();
