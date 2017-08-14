@@ -1,7 +1,6 @@
 package source.boor;
 
 import source.Post;
-import source.еnum.Boor;
 import source.еnum.Format;
 
 import java.util.HashMap;
@@ -102,7 +101,7 @@ public class E621 extends AbstractBoorAdvanced {
                     break;
                 }
                 case "created_at":{
-                    post.setCreate_time(pair.getValue());
+                    post.setCreate_Time(pair.getValue());
                     break;
                 }
             }

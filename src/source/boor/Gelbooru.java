@@ -96,7 +96,7 @@ public class Gelbooru extends AbstractBoorBasic {
                     break;
                 }
                 case "created_at":{
-                    post.setCreate_time(pair.getValue());
+                    post.setCreate_Time(pair.getValue());
                     break;
                 }
             }

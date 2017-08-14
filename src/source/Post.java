@@ -46,6 +46,8 @@ import java.util.*;
 //TODO: yandere and sakugabooru is not support searching comments by post_id. Try to find something else...
 public class Post {
 
+    private Map<String, String> original;
+
     private int id = Integer.MIN_VALUE;
 
     private HashSet<String> tags = null;
@@ -125,6 +127,7 @@ public class Post {
     }
 
     protected void defaultConstructor(HashMap<String, String> hashMap) {
+        original = hashMap;
         //create Entry
         Set<Map.Entry<String, String>> entrySet = hashMap.entrySet();
         //for each attribute
@@ -202,7 +205,7 @@ public class Post {
                 }
                 case "updated-at":
                 case "created_at":{
-                    setCreate_time(pair.getValue());
+                    setCreate_Time(pair.getValue());
                     break;
                 }
             }
@@ -451,14 +454,29 @@ public class Post {
      * If data will not defined - method return {@code null}.
      */
     public String getCreate_time() {
-        return create_time;
+        return this.create_time;
     }
 
     /**
      * Method will be success only if data was not defined yet.
      */
-    public void setCreate_time(String create_time) {
+    public void setCreate_Time(String create_time) {
         if (this.create_time != null) return;
         this.create_time = create_time;
+    }
+
+    /**
+     * @return original Map with <strong>all</strong> non modified post data.
+     */
+    public Map<String, String> getMap(){
+        return this.original;
+    }
+
+    /**
+     * @param key key
+     * @return value by this key, or null if key wasn't find.
+     */
+    public String getValue(String key) {
+        return this.original.get(key);
     }
 }
