@@ -15,12 +15,24 @@ public class Danbooru extends AbstractBoorAdvanced {
 
     private static final Danbooru instance = new Danbooru();
 
+    private String login;
+    private String pass;
+
     public static Danbooru get() {
         return instance;
     }
 
-    public void setFormat(Format format){
+    public void setFormat(Format format) {
         this.format = format;
+    }
+
+    public void setUserData(final String login, final String pass) {
+        this.login = login;
+        this.pass = pass;
+    }
+
+    public String getUserData() {
+        return this.login + ":" + this.pass;
     }
 
     @Override
@@ -29,56 +41,56 @@ public class Danbooru extends AbstractBoorAdvanced {
     }
 
     @Override
-    public String getPackByTagsRequest(int limit, String tags, int page, Format format){
-        return getCustomRequest("posts."+format.toString().toLowerCase()+"?tags="+tags+"&limit=" + limit + "&page=" + page);
+    public String getPackByTagsRequest(int limit, String tags, int page, Format format) {
+        return getCustomRequest("posts." + format.toString().toLowerCase() + "?tags=" + tags + "&limit=" + limit + "&page=" + page);
     }
 
     @Override
-    public String getCommentsByPostIdRequest(int post_id, Format format){
-        return getCustomRequest("comments."+format.toString().toLowerCase()+"?group_by=comment&search[post_id]=" + post_id);
+    public String getCommentsByPostIdRequest(int post_id, Format format) {
+        return getCustomRequest("comments." + format.toString().toLowerCase() + "?group_by=comment&search[post_id]=" + post_id);
     }
 
     @Override
-    public Post newPostInstance(HashMap<String, String> attributes){
+    public Post newPostInstance(HashMap<String, String> attributes) {
         Post post = new Post(instance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
         //for each attribute
         for (Map.Entry<String, String> pair : entrySet) {
-            switch (pair.getKey()){
-                case "id":{
+            switch (pair.getKey()) {
+                case "id": {
                     post.setId(Integer.parseInt(pair.getValue()));
                     break;
                 }
-                case "md5":{
+                case "md5": {
                     post.setMd5(pair.getValue());
                     break;
                 }
-                case "rating":{
+                case "rating": {
                     post.setRating(pair.getValue());
                     break;
                 }
-                case "score":{
+                case "score": {
                     post.setScore(Integer.parseInt(pair.getValue()));
                     break;
                 }
-                case "preview_file_url":{
+                case "preview_file_url": {
                     post.setPreview_url("https://danbooru.donmai.us" + pair.getValue());
                     break;
                 }
-                case "tag_string":{
+                case "tag_string": {
                     post.setTags(pair.getValue());
                     break;
                 }
-                case "file_url":{
+                case "file_url": {
                     post.setSample_url("https://danbooru.donmai.us" + pair.getValue());
                     break;
                 }
-                case "large_file_url":{
+                case "large_file_url": {
                     post.setFile_url("https://danbooru.donmai.us" + pair.getValue());
                     break;
                 }
-                case "source":{
+                case "source": {
                     post.setSource(pair.getValue());
                     break;
                 }
@@ -95,7 +107,7 @@ public class Danbooru extends AbstractBoorAdvanced {
                     }
                     break;
                 }
-                case "created_at":{
+                case "created_at": {
                     post.setCreate_Time(pair.getValue());
                     break;
                 }
@@ -103,7 +115,7 @@ public class Danbooru extends AbstractBoorAdvanced {
             }
         }
         //after all check comments flag
-        if (post.isHas_comments()){
+        if (post.isHas_comments()) {
             //and if true - setup comments url.
             post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
         }
