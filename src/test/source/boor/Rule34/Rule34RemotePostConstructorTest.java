@@ -76,18 +76,17 @@ public class Rule34RemotePostConstructorTest {
 
     @Test
     public void getComment() throws Exception {
-        assertFalse("Has comments", post.isHas_comments());
+        assertTrue("Has comments", post.isHas_comments());
     }
 
     @Test
     public void getHasComments() throws Exception {
-        assertEquals("Comment url", null, post.getComments_url());
+        assertEquals("Comment url", "https://rule34.xxx/index.php?page=dapi&q=index&s=comment&post_id=2421106", post.getComments_url());
     }
 
     @Test
     public void getCreateTime() throws Exception {
         assertEquals("Create Time", "Thu Jun 29 22:12:03 +0200 2017", post.getCreate_time());
     }
-
 
 }

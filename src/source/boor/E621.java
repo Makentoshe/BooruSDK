@@ -12,8 +12,10 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Singleton.
- * Storage data about E621 API and method for getting request
+ * Storage data about E621 API and method for getting request.
+ * NO LONGER SUPPORTED.
  */
+@Deprecated
 public class E621 extends AbstractBoorAdvanced implements LoginModule{
 
     private String login;

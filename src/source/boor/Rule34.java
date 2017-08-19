@@ -58,7 +58,7 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule {
                     break;
                 }
                 case "preview_url":{
-                    post.setPreview_url("https:" + pair.getValue());
+                    post.setPreview_url(pair.getValue());
                     break;
                 }
                 case "tags":{
@@ -66,11 +66,11 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule {
                     break;
                 }
                 case "sample_url":{
-                    post.setSample_url("https:" + pair.getValue());
+                    post.setSample_url(pair.getValue());
                     break;
                 }
                 case "file_url":{
-                    post.setFile_url("https:" + pair.getValue());
+                    post.setFile_url(pair.getValue());
                     break;
                 }
                 case "source":{

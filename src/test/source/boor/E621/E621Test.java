@@ -11,36 +11,36 @@ import static org.junit.Assert.*;
 
 public class E621Test {
 
-    @Before
+//    @Before
     public void setUp(){
         E621.get().setFormat(Format.JSON);
     }
 
-    @Test
+    //    @Test
     public void getApi_Test() throws Exception {
         assertEquals(Api.ADVANCED, E621.get().getApi());
     }
 
-    @Test
+    //    @Test
     public void getDataType_Test() throws Exception{
         assertEquals(Format.JSON, E621.get().getFormat());
     }
 
-    @Test
+    //    @Test
     public void getCustomRequest_Test() throws Exception {
         String request = E621.get().getCustomRequest("request");
         String expected = "https://e621.net/request";
         assertEquals(expected, request);
     }
 
-    @Test
+    //    @Test
     public void getIdRequest_Test() throws Exception {
         String request = E621.get().getPostByIdRequest(1263892);
         String expected = "https://e621.net/post/show.json?id=1263892";
         assertEquals(expected, request);
     }
 
-    @Test
+    //    @Test
     public void getPackRequest_Test() throws Exception {
         String request = E621.get().getPackByTagsRequest(10, "hatsune_miku", 0);
         String expected = "https://e621.net/post/index.json?tags=hatsune_miku&limit=10&page=0";

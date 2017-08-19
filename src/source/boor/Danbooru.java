@@ -11,8 +11,9 @@ import java.util.Set;
 /**
  * Singleton.
  * Storage data about Danbooru API and method for getting request
+ * NO LONGER SUPPORTED.
  */
-//LOGIN NOT TESTED
+@Deprecated
 public class Danbooru extends AbstractBoorAdvanced implements LoginModule {
 
     private static final Danbooru instance = new Danbooru();

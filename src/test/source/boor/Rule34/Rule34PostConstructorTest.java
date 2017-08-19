@@ -73,12 +73,12 @@ public class Rule34PostConstructorTest {
 
     @Test
     public void getComment() throws Exception {
-        assertFalse("Has comments", post.isHas_comments());
+        assertTrue("Has comments", post.isHas_comments());
     }
 
     @Test
     public void getHasComments() throws Exception {
-        assertEquals("Comment url", null, post.getComments_url());
+        assertEquals("Comment url", "https://rule34.xxx/index.php?page=dapi&q=index&s=comment&post_id=2421106", post.getComments_url());
     }
 
     @Test

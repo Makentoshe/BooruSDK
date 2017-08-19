@@ -17,6 +17,9 @@ import java.util.logging.Logger;
 
 public class HttpsConnection {
 
+    public static final String DEFAULT_USER_AGENT = "BooruEngineLib/1.0";
+    public static final String METHOD_GET = "GET";
+
     private final Map<String, String> mHeaders = new HashMap<>(); //request headers
     private String mRequestMethod;
 
