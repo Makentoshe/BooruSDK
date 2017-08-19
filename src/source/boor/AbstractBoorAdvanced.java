@@ -32,7 +32,8 @@ public abstract class AbstractBoorAdvanced extends AbstractBoor{
 
     @Override
     public String getPackByTagsRequest(int limit, String tags, int page, Format format){
-        return getCustomRequest("post/index."+format.toString().toLowerCase()+"?tags="+tags+"&limit=" + limit + "&page=" + page);
+        return getCustomRequest("post/index."+format.toString().toLowerCase()+
+                "?tags="+tags+"&limit=" + limit + "&page=" + page);
     }
 
     @Override

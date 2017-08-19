@@ -32,7 +32,8 @@ public abstract class AbstractBoorBasic extends AbstractBoor{
 
     @Override
     public String getPackByTagsRequest(int limit, String tags, int page, Format ignored){
-        return getCustomRequest("index.php?page=dapi&q=index&s=post&limit=" + limit + "&tags=" + tags + "&pid=" + page);
+        return getCustomRequest("index.php?page=dapi&q=index&s=post&limit=" + limit +
+                "&tags=" + tags + "&pid=" + page);
     }
 
     @Override

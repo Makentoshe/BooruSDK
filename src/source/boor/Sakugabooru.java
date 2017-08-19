@@ -35,7 +35,8 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule{
 
     @Override
     public String getPackByTagsRequest(int limit, String tags, int page, Format format) {
-        return getCustomRequest("post."+format.toString().toLowerCase()+"?tags="+tags+"&limit=" + limit + "&page=" + page);
+        return getCustomRequest("post."+format.toString().toLowerCase()+"" +
+                "?tags="+tags+"&limit=" + limit + "&page=" + page);
     }
 
     @Override
@@ -117,5 +118,15 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule{
             return "pass_hash=" + this.pass_hash + "; login=" + this.login;
         }
         return null;
+    }
+
+    @Override
+    public String getIdentify() {
+        return this.login;
+    }
+
+    @Override
+    public String getPass() {
+        return this.pass_hash;
     }
 }

@@ -116,4 +116,14 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule{
         }
         return null;
     }
+
+    @Override
+    public String getIdentify() {
+        return this.user_id;
+    }
+
+    @Override
+    public String getPass() {
+        return this.pass_hash;
+    }
 }

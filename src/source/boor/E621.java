@@ -127,4 +127,14 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule{
         }
         return null;
     }
+
+    @Override
+    public String getIdentify() {
+        return this.login;
+    }
+
+    @Override
+    public String getPass() {
+        return this.pass_hash;
+    }
 }

@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,7 @@ public class HttpsConnection {
     public HttpsConnection addCookie(final String cookie) {
         return setHeader("Cookie", this.mHeaders.get("Cookie") + "; ");
     }
+
     public HttpsConnection setAuthorization(final String login, final String pass) {
         setHeader("Authorization", "Basic " + Base64.encode((login + ':' + pass).getBytes()));
         return this;
@@ -95,18 +97,17 @@ public class HttpsConnection {
     private void GET(final URL url) throws BooruEngineException {
         try {
             HttpURLConnection connection;
-            if (url.getProtocol().equals("https")) {
-                connection = (HttpsURLConnection) url.openConnection();
-                log.log(Level.INFO, "Using HTTPS protocol.");
-            } else {
-                connection = (HttpURLConnection) url.openConnection();
-                log.log(Level.INFO, "Using HTTP protocol.");
-            }
+            if (url.getProtocol().equals("https")) connection = (HttpsURLConnection) url.openConnection();
+            else connection = (HttpURLConnection) url.openConnection();
+
+            log.log(Level.INFO, "Using protocol: " + url.getProtocol());
 
             connection.setRequestMethod("GET");
             setHeadersToConnection(connection, this.mHeaders);
 
-            if (connection.getResponseCode() != 200) throw new BooruEngineException(returnException(this.mResponseCode));
+            if (connection.getResponseCode() != 200) {
+                throw new BooruEngineException(returnException(this.mResponseCode));
+            }
             log.log(Level.INFO, this.mRequestMethod + "request success.");
 
             this.mResponseCode = connection.getResponseCode();
