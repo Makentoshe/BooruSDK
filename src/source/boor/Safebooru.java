@@ -4,6 +4,7 @@ import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
+import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -15,7 +16,7 @@ import java.util.Set;
  * Singleton.
  * Storage data about Safebooru API and method for getting request
  */
-public class Safebooru extends AbstractBoorBasic {
+public class Safebooru extends AbstractBoorBasic implements  LoginModule, VotingModule {
 
     private static final Safebooru instance = new Safebooru();
 
@@ -104,6 +105,7 @@ public class Safebooru extends AbstractBoorBasic {
         return post;
     }
 
+    @Override
     public void logIn(final String login, final String password) throws BooruEngineException {
         String logIn = getCustomRequest("index.php?page=account&s=login&code=00");
         String postData = "user="+login+"&pass="+password+"&submit=Log+in";
@@ -120,15 +122,22 @@ public class Safebooru extends AbstractBoorBasic {
         }
     }
 
+    @Override
     public void logOff(){
         this.loginData.clear();
     }
 
+    @Override
     public Map<String, String> getLoginData(){
         return this.loginData;
     }
 
-    public String votePost(final int id, final String action){
-        return getCustomRequest("index.php?page=post&s=vote&id="+id+"&type=" + action);
+    @Override
+    public void votePost(final int id, final String action) throws BooruEngineException{
+        new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setCookies(loginData.toString().replaceAll(", ", "; "))
+                .openConnection(getCustomRequest("index.php?page=post&s=vote&id=" + id + "&type=" + action));
     }
 }

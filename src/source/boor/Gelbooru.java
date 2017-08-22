@@ -4,6 +4,7 @@ import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
+import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -15,7 +16,7 @@ import java.util.Set;
  * Singleton.
  * Storage data about Gelbooru API and method for getting request
  */
-public class Gelbooru extends AbstractBoorBasic implements LoginModule{
+public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingModule{
 
     private static final Gelbooru mInstance = new Gelbooru();
 
@@ -132,7 +133,12 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule{
         return this.loginData;
     }
 
-    public String votePost(final int id, final String action){
-        return getCustomRequest("index.php?page=post&s=vote&id="+id+"&type=" + action);
+    @Override
+    public void votePost(final int id, final String action) throws BooruEngineException{
+        new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setCookies(loginData.toString().replaceAll(", ", "; "))
+                .openConnection(getCustomRequest("index.php?page=post&s=vote&id=" + id + "&type=" + action));
     }
 }

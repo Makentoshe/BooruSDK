@@ -4,6 +4,7 @@ import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
+import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -16,7 +17,7 @@ import java.util.Set;
  * Storage data about Rule34 API and method for getting request
  */
 //Cookies not tested!!!
-public class Rule34 extends AbstractBoorBasic{
+public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModule{
 
     private static final Rule34 instance = new Rule34();
 
@@ -128,7 +129,12 @@ public class Rule34 extends AbstractBoorBasic{
         return this.loginData;
     }
 
-    public String votePost(final int id, final String action){
-        return getCustomRequest("index.php?page=post&s=vote&id="+id+"&type=" + action);
+    @Override
+    public void votePost(final int id, final String action) throws BooruEngineException{
+        new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setCookies(loginData.toString().replaceAll(", ", "; "))
+                .openConnection(getCustomRequest("index.php?page=post&s=vote&id=" + id + "&type=" + action));
     }
 }
