@@ -13,12 +13,9 @@ import java.util.Set;
  * Storage data about Yandere API and methods for getting request.
  * Not supported "has_comments" and comment searching.
  */
-public class Yandere extends AbstractBoorAdvanced implements LoginModule{
+public class Yandere extends AbstractBoorAdvanced{
 
     private static final Yandere instance = new Yandere();
-
-    private String pass_hash;
-    private String user_id;
 
     public static Yandere get() {
         return instance;
@@ -106,27 +103,4 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule{
         return post;
     }
 
-    @Override
-    public void setUserData(String identify, String pass) {
-        this.pass_hash = pass;
-        this.user_id = identify;
-    }
-
-    @Override
-    public String getUserData() {
-        if (this.pass_hash != null && this.user_id != null){
-            return "pass_hash=" + this.pass_hash + "; user_id=" + this.user_id;
-        }
-        return null;
-    }
-
-    @Override
-    public String getIdentify() {
-        return this.user_id;
-    }
-
-    @Override
-    public String getPass() {
-        return this.pass_hash;
-    }
 }

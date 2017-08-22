@@ -27,10 +27,4 @@ public class GelbooruTest {
         assertEquals(expected, request);
     }
 
-    @Test
-    public void cookies_Test() throws Exception {
-        Gelbooru.get().setUserData("0", "pass_hash");
-        assertEquals("pass_hash=pass_hash; user_id=0", Gelbooru.get().getUserData());
-    }
-
 }

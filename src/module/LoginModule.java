@@ -5,32 +5,9 @@ package module;
  */
 public interface LoginModule {
 
-    /**
-     * Setter for two values - identify and pass.
-     *
-     * @param identify a user identification - id, login, etc
-     * @param pass     a user pass. As usually it's a pass hash, but can be something else.
-     */
-    void setUserData(final String identify, final String pass);
+    void logIn(final String login, final String password) throws Exception;
 
-    /**
-     * Constructor in special format. Each *boor need own format.
-     *
-     * @return string with the appended data.
-     */
-    String getUserData();
+    void logOff();
 
-    /**
-     * Getter.
-     *
-     * @return user identify.
-     */
-    String getIdentify();
-
-    /**
-     * Getter
-     *
-     * @return user pass
-     */
-    String getPass();
+    Object getLoginData();
 }

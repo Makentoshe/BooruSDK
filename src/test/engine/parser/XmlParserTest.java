@@ -1,6 +1,7 @@
 package test.engine.parser;
 
 import engine.HttpsConnection;
+import engine.Method;
 import engine.parser.XmlParser;
 import org.junit.Test;
 import source.boor.Gelbooru;
@@ -26,7 +27,7 @@ public class XmlParserTest {
         XmlParser parser = new XmlParser(false);
 
         String xml = new HttpsConnection()
-                .setRequestMethod(HttpsConnection.METHOD_GET)
+                .setRequestMethod(Method.GET)
                 .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
                 .openConnection(Gelbooru.get().getPackByTagsRequest(2, "hatsune_miku", 0))
                 .getResponse();

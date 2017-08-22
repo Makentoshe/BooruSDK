@@ -1,5 +1,8 @@
 package source.boor;
 
+import engine.BooruEngineException;
+import engine.HttpsConnection;
+import engine.Method;
 import module.LoginModule;
 import source.Post;
 import source.еnum.Format;
@@ -13,16 +16,15 @@ import java.util.Set;
  * Storage data about Rule34 API and method for getting request
  */
 //Cookies not tested!!!
-public class Rule34 extends AbstractBoorBasic implements LoginModule {
+public class Rule34 extends AbstractBoorBasic{
 
     private static final Rule34 instance = new Rule34();
+
+    private Map<String, String> loginData = new HashMap<>(2);
 
     public static Rule34 get() {
         return instance;
     }
-
-    private String pass_hash;
-    private String user_id;
 
     @Override
     public String getCustomRequest(String request) {
@@ -102,27 +104,31 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule {
         return post;
     }
 
-    @Override
-    public void setUserData(String identify, String pass) {
-        this.pass_hash = pass;
-        this.user_id = identify;
-    }
+    public void logIn(final String login, final String password) throws BooruEngineException {
+        String logIn = getCustomRequest("index.php?page=account&s=login&code=00");
+        String postData = "user="+login+"&pass="+password+"&submit=Log+in";
 
-    @Override
-    public String getUserData() {
-        if (this.pass_hash != null && this.user_id != null){
-            return "pass_hash=" + this.pass_hash + "; user_id=" + this.user_id;
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setBody(postData)
+                .openConnection(logIn);
+
+        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
+            String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+            this.loginData.put(data[0], data[1]);
         }
-        return null;
     }
 
-    @Override
-    public String getIdentify() {
-        return this.user_id;
+    public void logOff(){
+        this.loginData.clear();
     }
 
-    @Override
-    public String getPass() {
-        return this.pass_hash;
+    public Map<String, String> getLoginData(){
+        return this.loginData;
+    }
+
+    public String votePost(final int id, final String action){
+        return getCustomRequest("index.php?page=post&s=vote&id="+id+"&type=" + action);
     }
 }

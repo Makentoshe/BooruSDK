@@ -12,7 +12,7 @@ import java.util.Set;
  * Singleton.
  * Storage data about Behoimi API, method for getting request and resolving data type.
  */
-public class Behoimi extends AbstractBoorAdvanced implements LoginModule{
+public class Behoimi extends AbstractBoorAdvanced{
 
     private static final Behoimi instance = new Behoimi();
 
@@ -20,8 +20,6 @@ public class Behoimi extends AbstractBoorAdvanced implements LoginModule{
         return instance;
     }
 
-    private String login;
-    private String pass_hash;
 
     public void setFormat(Format format) {
         this.format = format;
@@ -110,29 +108,5 @@ public class Behoimi extends AbstractBoorAdvanced implements LoginModule{
             post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
         }
         return post;
-    }
-
-    @Override
-    public void setUserData(String identify, String pass) {
-        this.login = identify;
-        this.pass_hash = pass;
-    }
-
-    @Override
-    public String getUserData() {
-        if (this.pass_hash != null && this.login != null ){
-            return "pass_hash=" + this.pass_hash + "; login=" + this.login;
-        }
-        return null;
-    }
-
-    @Override
-    public String getIdentify() {
-        return this.login;
-    }
-
-    @Override
-    public String getPass() {
-        return this.pass_hash;
     }
 }

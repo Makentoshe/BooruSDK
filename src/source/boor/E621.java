@@ -16,10 +16,7 @@ import static org.junit.Assert.assertEquals;
  * NO LONGER SUPPORTED.
  */
 @Deprecated
-public class E621 extends AbstractBoorAdvanced implements LoginModule{
-
-    private String login;
-    private String pass_hash;
+public class E621 extends AbstractBoorAdvanced {
 
     private static final E621 instance = new E621();
 
@@ -114,29 +111,5 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule{
             post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
         }
         return post;
-    }
-
-    @Override
-    public void setUserData(String identify, String pass) {
-        this.login = identify;
-        this.pass_hash = pass;
-    }
-
-    @Override
-    public String getUserData() {
-        if (this.pass_hash != null && this.login != null){
-            return "pass_hash=" + this.pass_hash + "; login=" + this.login;
-        }
-        return null;
-    }
-
-    @Override
-    public String getIdentify() {
-        return this.login;
-    }
-
-    @Override
-    public String getPass() {
-        return this.pass_hash;
     }
 }

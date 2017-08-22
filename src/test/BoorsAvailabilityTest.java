@@ -2,6 +2,7 @@ package test;
 
 import engine.BooruEngineException;
 import engine.HttpsConnection;
+import engine.Method;
 import org.junit.Test;
 import source.boor.*;
 
@@ -15,7 +16,7 @@ public class BoorsAvailabilityTest {
 
     private int getResponseCodeFromRequest(String url) throws BooruEngineException {
         return new HttpsConnection()
-                .setRequestMethod("GET")
+                .setRequestMethod(Method.GET)
                 .setUserAgent("BooruEngineLib(mkliverout@gmail.com)/1.0")
                 .openConnection(url)
                 .getResponseCode();
@@ -34,7 +35,7 @@ public class BoorsAvailabilityTest {
     @Test
     public void e621_Test() throws Exception {
         HttpsConnection connection = new HttpsConnection(true)
-                .setRequestMethod("GET")
+                .setRequestMethod(Method.GET)
                 .setUserAgent("BooruEngineLib(mkliverout@gmail.com)/1.0")
                 .openConnection(E621.get().getCustomRequest(""));
         assertEquals(200, connection.getResponseCode());

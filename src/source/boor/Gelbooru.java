@@ -1,5 +1,8 @@
 package source.boor;
 
+import engine.BooruEngineException;
+import engine.HttpsConnection;
+import engine.Method;
 import module.LoginModule;
 import source.Post;
 import source.еnum.Format;
@@ -16,12 +19,11 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule{
 
     private static final Gelbooru mInstance = new Gelbooru();
 
+    private final Map<String, String> loginData = new HashMap<>(2);
+
     public static Gelbooru get() {
         return mInstance;
     }
-
-    private String pass_hash;
-    private String user_id;
 
     @Override
     public String getCustomRequest(String request) {
@@ -103,27 +105,34 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule{
         return getCustomRequest("index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
     }
 
-    @Override
-    public void setUserData(String identify, String pass) {
-        this.user_id = identify;
-        this.pass_hash = pass;
-    }
+    public void logIn(final String login, final String password) throws BooruEngineException{
+        String gelbooruLogIn = getCustomRequest("index.php?page=account&s=login&code=00");
+        String postData = "user="+login+"&pass="+password+"&submit=Log+in";
 
-    @Override
-    public String getUserData() {
-        if (this.pass_hash != null && this.user_id != null) {
-            return "pass_hash=" + this.pass_hash + "; user_id=" + this.user_id;
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setBody(postData)
+                .openConnection(gelbooruLogIn);
+
+
+        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
+            String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+            this.loginData.put(data[0], data[1]);
         }
-        return null;
     }
 
     @Override
-    public String getIdentify() {
-        return this.user_id;
+    public void logOff(){
+        this.loginData.clear();
     }
 
     @Override
-    public String getPass() {
-        return this.pass_hash;
+    public Map<String, String> getLoginData(){
+        return this.loginData;
+    }
+
+    public String votePost(final int id, final String action){
+        return getCustomRequest("index.php?page=post&s=vote&id="+id+"&type=" + action);
     }
 }

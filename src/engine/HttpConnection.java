@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  * or if you want use your own parser.
  */
 //TODO remove this class and replace all usages by HttpsConnection
+@Deprecated
 public class HttpConnection {
 
     private static final String USER_AGENT = "BooruEngineLib(mkliverout@gmail.com)/1.0";
@@ -41,7 +42,6 @@ public class HttpConnection {
      * @return server response in String.
      * @throws BooruEngineException - when something go wrong.
      */
-    @Deprecated
     public String getRequest(String url) throws BooruEngineException {
         StringBuilder result = new StringBuilder();
 

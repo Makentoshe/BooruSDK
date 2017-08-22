@@ -2,6 +2,7 @@ package test.engine;
 
 import engine.BooruEngineException;
 import engine.HttpsConnection;
+import engine.Method;
 import org.junit.Test;
 import source.boor.Gelbooru;
 
@@ -12,7 +13,7 @@ public class HttpsConnectionTest {
     @Test
     public void successRequest_test() throws Exception {
         HttpsConnection httpsConnection = new engine.HttpsConnection()
-                .setRequestMethod("GET")
+                .setRequestMethod(Method.GET)
                 .setUserAgent("BooruEngineLib(mkliverout@gmail.com)/1.0")
                 .openConnection(Gelbooru.get().getPackByTagsRequest(1, "touhou", 0));
         assertEquals(200, httpsConnection.getResponseCode());
@@ -21,7 +22,7 @@ public class HttpsConnectionTest {
     @Test(expected = BooruEngineException.class)
     public void failedRequest_Test() throws Exception {
         new HttpsConnection()
-                .setRequestMethod("GET")
+                .setRequestMethod(Method.GET)
                 .setUserAgent("BooruEngineLib(mkliverout@gmail.com)/1.0")
                 .openConnection("sas");
     }

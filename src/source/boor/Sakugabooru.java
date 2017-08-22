@@ -13,10 +13,7 @@ import java.util.Set;
  * Storage data about Sakugabooru API and methods for getting request.
  * Not supported "has_comments" and comment searching.
  */
-public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule{
-
-    private String pass_hash;
-    private String login;
+public class Sakugabooru extends AbstractBoorAdvanced{
 
     private final static Sakugabooru instance = new Sakugabooru();
 
@@ -106,27 +103,4 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule{
         return post;
     }
 
-    @Override
-    public void setUserData(String identify, String pass) {
-        this.login = identify;
-        this.pass_hash = pass;
-    }
-
-    @Override
-    public String getUserData() {
-        if (this.pass_hash != null && this.login != null){
-            return "pass_hash=" + this.pass_hash + "; login=" + this.login;
-        }
-        return null;
-    }
-
-    @Override
-    public String getIdentify() {
-        return this.login;
-    }
-
-    @Override
-    public String getPass() {
-        return this.pass_hash;
-    }
 }

@@ -14,12 +14,9 @@ import java.util.Set;
  * NO LONGER SUPPORTED.
  */
 @Deprecated
-public class Danbooru extends AbstractBoorAdvanced implements LoginModule {
+public class Danbooru extends AbstractBoorAdvanced {
 
     private static final Danbooru instance = new Danbooru();
-
-    private String login;
-    private String pass;
 
     public static Danbooru get() {
         return instance;
@@ -27,28 +24,6 @@ public class Danbooru extends AbstractBoorAdvanced implements LoginModule {
 
     public void setFormat(Format format) {
         this.format = format;
-    }
-
-    @Override
-    public void setUserData(final String login, final String pass) {
-        this.login = login;
-        this.pass = pass;
-    }
-
-    @Override
-    public String getUserData() {
-        if (this.login != null && this.pass != null) return this.login + ":" + this.pass;
-        return null;
-    }
-
-    @Override
-    public String getIdentify() {
-        return this.login;
-    }
-
-    @Override
-    public String getPass() {
-        return this.pass;
     }
 
     @Override
