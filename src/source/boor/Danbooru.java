@@ -22,6 +22,10 @@ public class Danbooru extends AbstractBoorAdvanced {
         return instance;
     }
 
+    private Danbooru(){
+        super();
+    }
+
     public void setFormat(Format format) {
         this.format = format;
     }

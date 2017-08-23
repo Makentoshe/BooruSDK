@@ -12,28 +12,30 @@ import java.util.HashMap;
  * and provide implementation for <tt>getCustomRequest</tt>,
  * <tt>getPostByIdRequest</tt>, <tt>getPackByTagsRequest</tt> and
  * <tt>newPostInstance</tt>.
- * <p>
- * You also need to implement <tt>getFormat</tt> and <tt>getApi</tt>.
- * So, you need to create 2 fields - {@code Format} and {@code Api}.
- * They should be explicitly set <strong>and not be null</strong>.
- * But then you can change them by custom methods.
- * <tt>getFormat</tt> and <tt>getApi</tt> implements must return this fields.
  */
 public abstract class AbstractBoor {
+
+    protected Format format;
+
+    protected Api api;
 
     /**
      * Get the result format of the current boor.
      *
      * @return result format. It can be {@code Format.JSON} or {@code Format.XML} or {@code Format.UNDEFINED}.
      */
-    public abstract Format getFormat();
+    public Format getFormat(){
+        return this.format;
+    }
 
     /**
      * Get the API of the current boor.
      *
      * @return API format. It can be {@code Api.Basic} or {@code Api.Advanced} or {@code Api.UNDEFINED}.
      */
-    public abstract Api getApi();
+    public Api getApi(){
+        return this.api;
+    }
 
     /**
      * Construct custom request.

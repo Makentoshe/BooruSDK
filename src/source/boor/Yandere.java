@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
  * Singleton.
  * Storage data about Yandere API and methods for getting request.
  * Not supported "has_comments" and comment searching.
+ * for each request need new csrf-token
  */
 public class Yandere extends AbstractBoorAdvanced implements LoginModule {
 
@@ -29,6 +30,10 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule {
 
     public void setFormat(Format format){
         this.format = format;
+    }
+
+    private Yandere(){
+        super();
     }
 
     @Override

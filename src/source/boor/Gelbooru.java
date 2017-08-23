@@ -26,6 +26,10 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
         return mInstance;
     }
 
+    private Gelbooru(){
+        super();
+    }
+
     @Override
     public String getCustomRequest(String request) {
         return "https://gelbooru.com" + request;

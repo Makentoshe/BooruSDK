@@ -27,6 +27,10 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModu
         return instance;
     }
 
+    private Rule34(){
+        super();
+    }
+
     @Override
     public String getCustomRequest(String request) {
         return "https://rule34.xxx" + request;

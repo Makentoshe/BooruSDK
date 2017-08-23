@@ -11,9 +11,10 @@ import java.util.HashMap;
  */
 public abstract class AbstractBoorBasic extends AbstractBoor{
 
-    protected final Format format = Format.XML;
-
-    protected final Api api = Api.BASICS;
+    public AbstractBoorBasic(){
+        format = Format.XML;
+        api = Api.BASICS;
+    }
 
     @Override
     public final Format getFormat(){

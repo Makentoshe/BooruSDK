@@ -11,18 +11,9 @@ import java.util.HashMap;
  */
 public abstract class AbstractBoorAdvanced extends AbstractBoor{
 
-    protected Format format = Format.JSON;
-
-    protected final Api api = Api.ADVANCED;
-
-    @Override
-    public final Format getFormat(){
-        return format;
-    }
-
-    @Override
-    public final Api getApi() {
-        return api;
+    public AbstractBoorAdvanced(){
+        format = Format.JSON;
+        api = Api.ADVANCED;
     }
 
     @Override

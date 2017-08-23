@@ -26,6 +26,10 @@ public class Safebooru extends AbstractBoorBasic implements  LoginModule, Voting
 
     private Map<String, String> loginData = new HashMap<>(2);
 
+    private Safebooru(){
+        super();
+    }
+
     @Override
     public String getCustomRequest(final String request) {
         return "https://safebooru.org" + request;

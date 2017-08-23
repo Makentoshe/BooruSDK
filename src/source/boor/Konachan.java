@@ -25,6 +25,10 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
         return instance;
     }
 
+    private Konachan(){
+        super();
+    }
+
     public void setFormat(Format format) {
         this.format = format;
     }

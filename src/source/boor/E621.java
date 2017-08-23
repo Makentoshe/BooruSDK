@@ -22,6 +22,10 @@ public class E621 extends AbstractBoorAdvanced {
         return instance;
     }
 
+    private E621(){
+        super();
+    }
+
     public void setFormat(Format format){
         this.format = format;
     }

@@ -28,7 +28,7 @@ public class SakugabooruTest {
 
     @Test
     public void getCustomRequest_Test() throws Exception {
-        String request = Sakugabooru.get().getCustomRequest("request");
+        String request = Sakugabooru.get().getCustomRequest("/request");
         String expected = "https://sakugabooru.com/request";
         assertEquals(expected, request);
     }

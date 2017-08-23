@@ -20,6 +20,10 @@ public class Behoimi extends AbstractBoorAdvanced{
         return instance;
     }
 
+    private Behoimi(){
+        super();
+    }
+
     public void setFormat(Format format) {
         this.format = format;
     }
