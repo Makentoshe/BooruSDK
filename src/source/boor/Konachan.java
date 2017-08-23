@@ -4,16 +4,18 @@ import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
+import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Singleton.
  * Storage data about Konachan API and method for getting request.
  */
-public class Konachan extends AbstractBoorAdvanced {
+public class Konachan extends AbstractBoorAdvanced implements LoginModule, VotingModule{
 
     private static final Konachan instance = new Konachan();
 
@@ -100,6 +102,7 @@ public class Konachan extends AbstractBoorAdvanced {
         return post;
     }
 
+    @Override
     public void logIn(final String login, final String password) throws BooruEngineException {
         if (!loginData.containsKey("konachan.com") || !loginData.containsKey("authenticity_token")) {
             //get connection
@@ -114,11 +117,11 @@ public class Konachan extends AbstractBoorAdvanced {
             }
             //set token
             if (!loginData.containsKey("authenticity_token")) {
-                setToken(connection);
+                _setToken(connection);
             }
         }
 
-        System.out.println(loginData);
+        System.out.println(loginData.get("authenticity_token"));
         System.out.println(" ");
 
         //if already have not cookie - throw an exception
@@ -154,10 +157,12 @@ public class Konachan extends AbstractBoorAdvanced {
         }
     }
 
+    @Override
     public void logOff() {
         this.loginData.clear();
     }
 
+    @Override
     public Map<String, String> getLoginData() {
         return this.loginData;
     }
@@ -173,18 +178,24 @@ public class Konachan extends AbstractBoorAdvanced {
                 });
     }
 
-    private void setToken(final HttpsConnection connection) {
+    private void _setToken(final HttpsConnection connection) {
         String s = connection.getResponse();
         String data = s.split("name=\"csrf-param\" />")[1]
                 .split(" name=\"csrf-token\" />")[0]
                 .replaceAll("\"", "")
-                .replace("<meta content=", "");
+                .replace("<meta content=", "")
+                .replaceAll(Pattern.quote("+"), "%2B");
+
+        System.out.println("New token: " + data);
         loginData.put("authenticity_token", data);
     }
 
+    public void setCsrfToken(final String token){
+        loginData.put("authenticity_token", token);
+    }
 
-
-    public void vote(final int id, final int score) throws BooruEngineException{
+    @Override
+    public void votePost(final int id, final String score) throws BooruEngineException{
         new HttpsConnection()
                 .setRequestMethod(Method.POST)
                 .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)

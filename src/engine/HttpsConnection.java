@@ -5,11 +5,11 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.Proxy;
-import java.net.URL;
+import java.net.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,6 +117,7 @@ public class HttpsConnection {
             log.log(Level.INFO, "Using protocol: " + url.getProtocol());
 
             connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Length", "0");
             setHeadersToConnection(connection, this.mHeaders);
 
             this.mResponseCode = connection.getResponseCode();
@@ -136,34 +137,31 @@ public class HttpsConnection {
     }
 
     private void POST(final URL url) throws BooruEngineException {
+        HttpURLConnection connection;
+        //choose protocol
         try {
-            HttpURLConnection connection;
-
-            //choose protocol
             if (url.getProtocol().equals("https")) connection = (HttpsURLConnection) url.openConnection();
             else connection = (HttpURLConnection) url.openConnection();
-
             log.log(Level.INFO, "Using protocol: " + url.getProtocol());
+        }catch (IOException ioe1) {
+            throw new BooruEngineException(ioe1);
+        }
 
+        try{
             //set meta-data
             connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Length", String.valueOf(this.mBody.length()));
             setHeadersToConnection(connection, this.mHeaders);
-
             connection.setInstanceFollowRedirects(false);
 
-            //send post request
+            //send post
             connection.setDoOutput(true);
             DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
             outputStream.writeBytes(this.mBody);
             outputStream.flush();
             outputStream.close();
 
-//            //get response
-//            if (connection.getResponseCode() != 200) {
-//                throw new BooruEngineException(returnException(connection.getResponseCode()));
-//            }
-//            log.log(Level.INFO, this.mRequestMethod + " request success.");
-
+            //get response
             this.mResponseCode = connection.getResponseCode();
             this.mResponseMessage = connection.getResponseMessage();
             this.mResponseHeaders = connection.getHeaderFields();
@@ -175,7 +173,9 @@ public class HttpsConnection {
             reader.close();
             this.mResponse = response.toString();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
+            connection.getErrorStream();
+            connection.disconnect();
             throw new BooruEngineException(e);
         }
     }
