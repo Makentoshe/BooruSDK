@@ -105,15 +105,20 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModu
         return post;
     }
 
+    @Override
+    public String getAuthenticateRequest() {
+        return getCustomRequest("index.php?page=account&s=login&code=00");
+    }
+
+    @Override
     public void logIn(final String login, final String password) throws BooruEngineException {
-        String logIn = getCustomRequest("index.php?page=account&s=login&code=00");
         String postData = "user="+login+"&pass="+password+"&submit=Log+in";
 
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
                 .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
                 .setBody(postData)
-                .openConnection(logIn);
+                .openConnection(getAuthenticateRequest());
 
         for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
             String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
@@ -121,10 +126,12 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModu
         }
     }
 
+    @Override
     public void logOff(){
         this.loginData.clear();
     }
 
+    @Override
     public Map<String, String> getLoginData(){
         return this.loginData;
     }

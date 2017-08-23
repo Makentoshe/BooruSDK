@@ -106,15 +106,19 @@ public class Safebooru extends AbstractBoorBasic implements  LoginModule, Voting
     }
 
     @Override
+    public String getAuthenticateRequest() {
+        return getCustomRequest("index.php?page=account&s=login&code=00");
+    }
+
+    @Override
     public void logIn(final String login, final String password) throws BooruEngineException {
-        String logIn = getCustomRequest("index.php?page=account&s=login&code=00");
         String postData = "user="+login+"&pass="+password+"&submit=Log+in";
 
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
                 .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
                 .setBody(postData)
-                .openConnection(logIn);
+                .openConnection(getAuthenticateRequest());
 
         for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
             String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
