@@ -27,7 +27,7 @@ public class BehoimiTest {
 
     @Test
     public void getCustomRequest_Test() throws Exception {
-        String request = Behoimi.get().getCustomRequest("request");
+        String request = Behoimi.get().getCustomRequest("/request");
         String expected = "http://behoimi.org/request";
         assertEquals(expected, request);
     }

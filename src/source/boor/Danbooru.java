@@ -28,18 +28,18 @@ public class Danbooru extends AbstractBoorAdvanced {
 
     @Override
     public String getCustomRequest(String request) {
-        return "https://danbooru.donmai.us/" + request;
+        return "https://danbooru.donmai.us" + request;
     }
 
     @Override
     public String getPackByTagsRequest(int limit, String tags, int page, Format format) {
-        return getCustomRequest("posts." + format.toString().toLowerCase() +
+        return getCustomRequest("/posts." + format.toString().toLowerCase() +
                 "?tags=" + tags + "&limit=" + limit + "&page=" + page);
     }
 
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
-        return getCustomRequest("comments." + format.toString().toLowerCase() +
+        return getCustomRequest("/comments." + format.toString().toLowerCase() +
                 "?group_by=comment&search[post_id]=" + post_id);
     }
 

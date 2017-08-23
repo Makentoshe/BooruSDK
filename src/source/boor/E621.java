@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * Singleton.
  * Storage data about E621 API and method for getting request.
@@ -30,17 +28,17 @@ public class E621 extends AbstractBoorAdvanced {
 
     @Override
     public String getCustomRequest(String request) {
-        return "https://e621.net/" + request;
+        return "https://e621.net" + request;
     }
 
     @Override
     public String getPostByIdRequest(int id, Format format) {
-        return getCustomRequest("post/show."+format.toString().toLowerCase()+"?id=" + id);
+        return getCustomRequest("/post/show."+format.toString().toLowerCase()+"?id=" + id);
     }
 
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
-        return getCustomRequest("comment/search."+format.toString().toLowerCase()+"?post_id=" + post_id);
+        return getCustomRequest("/comment/search."+format.toString().toLowerCase()+"?post_id=" + post_id);
     }
 
     @Override

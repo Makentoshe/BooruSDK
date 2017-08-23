@@ -27,12 +27,12 @@ public abstract class AbstractBoorAdvanced extends AbstractBoor{
 
     @Override
     public String getPostByIdRequest(int id, Format format) {
-        return getCustomRequest("posts/" + String.valueOf(id) + "." + format.toString().toLowerCase());
+        return getCustomRequest("/posts/" + String.valueOf(id) + "." + format.toString().toLowerCase());
     }
 
     @Override
     public String getPackByTagsRequest(int limit, String tags, int page, Format format){
-        return getCustomRequest("post/index."+format.toString().toLowerCase()+
+        return getCustomRequest("/post/index."+format.toString().toLowerCase()+
                 "?tags="+tags+"&limit=" + limit + "&page=" + page);
     }
 

@@ -28,7 +28,7 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
 
     @Override
     public String getCustomRequest(String request) {
-        return "https://gelbooru.com/" + request;
+        return "https://gelbooru.com" + request;
     }
 
     @Override
@@ -103,7 +103,7 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
 
     @Override
     public String getCommentsByPostIdRequest(final int post_id, final Format ignored) {
-        return getCustomRequest("index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
+        return getCustomRequest("/index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
     }
 
     public void logIn(final String login, final String password) throws BooruEngineException{
@@ -133,7 +133,7 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
 
     @Override
     public String getAuthenticateRequest() {
-        return getCustomRequest("index.php?page=account&s=login&code=00");
+        return getCustomRequest("/index.php?page=account&s=login&code=00");
     }
 
     @Override
@@ -142,6 +142,6 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
                 .setRequestMethod(Method.GET)
                 .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
-                .openConnection(getCustomRequest("index.php?page=post&s=vote&id=" + id + "&type=" + action));
+                .openConnection(getCustomRequest("/index.php?page=post&s=vote&id=" + id + "&type=" + action));
     }
 }

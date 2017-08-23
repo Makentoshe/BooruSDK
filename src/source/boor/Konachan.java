@@ -8,7 +8,6 @@ import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -20,7 +19,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
 
     private static final Konachan instance = new Konachan();
 
-    private Map<String, String> loginData = new HashMap<>();
+    private final Map<String, String> loginData = new HashMap<>();
 
     public static Konachan get() {
         return instance;
@@ -37,12 +36,12 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
 
     @Override
     public String getPostByIdRequest(int id, Format format) {
-        return getCustomRequest("post." + format.toString().toLowerCase() + "?tags=id:" + id);
+        return getCustomRequest("/post." + format.toString().toLowerCase() + "?tags=id:" + id);
     }
 
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
-        return getCustomRequest("comment." + format.toString().toLowerCase() + "?post_id=" + post_id);
+        return getCustomRequest("/comment." + format.toString().toLowerCase() + "?post_id=" + post_id);
     }
 
     @Override

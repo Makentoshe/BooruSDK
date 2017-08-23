@@ -28,7 +28,7 @@ public class KonachanTest {
 
     @Test
     public void getCustomRequest_Test() throws Exception {
-        String request = Konachan.get().getCustomRequest("request");
+        String request = Konachan.get().getCustomRequest("/request");
         String expected = "https://konachan.com/request";
         assertEquals(expected, request);
     }

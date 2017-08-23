@@ -26,17 +26,17 @@ public class Behoimi extends AbstractBoorAdvanced{
 
     @Override
     public String getCustomRequest(String request) {
-        return "http://behoimi.org/" + request;
+        return "http://behoimi.org" + request;
     }
 
     @Override
     public String getPostByIdRequest(int id, Format format) {
-        return getCustomRequest("post/index." + format.toString().toLowerCase() + "?tags=id:" + id);
+        return getCustomRequest("/post/index." + format.toString().toLowerCase() + "?tags=id:" + id);
     }
 
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
-        return getCustomRequest("comment/index."+format.toString().toLowerCase()+"?post_id=" + post_id);
+        return getCustomRequest("/comment/index."+format.toString().toLowerCase()+"?post_id=" + post_id);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class GelbooruTest {
 
     @Test
     public void getCustomRequest_Test() throws Exception{
-        String request = Gelbooru.get().getCustomRequest("request");
+        String request = Gelbooru.get().getCustomRequest("/request");
         String expected = "https://gelbooru.com/request";
         assertEquals(expected, request);
     }

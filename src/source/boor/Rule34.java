@@ -29,12 +29,12 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModu
 
     @Override
     public String getCustomRequest(String request) {
-        return "https://rule34.xxx/" + request;
+        return "https://rule34.xxx" + request;
     }
 
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
-        return getCustomRequest("index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
+        return getCustomRequest("/index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
     }
 
     public Post newPostInstance(HashMap<String, String> attributes){
@@ -107,7 +107,7 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModu
 
     @Override
     public String getAuthenticateRequest() {
-        return getCustomRequest("index.php?page=account&s=login&code=00");
+        return getCustomRequest("/index.php?page=account&s=login&code=00");
     }
 
     @Override
@@ -142,6 +142,6 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModu
                 .setRequestMethod(Method.GET)
                 .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
-                .openConnection(getCustomRequest("index.php?page=post&s=vote&id=" + id + "&type=" + action));
+                .openConnection(getCustomRequest("/index.php?page=post&s=vote&id=" + id + "&type=" + action));
     }
 }

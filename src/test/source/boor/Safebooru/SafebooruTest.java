@@ -23,7 +23,7 @@ public class SafebooruTest {
 
     @Test
     public void getCustomRequest_Test() throws Exception {
-        String request = Safebooru.get().getCustomRequest("request");
+        String request = Safebooru.get().getCustomRequest("/request");
         String expected = "https://safebooru.org/request";
         assertEquals(expected, request);
     }
