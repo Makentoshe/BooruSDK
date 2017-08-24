@@ -2,7 +2,7 @@ package module;
 
 import source.Post;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Interface with the single method for remote <tt>Post</tt> creating.
@@ -13,8 +13,8 @@ public interface PostModule {
      * Here you can create Post and create remote "constructor".
      * The main feature is reliably indicate from which *boor this post.
      *
-     * @param attributes list of all post attributes
+     * @param attributes map of all post attributes
      * @return Post entity with setted data.
      */
-    Post newPostInstance(HashMap<String, String> attributes);
+    Post newPostInstance(final Map<String, String> attributes);
 }

@@ -51,7 +51,7 @@ public class Behoimi extends AbstractBoorAdvanced implements LoginModule, PostMo
     }
 
     @Override
-    public Post newPostInstance(HashMap<String, String> attributes) {
+    public Post newPostInstance(final Map<String, String> attributes) {
         Post post = new Post(instance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();

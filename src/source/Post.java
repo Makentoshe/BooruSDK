@@ -20,7 +20,8 @@ import java.util.*;
  *     Default constructor for Post support some formats attributes.
  * <p>
  *     Be careful, if your attributes has specific names -
- * you must create Post entity in special method {@code newPostInstance(Hashmap&lt;String, String&gt;)} in you boor.
+ * you can implement in you boor PostModule interface, which have special method
+ * {@code newPostInstance(Hashmap&lt;String, String&gt;)}.
  * <p>
  * <p>Support attributes:
  * <p>    <i>id</i> - post id in the boor.

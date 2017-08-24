@@ -37,7 +37,7 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
     }
 
     @Override
-    public Post newPostInstance(final HashMap<String, String> attributes){
+    public Post newPostInstance(final Map<String, String> attributes){
         Post post = new Post(mInstance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();

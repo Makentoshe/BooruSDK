@@ -41,7 +41,8 @@ public class Safebooru extends AbstractBoorBasic implements  LoginModule, Voting
         return getCustomRequest("/index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
     }
 
-    public Post newPostInstance(HashMap<String, String> attributes){
+    @Override
+    public Post newPostInstance(final Map<String, String> attributes){
         Post post = new Post(instance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
