@@ -121,8 +121,7 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
 
         for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
             String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
-            this.loginData.put(data[0], data[1]);
-        }
+            if (data.length == 2) this.loginData.put(data[0], data[1]);        }
     }
 
     @Override
