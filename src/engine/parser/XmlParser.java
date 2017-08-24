@@ -58,6 +58,7 @@ public class XmlParser extends DefaultHandler {
      *
      * @param url - url to data.
      * @throws BooruEngineException - when parsing is going wrong.
+     * Use <tt>getCause</tt> to see more details.
      */
     public void startParse(String url) throws BooruEngineException {
         if (reusable && result.size() > 0) result.clear();
@@ -77,6 +78,7 @@ public class XmlParser extends DefaultHandler {
      *
      * @param stream - data stream.
      * @throws BooruEngineException - when parsing is going wrong.
+     * Use <tt>getCause</tt> to see more details.
      */
     public void startParse(InputStream stream) throws BooruEngineException {
         if (reusable) result.clear();

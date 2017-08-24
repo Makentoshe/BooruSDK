@@ -12,7 +12,8 @@ public interface LoginModule {
      *
      * @param login user login
      * @param password user pass
-     * @throws BooruEngineException - when something go wrong. Use <tt>getCause</tt> to see details.
+     * @throws BooruEngineException - when something go wrong.
+     * Use <tt>getCause</tt> to see details.
      */
     void logIn(final String login, final String password) throws BooruEngineException;
 

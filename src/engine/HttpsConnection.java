@@ -101,7 +101,7 @@ public class HttpsConnection {
                 break;
             }
             default: {
-                throw new BooruEngineException("Method " + this.mRequestMethod + "is not supported.");
+                throw new BooruEngineException(new UnsupportedOperationException("Method " + this.mRequestMethod + "is not supported."));
             }
         }
         return this;
@@ -131,7 +131,7 @@ public class HttpsConnection {
             reader.close();
             this.mResponse = response.toString();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new BooruEngineException(e);
         }
     }
