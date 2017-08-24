@@ -1,5 +1,8 @@
 package source.boor;
 
+import engine.BooruEngineException;
+import engine.HttpsConnection;
+import engine.Method;
 import module.LoginModule;
 import source.Post;
 import source.еnum.Format;
@@ -7,16 +10,17 @@ import source.еnum.Format;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Singleton.
  * Storage data about E621 API and method for getting request.
- * NO LONGER SUPPORTED.
  */
-@Deprecated
-public class E621 extends AbstractBoorAdvanced {
+public class E621 extends AbstractBoorAdvanced implements LoginModule{
 
     private static final E621 instance = new E621();
+
+    private final Map<String, String> loginData = new HashMap<>();
 
     public static E621 get(){
         return instance;
@@ -113,5 +117,90 @@ public class E621 extends AbstractBoorAdvanced {
             post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
         }
         return post;
+    }
+
+    @Override
+    public void logIn(final String login, final String password) throws BooruEngineException {
+        if (!loginData.containsKey("e621") || !loginData.containsKey("authenticity_token")) {
+            //get connection
+            HttpsConnection connection = new HttpsConnection()
+                    .setRequestMethod(Method.GET)
+                    .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                    .openConnection(getCustomRequest("/user/login"));
+
+            //set cookie
+            if (!loginData.containsKey("e621")) {
+                setCookie(connection);
+            }
+            //set token
+            if (!loginData.containsKey("authenticity_token")) {
+                setToken(connection);
+            }
+        }
+
+        //if already have not cookie - throw an exception
+        if (!loginData.containsKey("e621")) {
+            throw new BooruEngineException("Can't find \"e621\" cookie in login data.");
+        }
+        //if already have not token - throw an exception
+        if (!loginData.containsKey("authenticity_token")) {
+            throw new BooruEngineException("Can't find \"authenticity_token\" in login data.");
+        }
+
+        //create new connection for login
+        String postData = "authenticity_token=" + loginData.get("authenticity_token") + "&user%5Bname%5D=" + login +
+                "&user%5Bpassword%5D=" + password + "&user%5Broaming%5D=0&user%5Broaming%5D=1";
+        String cookie = "e621=" + loginData.get("e621");
+
+        //create connection
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setBody(postData)
+                .setCookies(cookie)
+                .openConnection(getAuthenticateRequest());
+
+        if (connection.getHeader("Set-Cookie") == null) {
+            throw new BooruEngineException(new NullPointerException());
+        }
+
+        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
+            String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+            if (data.length == 2) this.loginData.put(data[0], data[1]);
+        }
+    }
+
+    @Override
+    public void logOff() {
+        this.loginData.clear();
+    }
+
+    @Override
+    public Object getLoginData() {
+        return this.loginData;
+    }
+
+    @Override
+    public String getAuthenticateRequest() {
+        return getCustomRequest("/user/authenticate");
+    }
+
+    private void setCookie(final HttpsConnection connection) {
+        connection
+                .getHeader("Set-Cookie")
+                .stream()
+                .filter(s -> s.contains("e621"))
+                .forEach(s -> {
+                    String[] split = s.split("=");
+                    loginData.put(split[0], split[1].split("; ")[0]);
+                });
+    }
+
+    private void setToken(final HttpsConnection connection) {
+        String s = connection.getResponse();
+        String data = s.split("<input name=\"authenticity_token\" type=\"hidden\" value=\"")[1]
+                .split("\"></div>")[0]
+                .replaceAll(Pattern.quote("+"), "%2B");
+        loginData.put("authenticity_token", data);
     }
 }
