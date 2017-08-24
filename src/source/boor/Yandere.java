@@ -4,6 +4,7 @@ import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
+import module.PostModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -18,7 +19,7 @@ import java.util.regex.Pattern;
  * Not supported "has_comments" and comment searching.
  * for each request need new csrf-token
  */
-public class Yandere extends AbstractBoorAdvanced implements LoginModule {
+public class Yandere extends AbstractBoorAdvanced implements LoginModule, PostModule {
 
     private static final Yandere instance = new Yandere();
 

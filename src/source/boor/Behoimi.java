@@ -4,6 +4,7 @@ import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
+import module.PostModule;
 import source.Post;
 import source.еnum.Format;
 import sun.rmi.runtime.Log;
@@ -16,7 +17,7 @@ import java.util.Set;
  * Singleton.
  * Storage data about Behoimi API, method for getting request and resolving data type.
  */
-public class Behoimi extends AbstractBoorAdvanced implements LoginModule {
+public class Behoimi extends AbstractBoorAdvanced implements LoginModule, PostModule {
 
     private static final Behoimi instance = new Behoimi();
 

@@ -4,6 +4,7 @@ import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
+import module.PostModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -16,7 +17,7 @@ import java.util.regex.Pattern;
  * Singleton.
  * Storage data about E621 API and method for getting request.
  */
-public class E621 extends AbstractBoorAdvanced implements LoginModule{
+public class E621 extends AbstractBoorAdvanced implements LoginModule, PostModule {
 
     private static final E621 instance = new E621();
 

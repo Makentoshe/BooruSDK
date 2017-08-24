@@ -26,9 +26,4 @@ public abstract class AbstractBoorAdvanced extends AbstractBoor{
         return getCustomRequest("/post/index."+format.toString().toLowerCase()+
                 "?tags="+tags+"&limit=" + limit + "&page=" + page);
     }
-
-    @Override
-    public Post newPostInstance(HashMap<String, String> attributes){
-        return null;
-    }
 }

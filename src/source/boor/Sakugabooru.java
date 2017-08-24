@@ -4,6 +4,7 @@ import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
+import module.PostModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -18,7 +19,7 @@ import java.util.regex.Pattern;
  * Not supported "has_comments" and comment searching.
  * for each request need new cookies and csrf-token
  */
-public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule {
+public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, PostModule {
 
     private final static Sakugabooru instance = new Sakugabooru();
 

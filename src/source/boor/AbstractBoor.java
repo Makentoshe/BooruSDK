@@ -110,13 +110,4 @@ public abstract class AbstractBoor {
     public final String getCommentsByPostIdRequest(int post_id){
         return getCommentsByPostIdRequest(post_id, getFormat());
     }
-
-    /**
-     * Empty method for boor.
-     * Here you can create Post and create remote "constructor".
-     *
-     * @param attributes list of all post attributes
-     * @return Post entity with setted data.
-     */
-    public abstract Post newPostInstance(HashMap<String, String> attributes);
 }

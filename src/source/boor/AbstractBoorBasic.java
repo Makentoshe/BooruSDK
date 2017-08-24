@@ -36,9 +36,4 @@ public abstract class AbstractBoorBasic extends AbstractBoor{
         return getCustomRequest("/index.php?page=dapi&q=index&s=post&limit=" + limit +
                 "&tags=" + tags + "&pid=" + page);
     }
-
-    @Override
-    public Post newPostInstance(HashMap<String, String> attributes){
-        return null;
-    }
 }

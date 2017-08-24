@@ -4,6 +4,7 @@ import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
+import module.PostModule;
 import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
@@ -16,7 +17,7 @@ import java.util.Set;
  * Singleton.
  * Storage data about Safebooru API and method for getting request
  */
-public class Safebooru extends AbstractBoorBasic implements  LoginModule, VotingModule {
+public class Safebooru extends AbstractBoorBasic implements  LoginModule, VotingModule, PostModule {
 
     private static final Safebooru instance = new Safebooru();
 
