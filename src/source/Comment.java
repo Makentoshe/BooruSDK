@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Simple class which can describe comment for post from all boors.
  * <p>
- * This instance getting as is. That means, that you <strong>can't</strong> modify field after data defined.
+ * This instance getting as is. That means, that you <strong>can't</strong> modify fields after data defined.
  * Of course, when field is undefined you can setup value.
  * If you want change one or more fields - you must create new instance.
  * When data is defined - all setter calls will be ignored.
