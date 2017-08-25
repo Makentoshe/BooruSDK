@@ -5,9 +5,11 @@ import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
 import module.PostModule;
+import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 
+import javax.naming.AuthenticationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +21,12 @@ import java.util.regex.Pattern;
  * Not supported "has_comments" and comment searching.
  * for each request need new cookies and csrf-token
  */
-public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, PostModule {
+/*
+  Note:
+    Cookies are not static. for each request need new cookie data.
+    csrf-token is not static. for each request need new token.
+ */
+public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, PostModule, VotingModule {
 
     private final static Sakugabooru instance = new Sakugabooru();
 
@@ -201,5 +208,34 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Po
 
         System.out.println(data);
         loginData.put("authenticity_token", data);
+    }
+
+    @Override
+    public boolean votePost(int id, String score) throws BooruEngineException {
+        String token;
+        try{
+            token = loginData.get("authenticity_token").replaceAll("%2B", "+");
+        } catch (NullPointerException e){
+            throw new BooruEngineException("User data not defined.", new AuthenticationException());
+        }
+        try {
+            HttpsConnection connection = new HttpsConnection()
+                    .setRequestMethod(Method.POST)
+                    .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                    .setCookies(loginData.toString().replaceAll(", ", "; "))
+                    .setHeader("X-CSRF-Token", token)
+                    .setBody("id=" + id + "&score=" + score)
+                    .openConnection(getVotePostRequest());
+
+            return connection.getResponse().split("\"success\":")[1].equals("true");
+
+        } catch (BooruEngineException e) {
+            throw new BooruEngineException(e.getCause().getMessage());
+        }
+    }
+
+    @Override
+    public String getVotePostRequest() {
+        return getCustomRequest("/post/vote.json");
     }
 }

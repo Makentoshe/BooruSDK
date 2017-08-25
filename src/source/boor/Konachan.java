@@ -9,12 +9,18 @@ import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 
+import javax.naming.AuthenticationException;
 import java.util.*;
 import java.util.regex.Pattern;
 
 /**
  * Singleton.
  * Storage data about Konachan API and method for getting request.
+ */
+/*
+  Note:
+    Cookies are static
+    csrf-token is static too
  */
 public class Konachan extends AbstractBoorAdvanced implements LoginModule, VotingModule, PostModule {
 
@@ -194,9 +200,15 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
         loginData.put("authenticity_token", data);
     }
 
+    //score - 0 is remove, from 1 to 3. 3 is favorite.
     @Override
-    public void votePost(final int id, final String score) throws BooruEngineException {
-        String data = loginData.get("authenticity_token").replaceAll("%2B", "+");
+    public boolean votePost(final int id, final String score) throws BooruEngineException {
+        String data;
+        try{
+             data = loginData.get("authenticity_token").replaceAll("%2B", "+");
+        } catch (NullPointerException e){
+            throw new BooruEngineException("User data not defined.", new AuthenticationException());
+        }
         try {
             new HttpsConnection()
                     .setRequestMethod(Method.POST)
@@ -208,5 +220,11 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
         } catch (BooruEngineException e) {
             throw new BooruEngineException(e.getCause().getMessage());
         }
+        return true;
+    }
+
+    @Override
+    public String getVotePostRequest() {
+        return null;
     }
 }

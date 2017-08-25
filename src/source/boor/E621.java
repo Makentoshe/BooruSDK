@@ -5,9 +5,11 @@ import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
 import module.PostModule;
+import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +19,11 @@ import java.util.regex.Pattern;
  * Singleton.
  * Storage data about E621 API and method for getting request.
  */
-public class E621 extends AbstractBoorAdvanced implements LoginModule, PostModule {
+/*NOTE:
+    Cookie are static and not update, when page is upload.
+    csrf-token are static and not update.
+ */
+public class E621 extends AbstractBoorAdvanced implements LoginModule, PostModule, VotingModule {
 
     private static final E621 instance = new E621();
 
@@ -203,5 +209,22 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, PostModul
                 .split("\"></div>")[0]
                 .replaceAll(Pattern.quote("+"), "%2B");
         loginData.put("authenticity_token", data);
+    }
+
+    @Override
+    public boolean votePost(final int id, final String action) throws BooruEngineException {
+            String body = "id=" + id + "&score=" + action + "&_=";
+            HttpsConnection connection = new HttpsConnection()
+                    .setRequestMethod(Method.POST)
+                    .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                    .setCookies(loginData.toString().replaceAll(", ", "; "))
+                    .setBody(body)
+                    .openConnection(getVotePostRequest());
+        return connection.getResponse().split("\"success\":")[1].equals("true");
+    }
+
+    @Override
+    public String getVotePostRequest() {
+        return getCustomRequest("/post/vote.json");
     }
 }

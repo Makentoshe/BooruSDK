@@ -17,6 +17,7 @@ import java.util.Set;
  * Singleton.
  * Storage data about Behoimi API, method for getting request and resolving data type.
  */
+//Post Voting disable
 public class Behoimi extends AbstractBoorAdvanced implements LoginModule, PostModule {
 
     private static final Behoimi instance = new Behoimi();

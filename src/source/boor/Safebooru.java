@@ -142,11 +142,18 @@ public class Safebooru extends AbstractBoorBasic implements  LoginModule, Voting
     }
 
     @Override
-    public void votePost(final int id, final String action) throws BooruEngineException{
-        new HttpsConnection()
+    public boolean votePost(final int id, final String action) throws BooruEngineException{
+        HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
                 .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
-                .openConnection(getCustomRequest("/index.php?page=post&s=vote&id=" + id + "&type=" + action));
+                .openConnection(getVotePostRequest() + "&id=" + id + "&type=" + action);
+
+        return !connection.getResponse().equals("");
+    }
+
+    @Override
+    public String getVotePostRequest() {
+        return getCustomRequest("/index.php?page=post&s=vote");
     }
 }
