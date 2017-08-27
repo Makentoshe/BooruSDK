@@ -3,7 +3,7 @@ package module;
 import engine.BooruEngineException;
 
 /**
- * Interface with the methods for a voting posts on any *boor.
+ * Interface with the method for a voting posts on any *boor.
  */
 public interface VotingModule {
 
@@ -17,13 +17,5 @@ public interface VotingModule {
      * @throws BooruEngineException when something go wrong. Use <tt>getCause</tt> to see more details.
      */
     boolean votePost(final int id, final String action) throws BooruEngineException;
-
-
-    /**
-     * Create request for voting post by post id.
-     *
-     * @return constructed request to server.
-     */
-    String getVotePostRequest();
 
 }

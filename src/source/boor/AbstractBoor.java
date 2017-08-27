@@ -1,10 +1,7 @@
 package source.boor;
 
-import source.Post;
 import source.еnum.Api;
 import source.еnum.Format;
-
-import java.util.HashMap;
 
 /**
  * The main class for all boor's realisation.
@@ -41,7 +38,7 @@ public abstract class AbstractBoor {
      * Construct custom request.
      *
      * @param request request.
-     * @return complete get request
+     * @return get complete request.
      */
     public abstract String getCustomRequest(String request);
 
@@ -71,7 +68,7 @@ public abstract class AbstractBoor {
      * @param limit  how many posts must be in page.
      * @param tags   the tags to search for.
      * @param page   page index(from zero).
-     * @param format format result(Can be JSON or XML)
+     * @param format format result (can be {@code Format.JSON} or {@code Format.XML})
      * @return constructed request to this server.
      */
     public abstract String getPackByTagsRequest(int limit, String tags, int page, Format format);
@@ -89,25 +86,45 @@ public abstract class AbstractBoor {
         return getPackByTagsRequest(limit, tags, page, getFormat());
     }
 
-
     /**
      * Create request for getting comments by post id.
      *
-     * @param post_id post, for which comment will be searching
+     * @param post_id post, for which comment will be searching.
      * @param format in what format must be result output.
      * @return constructed request to server.
      */
     public abstract String getCommentsByPostIdRequest(int post_id, Format format);
 
-
     /**
      * Create request for getting comments by post id.
-     * The format is getting from the getFormat() method.
+     * The format is getting from the <tt>getFormat</tt> method.
      *
-     * @param post_id post, for which comment will be searching
+     * @param post_id post, for which comment will be searching.
      * @return constructed request to server.
      */
     public final String getCommentsByPostIdRequest(int post_id){
         return getCommentsByPostIdRequest(post_id, getFormat());
     }
+
+    /**
+     * Get request for authentication.
+     *
+     * @return constructed request to server.
+     */
+    public abstract String getAuthenticateRequest();
+
+    /**
+     * Get request for voting post.
+     *
+     * @return constructed request to server.
+     */
+    public abstract String getVotePostRequest();
+
+    /**
+     * Create request for creating comment.
+     *
+     * @param id post id.
+     * @return url.
+     */
+    public abstract String getCreateCommentRequest(final int id);
 }

@@ -30,11 +30,4 @@ public interface LoginModule {
      * @return any object, which storage login data.
      */
     Object getLoginData();
-
-    /**
-     * Create request for authentication.
-     *
-     * @return url.
-     */
-    String getAuthenticateRequest();
 }
