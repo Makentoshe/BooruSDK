@@ -3,8 +3,9 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
+import module.CommentModule;
 import module.LoginModule;
-import module.PostModule;
+import module.RemotePostModule;
 import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
@@ -12,12 +13,24 @@ import source.еnum.Format;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Singleton.
- * Storage data about Gelbooru API and method for getting request
+ * <p>
+ * Describe Gelbooru.
+ * <p>
+ * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>, <tt>CommentModule</tt>.
  */
-public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingModule, PostModule{
+/*NOTE:
+    Cookie are static and not update, when page is upload.
+    csrf-token are static and not update.
+
+    Login is OK
+    Commenting is OK
+    Post Voting is OK
+ */
+public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingModule, RemotePostModule, CommentModule {
 
     private static final Gelbooru mInstance = new Gelbooru();
 
@@ -113,7 +126,6 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
 
     public void logIn(final String login, final String password) throws BooruEngineException{
         String postData = "user="+login+"&pass="+password+"&submit=Log+in";
-
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
                 .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
@@ -122,7 +134,8 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
 
         for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
             String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
-            if (data.length == 2) this.loginData.put(data[0], data[1]);        }
+            if (data.length == 2) this.loginData.put(data[0], data[1]);
+        }
     }
 
     @Override
@@ -155,5 +168,47 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
     @Override
     public String getVotePostRequest() {
         return getCustomRequest("/index.php?page=post&s=vote");
+    }
+
+    @Override
+    public boolean commentPost(int id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setHeader("Connection", "keep-alive")
+                .openConnection("https://gelbooru.com/index.php?page=post&s=view&id=" + id);
+
+        String token = connection.getResponse()
+                .split("\"/>\t\t<input type=\"hidden\" name=\"csrf-token\" value=\"")[1]
+                .split("\"/>\t\t</td>")[0];
+
+        //get PHPSESSID
+        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
+            String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+            if (data.length == 2) this.loginData.put(data[0], data[1]);
+        }
+
+        String cbody =
+                "comment="+body.replaceAll(" ", "+")+
+                        "&post_anonymous="+ (postAsAnon?"on":"off") +
+                        "&submit=Post+comment&conf=1" +
+                        "&csrf-token=" + token
+                        .replaceAll(Pattern.quote("+"), "%2B")
+                        .replaceAll("/", "%2F")
+                        .replaceAll("=", "%3D");
+
+        connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setBody(cbody)
+                .setCookies(loginData.toString().replaceAll(", ", "; "))
+                .openConnection(getCreateCommentRequest(id));
+
+        return connection.getResponse().equals("");
+    }
+
+    @Override
+    public String getCreateCommentRequest(final int id) {
+        return getCustomRequest("/index.php?page=comment&id="+id+"&s=save");
     }
 }

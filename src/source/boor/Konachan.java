@@ -4,7 +4,7 @@ import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
-import module.PostModule;
+import module.RemotePostModule;
 import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
@@ -15,14 +15,20 @@ import java.util.regex.Pattern;
 
 /**
  * Singleton.
- * Storage data about Konachan API and method for getting request.
+ * <p>
+ * Describe Konachan.
+ * <p>
+ * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>.
  */
-/*
-  Note:
-    Cookies are static
-    csrf-token is static too
+/*NOTE:
+    Cookie is static
+    csrf-token is static
+
+    Login is OK
+    Commenting is ... TODO: make CommentModule implementation(do it after ~2 weeks).
+    Post Voting is OK
  */
-public class Konachan extends AbstractBoorAdvanced implements LoginModule, VotingModule, PostModule {
+public class Konachan extends AbstractBoorAdvanced implements LoginModule, VotingModule, RemotePostModule {
 
     private static final Konachan instance = new Konachan();
 

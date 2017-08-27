@@ -4,12 +4,11 @@ import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
 import module.LoginModule;
-import module.PostModule;
+import module.RemotePostModule;
 import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -17,13 +16,20 @@ import java.util.regex.Pattern;
 
 /**
  * Singleton.
- * Storage data about E621 API and method for getting request.
+ * <p>
+ * Describe E621.
+ * <p>
+ * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>.
  */
 /*NOTE:
     Cookie are static and not update, when page is upload.
     csrf-token are static and not update.
+
+    Login is OK
+    Commenting is ...
+    Post Voting is OK
  */
-public class E621 extends AbstractBoorAdvanced implements LoginModule, PostModule, VotingModule {
+public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule {
 
     private static final E621 instance = new E621();
 

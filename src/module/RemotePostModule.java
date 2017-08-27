@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Interface with the single method for remote <tt>Post</tt> creating.
  */
-public interface PostModule {
+public interface RemotePostModule {
 
     /**
      * Here you can create Post remote constructor.

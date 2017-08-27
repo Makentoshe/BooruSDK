@@ -3,8 +3,9 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
+import module.CommentModule;
 import module.LoginModule;
-import module.PostModule;
+import module.RemotePostModule;
 import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
@@ -15,9 +16,20 @@ import java.util.Set;
 
 /**
  * Singleton.
- * Storage data about Safebooru API and method for getting request
+ * <p>
+ * Describe Safebooru.
+ * <p>
+ * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>, <tt>CommentModule</tt>.
  */
-public class Safebooru extends AbstractBoorBasic implements  LoginModule, VotingModule, PostModule {
+/*NOTE:
+    Cookie are static
+    csrf-token disable.
+
+    Login is OK
+    Commenting is ...
+    Post Voting is OK
+ */
+public class Safebooru extends AbstractBoorBasic implements LoginModule, VotingModule, RemotePostModule, CommentModule {
 
     private static final Safebooru instance = new Safebooru();
 
@@ -27,7 +39,7 @@ public class Safebooru extends AbstractBoorBasic implements  LoginModule, Voting
 
     private Map<String, String> loginData = new HashMap<>(2);
 
-    private Safebooru(){
+    private Safebooru() {
         super();
     }
 
@@ -42,46 +54,46 @@ public class Safebooru extends AbstractBoorBasic implements  LoginModule, Voting
     }
 
     @Override
-    public Post newPostInstance(final Map<String, String> attributes){
+    public Post newPostInstance(final Map<String, String> attributes) {
         Post post = new Post(instance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
         //for each attribute
         for (Map.Entry<String, String> pair : entrySet) {
-            switch (pair.getKey()){
-                case "id":{
+            switch (pair.getKey()) {
+                case "id": {
                     post.setId(Integer.parseInt(pair.getValue()));
                     break;
                 }
-                case "md5":{
+                case "md5": {
                     post.setMd5(pair.getValue());
                     break;
                 }
-                case "rating":{
+                case "rating": {
                     post.setRating(pair.getValue());
                     break;
                 }
-                case "score":{
+                case "score": {
                     post.setScore(Integer.parseInt(pair.getValue()));
                     break;
                 }
-                case "preview_url":{
+                case "preview_url": {
                     post.setPreview_url("https:" + pair.getValue());
                     break;
                 }
-                case "tags":{
+                case "tags": {
                     post.setTags(pair.getValue());
                     break;
                 }
-                case "sample_url":{
+                case "sample_url": {
                     post.setSample_url("https:" + pair.getValue());
                     break;
                 }
-                case "file_url":{
+                case "file_url": {
                     post.setFile_url("https:" + pair.getValue());
                     break;
                 }
-                case "source":{
+                case "source": {
                     post.setSource(pair.getValue());
                     break;
                 }
@@ -97,14 +109,14 @@ public class Safebooru extends AbstractBoorBasic implements  LoginModule, Voting
                     }
                     break;
                 }
-                case "created_at":{
+                case "created_at": {
                     post.setCreate_Time(pair.getValue());
                     break;
                 }
             }
         }
         //after all check comments flag
-        if (post.isHas_comments()){
+        if (post.isHas_comments()) {
             //and if true - setup comments url.
             post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
         }
@@ -118,7 +130,7 @@ public class Safebooru extends AbstractBoorBasic implements  LoginModule, Voting
 
     @Override
     public void logIn(final String login, final String password) throws BooruEngineException {
-        String postData = "user="+login+"&pass="+password+"&submit=Log+in";
+        String postData = "user=" + login + "&pass=" + password + "&submit=Log+in";
 
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
@@ -126,23 +138,26 @@ public class Safebooru extends AbstractBoorBasic implements  LoginModule, Voting
                 .setBody(postData)
                 .openConnection(getAuthenticateRequest());
 
-        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
+        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
             String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
-            if (data.length == 2) this.loginData.put(data[0], data[1]);        }
+            if (data.length == 2) this.loginData.put(data[0], data[1]);
+        }
     }
 
     @Override
-    public void logOff(){
+    public void logOff() {
         this.loginData.clear();
     }
 
     @Override
-    public Map<String, String> getLoginData(){
+    public Map<String, String> getLoginData() {
         return this.loginData;
     }
 
     @Override
-    public boolean votePost(final int id, final String action) throws BooruEngineException{
+    public boolean votePost(final int id, final String action) throws BooruEngineException {
+        if (!action.equals("up") && !action.equals("down")) return false;
+
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
                 .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
@@ -155,5 +170,27 @@ public class Safebooru extends AbstractBoorBasic implements  LoginModule, Voting
     @Override
     public String getVotePostRequest() {
         return getCustomRequest("/index.php?page=post&s=vote");
+    }
+
+    @Override
+    public boolean commentPost(int id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        String cbody =
+                "comment=" + body +
+                        "&post_anonymous=" + (postAsAnon ? "on" : "off") +
+                        "&submit=Post+comment&conf=1";
+
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setCookies(loginData.toString().replaceAll(", ", "; "))
+                .setBody(cbody)
+                .openConnection(getCreateCommentRequest(id));
+
+        return connection.getResponse().equals("") && connection.getResponseCode() == 302;
+    }
+
+    @Override
+    public String getCreateCommentRequest(final int id) {
+        return getCustomRequest("/index.php?page=comment&id=" + id + "&s=save ");
     }
 }

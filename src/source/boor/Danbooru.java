@@ -1,11 +1,9 @@
 package source.boor;
 
-import module.LoginModule;
-import module.PostModule;
+import module.RemotePostModule;
 import source.Post;
 import source.еnum.Format;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,7 +13,7 @@ import java.util.Set;
  * NO LONGER SUPPORTED.
  */
 @Deprecated
-public class Danbooru extends AbstractBoorAdvanced implements PostModule {
+public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule {
 
     private static final Danbooru instance = new Danbooru();
 

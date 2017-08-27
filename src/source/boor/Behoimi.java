@@ -3,11 +3,11 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
+import module.CommentModule;
 import module.LoginModule;
-import module.PostModule;
+import module.RemotePostModule;
 import source.Post;
 import source.еnum.Format;
-import sun.rmi.runtime.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,10 +15,17 @@ import java.util.Set;
 
 /**
  * Singleton.
- * Storage data about Behoimi API, method for getting request and resolving data type.
+ * <p>
+ * Describe Behoimi.
+ * <p>
+ * Implements <tt>LoginModule</tt>, <tt>RemotePostModule</tt>, <tt>CommentModule</tt>.
  */
-//Post Voting disable
-public class Behoimi extends AbstractBoorAdvanced implements LoginModule, PostModule {
+/*
+    Loging is OK.
+    Commenting is OK.
+    Post Voting disable.
+ */
+public class Behoimi extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, CommentModule {
 
     private static final Behoimi instance = new Behoimi();
 
@@ -150,4 +157,26 @@ public class Behoimi extends AbstractBoorAdvanced implements LoginModule, PostMo
     public String getAuthenticateRequest() {
         return getCustomRequest("/user/authenticate");
     }
+
+    @Override
+    public boolean commentPost(int id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        String cbody = "comment%5Bpost_id%5D=" + id +
+                "&comment%5Bbody%5D=" + body.replaceAll(" ", "+") +
+                "&commit=" + (bumpPost ? "Post" : "Post+without+bumping");
+
+        new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setCookies(getLoginData().toString().replaceAll(", ", "; "))
+                .setBody(cbody)
+                .openConnection(getCreateCommentRequest(id));
+
+        return true;
+    }
+
+    @Override
+    public String getCreateCommentRequest(int id) {
+        return getCustomRequest("/comment/create");
+    }
+
 }

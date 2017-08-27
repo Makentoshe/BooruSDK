@@ -3,8 +3,9 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
+import module.CommentModule;
 import module.LoginModule;
-import module.PostModule;
+import module.RemotePostModule;
 import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
@@ -15,10 +16,20 @@ import java.util.Set;
 
 /**
  * Singleton.
- * Storage data about Rule34 API and method for getting request
+ * <p>
+ * Describe Rule34.
+ * <p>
+ * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>, <tt>CommentModule</tt>.
  */
-//Cookies not tested!!!
-public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModule, PostModule {
+/*NOTE:
+    Cookie are static.
+    csrf-token disable.
+
+    Login is OK
+    Commenting is OK
+    Post Voting is OK
+ */
+public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModule, RemotePostModule, CommentModule{
 
     private static final Rule34 instance = new Rule34();
 
@@ -141,8 +152,11 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModu
         return this.loginData;
     }
 
+    //up of down
     @Override
     public boolean votePost(final int id, final String action) throws BooruEngineException{
+        if (!action.equals("up")) return false;
+
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
                 .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
@@ -155,5 +169,27 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModu
     @Override
     public String getVotePostRequest() {
         return getCustomRequest("/index.php?page=post&s=vote");
+    }
+
+    @Override
+    public boolean commentPost(int id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        String cbody =
+                "comment="+body.replaceAll(" ", "+")+
+                        "&post_anonymous="+ (postAsAnon?"on":"off") +
+                        "&submit=Post+comment&conf=2";
+
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setCookies(loginData.toString().replaceAll(", ", "; "))
+                .setBody(cbody)
+                .openConnection(getCreateCommentRequest(id));
+
+        return connection.getResponse().equals("") && connection.getResponseCode() == 302;
+    }
+
+    @Override
+    public String getCreateCommentRequest(final int id) {
+        return getCustomRequest("/index.php?page=comment&id="+id+"&s=save");
     }
 }

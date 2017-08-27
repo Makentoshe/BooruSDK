@@ -4,6 +4,8 @@ import engine.BooruEngineException;
 
 /**
  * Interface with the basic methods for storing and creating a user data, with which a *boor will work.
+ * <p>
+ * Give access for login and other actions, which requires user data.
  */
 public interface LoginModule {
 

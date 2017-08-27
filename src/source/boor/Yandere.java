@@ -3,25 +3,39 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
+import module.CommentModule;
 import module.LoginModule;
-import module.PostModule;
+import module.RemotePostModule;
 import module.VotingModule;
+import source.Comment;
 import source.Post;
 import source.еnum.Format;
 
 import javax.naming.AuthenticationException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
  * Singleton.
- * Storage data about Yandere API and methods for getting request.
- * Not supported "has_comments" and comment searching.
- * for each request need new csrf-token
+ * <p>
+ * Describe Yandere.
+ * <p>
+ * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>, <tt>CommentModule</tt>.
  */
-public class Yandere extends AbstractBoorAdvanced implements LoginModule, PostModule, VotingModule {
+/*NOTE:
+    Not supported "has_comments" and comment searching.
+
+    Cookie are not static
+    csrf-token are not static
+
+    Login is OK
+    Commenting is ...
+    Post Voting is OK
+ */
+public class Yandere extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule, CommentModule {
 
     private static final Yandere instance = new Yandere();
 
@@ -231,5 +245,62 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, PostMo
     @Override
     public String getVotePostRequest() {
         return getCustomRequest("/post/vote.json");
+    }
+
+    @Override
+    public boolean commentPost(int id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        boolean out = false;
+        HttpsConnection connection;
+        StringBuilder cbody = new StringBuilder();
+
+        connection = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .openConnection(getCustomRequest(""));
+        setToken(connection);
+        setCookie(connection);
+
+        cbody.append("authenticity_token=").append(loginData.get("authenticity_token"))
+                .append("&comment%5Bpost_id%5D=").append(id)
+                .append("&comment%5Bbody%5D=").append(body.replaceAll(" ", "+"))
+                .append("&commit=Post");
+
+        connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setCookies(loginData.toString().replaceAll(", ", "; "))
+                .setBody(cbody.toString())
+                .openConnection(getCreateCommentRequest(id));
+
+        //try to get Set-Cookie header
+        //if failed(NPE) - catch and throw BEE
+        try {
+            for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
+                String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+                //if notice=Comment+created - OK
+                //else throw RE
+                if (data[0].equals("notice")) {
+                    if (data[1].equals("Comment+created")) {
+                        out = true;
+                    } else {
+                        throw new BooruEngineException(new RuntimeException(data[1].replaceAll(Pattern.quote("+"), " ")));
+                    }
+                }
+                //and of course put cookie in data
+                if (data[0].equals("yande.re")) loginData.put(data[0], data[1]);
+            }
+        } catch (NullPointerException e) {
+            throw new BooruEngineException(
+                    "Something go wrong and server can't process it.",
+                    new NoSuchElementException("Set-Cookie")
+            );
+        }
+
+        return out;
+    }
+
+    @Override
+    public String getCreateCommentRequest(int id) {
+        return getCustomRequest("/comment/create");
     }
 }
