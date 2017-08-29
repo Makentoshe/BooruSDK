@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * <p>
  * Describe Gelbooru.
  * <p>
- * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>, <tt>CommentModule</tt>.
+ * Implements <tt>LoginModuleInterface</tt>, <tt>VotingModuleInterface</tt>, <tt>RemotePostModuleInterface</tt>, <tt>CommentModuleInterface</tt>.
  */
 /*NOTE:
     Cookie are static and not update, when page is upload.
@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
     Commenting is OK
     Post Voting is OK
  */
-public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingModule, RemotePostModule, CommentModule, UploadModule {
+public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface, VotingModuleInterface, RemotePostModuleInterface, CommentModuleInterface, UploadModuleInterface {
 
     private static final Gelbooru mInstance = new Gelbooru();
 

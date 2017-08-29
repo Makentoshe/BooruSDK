@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Interface with the single method for remote <tt>Comment</tt> creating.
  */
-public interface RemoteCommentModule {
+public interface RemoteCommentModuleInterface {
 
     /**
      * Here you can create <tt>Comment</tt> remote constructor.

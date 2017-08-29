@@ -9,7 +9,7 @@ import java.io.File;
 /**
  * Interface for creating posts and upload images on *boor.
  */
-public interface UploadModule {
+public interface UploadModuleInterface {
 
     boolean createPost(
             @NotNull final File post,

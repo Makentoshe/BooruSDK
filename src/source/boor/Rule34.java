@@ -3,10 +3,10 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
-import module.CommentModule;
-import module.LoginModule;
-import module.RemotePostModule;
-import module.VotingModule;
+import module.CommentModuleInterface;
+import module.LoginModuleInterface;
+import module.RemotePostModuleInterface;
+import module.VotingModuleInterface;
 import source.Post;
 import source.еnum.Format;
 
@@ -19,7 +19,7 @@ import java.util.Set;
  * <p>
  * Describe Rule34.
  * <p>
- * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>, <tt>CommentModule</tt>.
+ * Implements <tt>LoginModuleInterface</tt>, <tt>VotingModuleInterface</tt>, <tt>RemotePostModuleInterface</tt>, <tt>CommentModuleInterface</tt>.
  */
 /*NOTE:
     Cookie are static.
@@ -29,7 +29,7 @@ import java.util.Set;
     Commenting is OK
     Post Voting is OK
  */
-public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModule, RemotePostModule, CommentModule{
+public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, VotingModuleInterface, RemotePostModuleInterface, CommentModuleInterface {
 
     private static final Rule34 instance = new Rule34();
 

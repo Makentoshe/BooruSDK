@@ -3,11 +3,10 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
-import module.CommentModule;
-import module.LoginModule;
-import module.RemotePostModule;
-import module.VotingModule;
-import source.Comment;
+import module.CommentModuleInterface;
+import module.LoginModuleInterface;
+import module.RemotePostModuleInterface;
+import module.VotingModuleInterface;
 import source.Post;
 import source.еnum.Format;
 
@@ -23,7 +22,7 @@ import java.util.regex.Pattern;
  * <p>
  * Describe Yandere.
  * <p>
- * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>, <tt>CommentModule</tt>.
+ * Implements <tt>LoginModuleInterface</tt>, <tt>VotingModuleInterface</tt>, <tt>RemotePostModuleInterface</tt>, <tt>CommentModuleInterface</tt>.
  */
 /*NOTE:
     Not supported "has_comments" and comment searching.
@@ -35,7 +34,7 @@ import java.util.regex.Pattern;
     Commenting is ...
     Post Voting is OK
  */
-public class Yandere extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule, CommentModule {
+public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterface, RemotePostModuleInterface, VotingModuleInterface, CommentModuleInterface {
 
     private static final Yandere instance = new Yandere();
 

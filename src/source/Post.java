@@ -20,7 +20,7 @@ import java.util.*;
  *     Default constructor for Post support some formats attributes.
  * <p>
  *     Be careful, if your attributes has specific names -
- * you can implement in you boor RemotePostModule interface, which have special method
+ * you can implement in you boor RemotePostModuleInterface interface, which have special method
  * {@code newPostInstance(Hashmap&lt;String, String&gt;)}.
  * <p>
  * <p>Support attributes:

@@ -3,9 +3,9 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
-import module.LoginModule;
-import module.RemotePostModule;
-import module.VotingModule;
+import module.LoginModuleInterface;
+import module.RemotePostModuleInterface;
+import module.VotingModuleInterface;
 import source.Post;
 import source.еnum.Format;
 
@@ -18,17 +18,17 @@ import java.util.regex.Pattern;
  * <p>
  * Describe Konachan.
  * <p>
- * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>.
+ * Implements <tt>LoginModuleInterface</tt>, <tt>VotingModuleInterface</tt>, <tt>RemotePostModuleInterface</tt>.
  */
 /*NOTE:
     Cookie is static
     csrf-token is static
 
     Login is OK
-    Commenting is ... TODO: make CommentModule implementation(do it after ~2 weeks).
+    Commenting is ... TODO: make CommentModuleInterface implementation(do it after ~2 weeks).
     Post Voting is OK
  */
-public class Konachan extends AbstractBoorAdvanced implements LoginModule, VotingModule, RemotePostModule {
+public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterface, VotingModuleInterface, RemotePostModuleInterface {
 
     private static final Konachan instance = new Konachan();
 

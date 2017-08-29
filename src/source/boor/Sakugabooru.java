@@ -3,11 +3,10 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
-import javafx.geometry.Pos;
-import module.CommentModule;
-import module.LoginModule;
-import module.RemotePostModule;
-import module.VotingModule;
+import module.CommentModuleInterface;
+import module.LoginModuleInterface;
+import module.RemotePostModuleInterface;
+import module.VotingModuleInterface;
 import source.Post;
 import source.еnum.Format;
 
@@ -23,7 +22,7 @@ import java.util.regex.Pattern;
  * <p>
  * Describe Sakugabooru.
  * <p>
- * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>, <tt>CommentModule</tt>.
+ * Implements <tt>LoginModuleInterface</tt>, <tt>VotingModuleInterface</tt>, <tt>RemotePostModuleInterface</tt>, <tt>CommentModuleInterface</tt>.
  */
 /*
   Note:
@@ -36,7 +35,7 @@ import java.util.regex.Pattern;
     Commenting is OK
     Post Voting is OK
  */
-public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule, CommentModule {
+public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInterface, RemotePostModuleInterface, VotingModuleInterface, CommentModuleInterface {
 
     private final static Sakugabooru instance = new Sakugabooru();
 
