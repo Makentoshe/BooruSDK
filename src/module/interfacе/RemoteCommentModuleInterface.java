@@ -11,10 +11,10 @@ import java.util.Map;
 public interface RemoteCommentModuleInterface {
 
     /**
-     * Here you can create <tt>Comment</tt> remote constructor.
+     * Here a <tt>Comment</tt> remote constructor implementation.
      *
      * @param attributes map of all comment attributes
-     * @return <tt>Comment</tt> entity with setted data.
+     * @return <tt>Comment</tt> entity with a setted data.
      */
     Post newCommentInstance(final Map<String, String> attributes);
 }

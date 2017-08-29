@@ -1,10 +1,8 @@
 package source.boor;
 
-import source.Post;
 import source.еnum.Api;
 import source.еnum.Format;
 
-import java.util.HashMap;
 
 /**
  * Abstract class fo boor realisation with API v1.13.

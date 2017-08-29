@@ -137,7 +137,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInte
             //get connection
             HttpsConnection connection = new HttpsConnection()
                     .setRequestMethod(Method.GET)
-                    .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .openConnection(getCustomRequest("/user/login"));
 
             //set cookie
@@ -167,7 +167,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInte
         //create connection
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setBody(postData)
                 .setCookies(cookie)
                 .openConnection(getAuthenticateRequest());
@@ -231,7 +231,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInte
         try {
             HttpsConnection connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
-                    .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setCookies(loginData.toString().replaceAll(", ", "; "))
                     .setHeader("X-CSRF-Token", token)
                     .setBody("id=" + id + "&score=" + score)
@@ -253,7 +253,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInte
     public boolean commentPost(int id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .openConnection(getCustomRequest(""));
         setToken(connection);
         setCookie(connection);
@@ -265,7 +265,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInte
 
         connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .setBody(cbody)
                 .openConnection(getCreateCommentRequest(id));

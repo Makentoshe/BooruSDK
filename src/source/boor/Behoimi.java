@@ -134,7 +134,7 @@ public class Behoimi extends AbstractBoorAdvanced implements LoginModuleInterfac
 
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setBody(postData)
                 .openConnection(getAuthenticateRequest());
 
@@ -176,7 +176,7 @@ public class Behoimi extends AbstractBoorAdvanced implements LoginModuleInterfac
 
         new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(getLoginData().toString().replaceAll(", ", "; "))
                 .setBody(cbody)
                 .openConnection(getCreateCommentRequest(id));

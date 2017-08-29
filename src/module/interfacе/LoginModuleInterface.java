@@ -1,5 +1,6 @@
 package module.interfacе;
 
+import com.sun.istack.internal.Nullable;
 import engine.BooruEngineException;
 
 /**
@@ -31,6 +32,18 @@ public interface LoginModuleInterface {
      */
     Object getLoginData();
 
+    /**
+     * Get request for authentication.
+     *
+     * @return constructed request to server.
+     */
+    String getAuthenticateRequest();
 
+    /**
+     * Transforms the user data into cookies.
+     *
+     * @return user data in Cookie format. Can return {@code null} if data not defined or else.
+     */
+    @Nullable
     String getCookieFromLoginData();
 }

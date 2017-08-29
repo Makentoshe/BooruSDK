@@ -138,7 +138,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModuleInterface, 
             //get connection
             HttpsConnection connection = new HttpsConnection()
                     .setRequestMethod(Method.GET)
-                    .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .openConnection(getCustomRequest("/user/login"));
 
             //set cookie
@@ -168,7 +168,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModuleInterface, 
         //create connection
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setBody(postData)
                 .setCookies(cookie)
                 .openConnection(getAuthenticateRequest());
@@ -222,7 +222,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModuleInterface, 
             String body = "id=" + id + "&score=" + action + "&_=";
             HttpsConnection connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
-                    .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setCookies(loginData.toString().replaceAll(", ", "; "))
                     .setBody(body)
                     .openConnection(getVotePostRequest());

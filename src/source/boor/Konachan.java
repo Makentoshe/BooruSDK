@@ -130,7 +130,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
             //get connection
             HttpsConnection connection = new HttpsConnection()
                     .setRequestMethod(Method.GET)
-                    .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .openConnection(getCustomRequest("/user/login"));
 
             //set cookie
@@ -160,7 +160,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
         //create connection
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setBody(postData)
                 .setCookies(cookie)
                 .openConnection(getAuthenticateRequest());
@@ -218,7 +218,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
         try {
             new HttpsConnection()
                     .setRequestMethod(Method.POST)
-                    .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setCookies(loginData.toString().replaceAll(", ", "; "))
                     .setHeader("X-CSRF-Token", data)
                     .setBody("id=" + id + "&score=" + score)

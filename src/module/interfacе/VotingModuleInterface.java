@@ -18,4 +18,10 @@ public interface VotingModuleInterface {
      */
     boolean votePost(final int id, final String action) throws BooruEngineException;
 
+    /**
+     * Get request for voting post.
+     *
+     * @return constructed request to server.
+     */
+    String getVotePostRequest();
 }

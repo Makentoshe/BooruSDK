@@ -105,26 +105,4 @@ public abstract class AbstractBoor {
     public final String getCommentsByPostIdRequest(int post_id){
         return getCommentsByPostIdRequest(post_id, getFormat());
     }
-
-    /**
-     * Get request for authentication.
-     *
-     * @return constructed request to server.
-     */
-    public abstract String getAuthenticateRequest();
-
-    /**
-     * Get request for voting post.
-     *
-     * @return constructed request to server.
-     */
-    public abstract String getVotePostRequest();
-
-    /**
-     * Create request for creating comment.
-     *
-     * @param id post id.
-     * @return url.
-     */
-    public abstract String getCreateCommentRequest(final int id);
 }

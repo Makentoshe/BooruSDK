@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class HttpsConnection {
 
-    public static final String DEFAULT_USER_AGENT = "BooruEngineLib/1.0";
+    private static String sDefaultUserAgent = "BooruEngineLib/1.0";
 
     private final Map<String, String> mHeaders = new HashMap<>(); //request headers
     private Method mRequestMethod;
@@ -271,4 +271,13 @@ public class HttpsConnection {
     public URLConnection getConnection(){
         return this.mConnection;
     }
+
+    public static void setDefaultUserAgent(final String newUserAgent){
+        sDefaultUserAgent = newUserAgent;
+    }
+
+    public static String getDefaultUserAgent(){
+        return sDefaultUserAgent;
+    }
+
 }

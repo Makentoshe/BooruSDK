@@ -22,4 +22,11 @@ public interface CommentModuleInterface {
      */
     boolean commentPost(final int id, final String body, final boolean postAsAnon, final boolean bumpPost) throws BooruEngineException;
 
+    /**
+     * Create request for creating comment.
+     *
+     * @param id post id.
+     * @return constructed request to server.
+     */
+    String getCreateCommentRequest(final int id);
 }

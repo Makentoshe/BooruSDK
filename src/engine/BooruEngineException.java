@@ -1,7 +1,7 @@
 package engine;
 
 /**
- * Created by Makentoshe on 10.07.2017.
+ * Exception for BEL.
  */
 public class BooruEngineException extends Exception {
 

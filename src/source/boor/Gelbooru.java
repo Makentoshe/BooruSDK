@@ -9,6 +9,7 @@ import source.Post;
 import source.еnum.Format;
 import source.еnum.Rating;
 
+import javax.naming.AuthenticationException;
 import java.io.*;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import java.util.regex.Pattern;
     Login is OK
     Commenting is OK
     Post Voting is OK
-    Uploading is OK
+    Posting is OK
  */
 public class Gelbooru
         extends AbstractBoorBasic
@@ -51,7 +52,7 @@ public class Gelbooru
         return mInstance;
     }
 
-    private Gelbooru(){
+    private Gelbooru() {
         super();
     }
 
@@ -61,46 +62,46 @@ public class Gelbooru
     }
 
     @Override
-    public Post newPostInstance(final Map<String, String> attributes){
+    public Post newPostInstance(final Map<String, String> attributes) {
         Post post = new Post(mInstance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
         //for each attribute
         for (Map.Entry<String, String> pair : entrySet) {
-            switch (pair.getKey()){
-                case "id":{
+            switch (pair.getKey()) {
+                case "id": {
                     post.setId(Integer.parseInt(pair.getValue()));
                     break;
                 }
-                case "md5":{
+                case "md5": {
                     post.setMd5(pair.getValue());
                     break;
                 }
-                case "rating":{
+                case "rating": {
                     post.setRating(pair.getValue());
                     break;
                 }
-                case "score":{
+                case "score": {
                     post.setScore(Integer.parseInt(pair.getValue()));
                     break;
                 }
-                case "preview_url":{
+                case "preview_url": {
                     post.setPreview_url("https:" + pair.getValue());
                     break;
                 }
-                case "tags":{
+                case "tags": {
                     post.setTags(pair.getValue());
                     break;
                 }
-                case "sample_url":{
+                case "sample_url": {
                     post.setSample_url("https:" + pair.getValue());
                     break;
                 }
-                case "file_url":{
+                case "file_url": {
                     post.setFile_url("https:" + pair.getValue());
                     break;
                 }
-                case "source":{
+                case "source": {
                     post.setSource(pair.getValue());
                     break;
                 }
@@ -116,14 +117,14 @@ public class Gelbooru
                     }
                     break;
                 }
-                case "created_at":{
+                case "created_at": {
                     post.setCreate_Time(pair.getValue());
                     break;
                 }
             }
         }
         //after all check comments flag
-        if (post.isHas_comments()){
+        if (post.isHas_comments()) {
             //and if true - setup comments url.
             post.setComments_url(mInstance.getCommentsByPostIdRequest(post.getId()));
         }
@@ -135,27 +136,34 @@ public class Gelbooru
         return getCustomRequest("/index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
     }
 
-    public void logIn(final String login, final String password) throws BooruEngineException{
-        String postData = "user="+login+"&pass="+password+"&submit=Log+in";
+    public void logIn(final String login, final String password) throws BooruEngineException {
+        //create post body
+        String postData = "user=" + login + "&pass=" + password + "&submit=Log+in";
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setBody(postData)
                 .openConnection(getAuthenticateRequest());
-
-        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
-            String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
-            if (data.length == 2) this.loginData.put(data[0], data[1]);
+        //try to parse response
+        try {
+            for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
+                String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+                if (data.length == 2) this.loginData.put(data[0], data[1]);
+            }
+            //if unsuccessful
+        } catch (NullPointerException e){
+            //throw exception
+            throw new BooruEngineException(new AuthenticationException("Authentication failed."));
         }
     }
 
     @Override
-    public void logOff(){
+    public void logOff() {
         this.loginData.clear();
     }
 
     @Override
-    public Map<String, String> getLoginData(){
+    public Map<String, String> getLoginData() {
         return this.loginData;
     }
 
@@ -166,16 +174,21 @@ public class Gelbooru
 
     @Override
     public String getPostByIdRequest(int id, Format format) {
-        return getCustomRequest("/index.php?page=dapi&q=index&s=post&id=" + String.valueOf(id) + (format.equals(Format.JSON)?"json=1":""));
+        return getCustomRequest("/index.php?page=dapi&q=index&s=post&id=" + String.valueOf(id) + (format.equals(Format.JSON) ? "json=1" : ""));
     }
 
     //action - up
     @Override
-    public boolean votePost(final int id, final String action) throws BooruEngineException{
+    public boolean votePost(final int id, final String action) throws BooruEngineException {
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined"));
+        }
+
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
-                .setCookies(loginData.toString().replaceAll(", ", "; "))
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .setCookies(getCookieFromLoginData())
                 .openConnection(getVotePostRequest() + "&id=" + id + "&type=" + action);
 
         return !connection.getResponse().equals("");
@@ -188,25 +201,30 @@ public class Gelbooru
 
     @Override
     public boolean commentPost(int id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined"));
+        }
+
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setHeader("Connection", "keep-alive")
                 .openConnection("https://gelbooru.com/index.php?page=post&s=view&id=" + id);
-
+        //get token
         String token = connection.getResponse()
                 .split("\"/>\t\t<input type=\"hidden\" name=\"csrf-token\" value=\"")[1]
                 .split("\"/>\t\t</td>")[0];
 
         //get PHPSESSID
-        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
+        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
             String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
             if (data.length == 2) this.loginData.put(data[0], data[1]);
         }
 
         String cbody =
-                "comment="+body.replaceAll(" ", "+")+
-                        "&post_anonymous="+ (postAsAnon?"on":"off") +
+                "comment=" + body.replaceAll(" ", "+") +
+                        "&post_anonymous=" + (postAsAnon ? "on" : "off") +
                         "&submit=Post+comment&conf=1" +
                         "&csrf-token=" + token
                         .replaceAll(Pattern.quote("+"), "%2B")
@@ -215,7 +233,7 @@ public class Gelbooru
 
         connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setBody(cbody)
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .openConnection(getCreateCommentRequest(id));
@@ -225,25 +243,41 @@ public class Gelbooru
 
     @Override
     public String getCreateCommentRequest(final int id) {
-        return getCustomRequest("/index.php?page=comment&id="+id+"&s=save");
+        return getCustomRequest("/index.php?page=comment&id=" + id + "&s=save");
     }
 
     @Override
     public String getCookieFromLoginData() {
-        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
+        if (getLoginData().size() == 0) return null;
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
     }
 
     @Override
-    public boolean createPost(@NotNull File post, @NotNull String tags, String title, String source, @NotNull Rating rating) throws BooruEngineException {
+    public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating) throws BooruEngineException {
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined"));
+        }
+
         final String BOUNDARY = "----WebKitFormBoundaryBooruEngineLib";
         final String LINE_FEED = "\r\n";
 
+        //get PHPSESSID
         HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .setCookies(getCookieFromLoginData())
+                .openConnection("https://gelbooru.com/index.php?page=post&s=view&id=1");
+        getLoginData().put("PHPSESSID", connection.getHeader("Set-Cookie").get(0).split("=")[1].split("; ")[0]);
+
+        //Create connection
+        connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY)
                 .setCookies(getCookieFromLoginData())
-                .openConnection(getCustomRequest("/index.php?page=post&s=add"));
+                .openConnection(getCreatePostRequest());
+        //and write all data with stream to server
         try {
             PrintWriter writer = new PrintWriter(new OutputStreamWriter(connection.getConnection().getOutputStream(), "UTF-8"), true);
             writer.append("--" + BOUNDARY + LINE_FEED);
@@ -262,34 +296,40 @@ public class Gelbooru
             writer.append(LINE_FEED);
             writer.flush();
 
-        writer.append("--" + BOUNDARY + LINE_FEED);
-        writer.append("Content-Disposition: form-data; name=\"source\"" + LINE_FEED + LINE_FEED);
-        writer.append(source + LINE_FEED);//put here source
+            writer.append("--" + BOUNDARY + LINE_FEED);
+            writer.append("Content-Disposition: form-data; name=\"source\"" + LINE_FEED + LINE_FEED);
+            writer.append(source + LINE_FEED);//put here source
 
-        writer.append("--" + BOUNDARY + LINE_FEED);
-        writer.append("Content-Disposition: form-data; name=\"title\"" + LINE_FEED + LINE_FEED);
-        writer.append(title + LINE_FEED);//put here title
+            writer.append("--" + BOUNDARY + LINE_FEED);
+            writer.append("Content-Disposition: form-data; name=\"title\"" + LINE_FEED + LINE_FEED);
+            writer.append(title + LINE_FEED);//put here title
 
-        writer.append("--" + BOUNDARY + LINE_FEED);
-        writer.append("Content-Disposition: form-data; name=\"tags\"" + LINE_FEED + LINE_FEED);
-        writer.append(tags + LINE_FEED);//put here tags
+            writer.append("--" + BOUNDARY + LINE_FEED);
+            writer.append("Content-Disposition: form-data; name=\"tags\"" + LINE_FEED + LINE_FEED);
+            writer.append(tags + LINE_FEED);//put here tags
 
-        writer.append("--" + BOUNDARY + LINE_FEED);
-        writer.append("Content-Disposition: form-data; name=\"rating\"" + LINE_FEED + LINE_FEED);
-        writer.append(rating + LINE_FEED);//put here rating
+            writer.append("--" + BOUNDARY + LINE_FEED);
+            writer.append("Content-Disposition: form-data; name=\"rating\"" + LINE_FEED + LINE_FEED);
+            writer.append(rating.toString().toLowerCase().charAt(0) + LINE_FEED);//put here rating
 
-        writer.append("--" + BOUNDARY + LINE_FEED);
-        writer.append("Content-Disposition: form-data; name=\"submit\"" + LINE_FEED + LINE_FEED);
-        writer.append("Upload" + LINE_FEED);
-        writer.append("--" + BOUNDARY + "--" + LINE_FEED);
-        writer.flush();
-        writer.close();
-        }catch (IOException e){
+            writer.append("--" + BOUNDARY + LINE_FEED);
+            writer.append("Content-Disposition: form-data; name=\"submit\"" + LINE_FEED + LINE_FEED);
+            writer.append("Upload" + LINE_FEED);
+            writer.append("--" + BOUNDARY + "--" + LINE_FEED);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
             throw new BooruEngineException(e);
         }
 
+        //get result
         boolean code = connection.getResponseCode() == 200;
         boolean message = connection.getResponse().contains("Image added.");
         return code && message;
+    }
+
+    @Override
+    public String getCreatePostRequest(){
+        return getCustomRequest("/index.php?page=post&s=add");
     }
 }

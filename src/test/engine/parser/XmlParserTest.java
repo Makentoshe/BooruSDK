@@ -28,7 +28,7 @@ public class XmlParserTest {
 
         String xml = new HttpsConnection()
                 .setRequestMethod(Method.GET)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .openConnection(Gelbooru.get().getPackByTagsRequest(2, "hatsune_miku", 0))
                 .getResponse();
 

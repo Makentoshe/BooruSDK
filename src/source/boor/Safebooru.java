@@ -134,7 +134,7 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
 
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setBody(postData)
                 .openConnection(getAuthenticateRequest());
 
@@ -160,7 +160,7 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
 
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .openConnection(getVotePostRequest() + "&id=" + id + "&type=" + action);
 
@@ -181,7 +181,7 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
 
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .setBody(cbody)
                 .openConnection(getCreateCommentRequest(id));

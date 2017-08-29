@@ -1,6 +1,5 @@
 package test.source.boor.E621;
 
-import engine.HttpConnection;
 import engine.HttpsConnection;
 import engine.Method;
 import engine.parser.JsonParser;
@@ -22,7 +21,7 @@ public class E621CommentConstructorTest {
 
         String responseData = new HttpsConnection()
                 .setRequestMethod(Method.GET)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .openConnection(post.getComments_url()).getResponse();
 
         JsonParser parser = new JsonParser();

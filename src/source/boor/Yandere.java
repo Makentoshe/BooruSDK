@@ -136,7 +136,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
             //get connection
             HttpsConnection connection = new HttpsConnection()
                     .setRequestMethod(Method.GET)
-                    .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .openConnection(getCustomRequest("/user/login"));
 
             //set cookie
@@ -166,7 +166,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
         //create connection
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setBody(postData)
                 .setCookies(cookie)
                 .openConnection(getAuthenticateRequest());
@@ -228,7 +228,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
         try {
             HttpsConnection connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
-                    .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setCookies(loginData.toString().replaceAll(", ", "; "))
                     .setHeader("X-CSRF-Token", token)
                     .setBody("id=" + id + "&score=" + score)
@@ -251,22 +251,24 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
         boolean out = false;
         HttpsConnection connection;
         StringBuilder cbody = new StringBuilder();
-
+        //create connection for getting token and cookies
         connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .openConnection(getCustomRequest(""));
         setToken(connection);
         setCookie(connection);
 
+        //create post body
         cbody.append("authenticity_token=").append(loginData.get("authenticity_token"))
                 .append("&comment%5Bpost_id%5D=").append(id)
                 .append("&comment%5Bbody%5D=").append(body.replaceAll(" ", "+"))
                 .append("&commit=Post");
 
+        //send body to server
         connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .setBody(cbody.toString())
                 .openConnection(getCreateCommentRequest(id));

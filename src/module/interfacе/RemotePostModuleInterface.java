@@ -10,11 +10,11 @@ import java.util.Map;
 public interface RemotePostModuleInterface {
 
     /**
-     * Here you can create Post remote constructor.
+     * Here a <tt>Post</tt> remote constructor implementation.
      * The main feature is reliably indicate from which *boor this post.
      *
      * @param attributes map of all post attributes
-     * @return Post entity with setted data.
+     * @return Post entity with a setted data.
      */
     Post newPostInstance(final Map<String, String> attributes);
 }

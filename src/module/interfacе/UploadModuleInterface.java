@@ -20,4 +20,5 @@ public interface UploadModuleInterface {
     )
             throws BooruEngineException;
 
+     String getCreatePostRequest();
 }
