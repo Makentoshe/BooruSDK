@@ -192,4 +192,9 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModu
     public String getCreateCommentRequest(final int id) {
         return getCustomRequest("/index.php?page=comment&id="+id+"&s=save");
     }
+
+    @Override
+    public String getCookieFromLoginData() {
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
+    }
 }

@@ -1,15 +1,16 @@
 package source.boor;
 
+import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
-import module.CommentModule;
-import module.LoginModule;
-import module.RemotePostModule;
-import module.VotingModule;
+import module.*;
 import source.Post;
 import source.еnum.Format;
+import source.еnum.Rating;
 
+import java.io.*;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
     Commenting is OK
     Post Voting is OK
  */
-public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingModule, RemotePostModule, CommentModule {
+public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingModule, RemotePostModule, CommentModule, UploadModule {
 
     private static final Gelbooru mInstance = new Gelbooru();
 
@@ -153,6 +154,11 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
         return getCustomRequest("/index.php?page=account&s=login&code=00");
     }
 
+    @Override
+    public String getPostByIdRequest(int id, Format format) {
+        return getCustomRequest("/index.php?page=dapi&q=index&s=post&id=" + String.valueOf(id) + (format.equals(Format.JSON)?"json=1":""));
+    }
+
     //action - up
     @Override
     public boolean votePost(final int id, final String action) throws BooruEngineException{
@@ -210,5 +216,70 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
     @Override
     public String getCreateCommentRequest(final int id) {
         return getCustomRequest("/index.php?page=comment&id="+id+"&s=save");
+    }
+
+    @Override
+    public String getCookieFromLoginData() {
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
+    }
+
+    @Override
+    public boolean createPost(@NotNull File post, @NotNull String tags, String title, String source, @NotNull Rating rating) throws BooruEngineException {
+        final String BOUNDARY = "----WebKitFormBoundaryBooruEngineLib";
+        final String LINE_FEED = "\r\n";
+
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.DEFAULT_USER_AGENT)
+                .setHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY)
+                .setCookies(getCookieFromLoginData())
+                .openConnection(getCustomRequest("/index.php?page=post&s=add"));
+        try {
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(connection.getConnection().getOutputStream(), "UTF-8"), true);
+            writer.append("--" + BOUNDARY + LINE_FEED);
+            writer.append("Content-Disposition: form-data; name=\"upload\"; filename=\"" + post.getName() + "\"" + LINE_FEED);
+            writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(post.getName()) + LINE_FEED);
+            writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED).append(LINE_FEED);
+            writer.flush();
+            FileInputStream inputStream = new FileInputStream(post);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                connection.getConnection().getOutputStream().write(buffer, 0, bytesRead);
+            }
+            connection.getConnection().getOutputStream().flush();
+            inputStream.close();
+            writer.append(LINE_FEED);
+            writer.flush();
+
+        writer.append("--" + BOUNDARY + LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"source\"" + LINE_FEED + LINE_FEED);
+        writer.append(source + LINE_FEED);//put here source
+
+        writer.append("--" + BOUNDARY + LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"title\"" + LINE_FEED + LINE_FEED);
+        writer.append(title + LINE_FEED);//put here title
+
+        writer.append("--" + BOUNDARY + LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"tags\"" + LINE_FEED + LINE_FEED);
+        writer.append(tags + LINE_FEED);//put here tags
+
+        writer.append("--" + BOUNDARY + LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"rating\"" + LINE_FEED + LINE_FEED);
+        writer.append(rating + LINE_FEED);//put here rating
+
+        writer.append("--" + BOUNDARY + LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"submit\"" + LINE_FEED + LINE_FEED);
+        writer.append("Upload" + LINE_FEED);
+        writer.append("--" + BOUNDARY + "--" + LINE_FEED);
+        writer.flush();
+        writer.close();
+        }catch (IOException e){
+            throw new BooruEngineException(e);
+        }
+
+        boolean code = connection.getResponseCode() == 200;
+        boolean message = connection.getResponse().contains("Image added.");
+        return code && message;
     }
 }

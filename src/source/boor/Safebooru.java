@@ -193,4 +193,9 @@ public class Safebooru extends AbstractBoorBasic implements LoginModule, VotingM
     public String getCreateCommentRequest(final int id) {
         return getCustomRequest("/index.php?page=comment&id=" + id + "&s=save ");
     }
+
+    @Override
+    public String getCookieFromLoginData() {
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
+    }
 }

@@ -185,7 +185,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
         return this.loginData;
     }
 
-    private void setCookie(final HttpsConnection connection) {
+    protected void setCookie(final HttpsConnection connection) {
         connection
                 .getHeader("Set-Cookie")
                 .stream()
@@ -196,14 +196,14 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
                 });
     }
 
-    private void setToken(final HttpsConnection connection) {
-        String s = connection.getResponse();
-        String data = s.split("name=\"csrf-param\" />")[1]
-                .split(" name=\"csrf-token\" />")[0]
-                .replaceAll("\"", "")
-                .replace("<meta content=", "")
-                .replaceAll(Pattern.quote("+"), "%2B");
-        loginData.put("authenticity_token", data);
+    protected void setToken(final HttpsConnection connection) throws BooruEngineException {
+            String s = connection.getResponse();
+            String data = s.split("name=\"csrf-param\" />")[1]
+                    .split(" name=\"csrf-token\" />")[0]
+                    .replaceAll("\"", "")
+                    .replace("<meta content=", "")
+                    .replaceAll(Pattern.quote("+"), "%2B");
+            loginData.put("authenticity_token", data);
     }
 
     //score - 0 is remove, from 1 to 3. 3 is favorite.
@@ -232,5 +232,15 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
     @Override
     public String getVotePostRequest() {
         return null;
+    }
+
+    @Override
+    public String getCreateCommentRequest(int id) {
+        return null;
+    }
+
+    @Override
+    public String getCookieFromLoginData() {
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
     }
 }

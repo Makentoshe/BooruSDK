@@ -209,16 +209,16 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
                 });
     }
 
-    private void setToken(final HttpsConnection connection) {
-        String s = connection.getResponse();
-        String data = s.split("\"csrf-token\" content=\"")[1]
-                .split("\" />")[0]
-                .replace("<meta content=", "")
-                .replaceAll(Pattern.quote("+"), "%2B")
-                .replaceAll("=", "%3D")
-                .replaceAll("/", "%2F");
+    private void setToken(final HttpsConnection connection) throws BooruEngineException {
+            String s = connection.getResponse();
+            String data = s.split("\"csrf-token\" content=\"")[1]
+                    .split("\" />")[0]
+                    .replace("<meta content=", "")
+                    .replaceAll(Pattern.quote("+"), "%2B")
+                    .replaceAll("=", "%3D")
+                    .replaceAll("/", "%2F");
 
-        loginData.put("authenticity_token", data);
+            loginData.put("authenticity_token", data);
     }
 
     @Override
@@ -301,5 +301,10 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
     @Override
     public String getCreateCommentRequest(int id) {
         return getCustomRequest("/comment/create");
+    }
+
+    @Override
+    public String getCookieFromLoginData() {
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
     }
 }

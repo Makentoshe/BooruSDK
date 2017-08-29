@@ -68,6 +68,6 @@ public class BoorsAvailabilityTest {
 
     @Test
     public void Yandere_Test() throws Exception {
-        assertEquals(200, getResponseCodeFromRequest(Yandere.get().getCustomRequest("")));
+        assertEquals(200, getResponseCodeFromRequest(Yandere.get().getCustomRequest("/post")));
     }
 }

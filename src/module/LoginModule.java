@@ -8,7 +8,7 @@ import engine.BooruEngineException;
  * Give access for login and other actions, which requires user data.
  */
 public interface LoginModule {
-
+//TODO: use URLEncoder.encode(data, String.valueOf(Charset.defaultCharset()))
     /**
      * Login a user.
      *
@@ -30,4 +30,7 @@ public interface LoginModule {
      * @return any object, which storage login data.
      */
     Object getLoginData();
+
+
+    String getCookieFromLoginData();
 }

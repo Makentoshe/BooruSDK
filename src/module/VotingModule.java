@@ -12,7 +12,7 @@ public interface VotingModule {
      * so it will be okay, if you use <tt>LoginModule</tt>.
      *
      * @param id post id.
-     * @param action any action - it can be score quantity or action "up".
+     * @param action any action - it can be score quantity(from 0 to 3) or action "up"/"down".
      * @return true if success.
      * @throws BooruEngineException when something go wrong. Use <tt>getCause</tt> to see more details.
      */

@@ -39,7 +39,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
         return instance;
     }
 
-    private E621(){
+    protected E621(){
         super();
     }
 
@@ -198,7 +198,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
         return getCustomRequest("/user/authenticate");
     }
 
-    private void setCookie(final HttpsConnection connection) {
+    protected void setCookie(final HttpsConnection connection) {
         connection
                 .getHeader("Set-Cookie")
                 .stream()
@@ -209,7 +209,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
                 });
     }
 
-    private void setToken(final HttpsConnection connection) {
+    protected void setToken(final HttpsConnection connection) throws BooruEngineException {
         String s = connection.getResponse();
         String data = s.split("<input name=\"authenticity_token\" type=\"hidden\" value=\"")[1]
                 .split("\"></div>")[0]
@@ -232,5 +232,15 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
     @Override
     public String getVotePostRequest() {
         return getCustomRequest("/post/vote.json");
+    }
+
+    @Override
+    public String getCreateCommentRequest(int id) {
+        return null;
+    }
+
+    @Override
+    public String getCookieFromLoginData() {
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
     }
 }

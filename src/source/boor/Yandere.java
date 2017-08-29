@@ -208,7 +208,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
                 });
     }
 
-    private void setToken(final HttpsConnection connection) {
+    private void setToken(final HttpsConnection connection)throws BooruEngineException {
         String s = connection.getResponse();
         String data = s.split("\"csrf-token\" content=\"")[1]
                 .split("\" />")[0]
@@ -302,5 +302,10 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
     @Override
     public String getCreateCommentRequest(int id) {
         return getCustomRequest("/comment/create");
+    }
+
+    @Override
+    public String getCookieFromLoginData() {
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
     }
 }

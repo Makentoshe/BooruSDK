@@ -154,8 +154,18 @@ public class Behoimi extends AbstractBoorAdvanced implements LoginModule, Remote
     }
 
     @Override
+    public String getCookieFromLoginData() {
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
+    }
+
+    @Override
     public String getAuthenticateRequest() {
         return getCustomRequest("/user/authenticate");
+    }
+
+    @Override
+    public String getVotePostRequest() {
+        return null;
     }
 
     @Override

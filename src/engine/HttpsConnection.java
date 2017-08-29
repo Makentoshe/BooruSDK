@@ -3,13 +3,8 @@ package engine;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +18,14 @@ public class HttpsConnection {
     private final Map<String, String> mHeaders = new HashMap<>(); //request headers
     private Method mRequestMethod;
     private String mBody;
+    private InputStream mErrStream;
 
     //after getting response
-    private int mResponseCode;
+    private int mResponseCode = -1;
     private String mResponse;
     private String mResponseMessage;
     private Map<String, List<String>> mResponseHeaders;
+    private HttpURLConnection mConnection;
 
     private static final Logger log = Logger.getLogger(HttpsConnection.class.getName());
 
@@ -76,9 +73,15 @@ public class HttpsConnection {
         return this;
     }
 
-    private void setHeadersToConnection(final HttpURLConnection connection, final Map<String, String> headers) {
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            connection.setRequestProperty(entry.getKey(), entry.getValue());
+    private void setHeaders(final HttpURLConnection connection, final Map<String, String> headers) throws BooruEngineException{
+        try {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                connection.setRequestProperty(entry.getKey(), entry.getValue());
+            }
+            connection.setRequestMethod(this.mRequestMethod.toString());
+            connection.setInstanceFollowRedirects(false);
+        }catch (ProtocolException e){
+            throw new BooruEngineException(e);
         }
     }
 
@@ -107,96 +110,90 @@ public class HttpsConnection {
         return this;
     }
 
-    private void GET(final URL url) throws BooruEngineException {
-        try {
-            HttpURLConnection connection;
-            //choose protocol
-            if (url.getProtocol().equals("https")) connection = (HttpsURLConnection) url.openConnection();
-            else connection = (HttpURLConnection) url.openConnection();
-
-            log.log(Level.INFO, "Using protocol: " + url.getProtocol());
-
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Content-Length", "0");
-            setHeadersToConnection(connection, this.mHeaders);
-
-            this.mResponseCode = connection.getResponseCode();
-            this.mResponseMessage = connection.getResponseMessage();
-            this.mResponseHeaders = connection.getHeaderFields();
-
-            StringBuilder response = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String input;
-            while ((input = reader.readLine()) != null) response.append(input);
-            reader.close();
-            this.mResponse = response.toString();
-
+    private void sendPost(final String data) throws BooruEngineException{
+        try{
+            if (data != null) {
+                mConnection.setRequestProperty("Content-Length", String.valueOf(data.length()));
+                //send post
+                DataOutputStream outputStream = new DataOutputStream(this.mConnection.getOutputStream());
+                outputStream.writeBytes(data);
+                outputStream.flush();
+                outputStream.close();
+            }
         } catch (IOException e) {
+            this.mErrStream = this.mConnection.getErrorStream();
             throw new BooruEngineException(e);
         }
+    }
+
+    private void GET(final URL url) throws BooruEngineException {
+        chooseProtocol(url);
+
+        setHeaders(mConnection, this.mHeaders);
     }
 
     private void POST(final URL url) throws BooruEngineException {
-        HttpURLConnection connection;
-        //choose protocol
-        try {
-            if (url.getProtocol().equals("https")) connection = (HttpsURLConnection) url.openConnection();
-            else connection = (HttpURLConnection) url.openConnection();
-            log.log(Level.INFO, "Using protocol: " + url.getProtocol());
-        }catch (IOException ioe1) {
-            throw new BooruEngineException(ioe1);
+        chooseProtocol(url);
+
+        setHeaders(mConnection, this.mHeaders);
+        mConnection.setDoOutput(true);
+
+        if (this.mBody != null) {
+            sendPost(this.mBody);
         }
+    }
 
-        try{
-            //set meta-data
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Length", String.valueOf(this.mBody.length()));
-            setHeadersToConnection(connection, this.mHeaders);
-            connection.setInstanceFollowRedirects(false);
+    public String getResponse() throws BooruEngineException {
+        try {
+            if (this.mResponse == null){
+                StringBuilder response = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(mConnection.getInputStream()));
+                String input;
+                while ((input = reader.readLine()) != null) response.append(input);
+                reader.close();
+                this.mResponse = response.toString();
+            }
+            return this.mResponse;
+        } catch (IOException e){
+            mErrStream = mConnection.getErrorStream();
+            throw new BooruEngineException(e);
 
-            //send post
-            connection.setDoOutput(true);
-            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.writeBytes(this.mBody);
-            outputStream.flush();
-            outputStream.close();
+        }
+    }
 
-            //get response
-            this.mResponseCode = connection.getResponseCode();
-            this.mResponseMessage = connection.getResponseMessage();
-            this.mResponseHeaders = connection.getHeaderFields();
-
-            StringBuilder response = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String input;
-            while ((input = reader.readLine()) != null) response.append(input);
-            reader.close();
-            this.mResponse = response.toString();
-
-        } catch (IOException e) {
-            connection.getErrorStream();
-            connection.disconnect();
+    public int getResponseCode() throws BooruEngineException {
+        try {
+            if (this.mResponseCode == -1) this.mResponseCode = mConnection.getResponseCode();
+            return this.mResponseCode;
+        }catch (IOException e){
+            mErrStream = mConnection.getErrorStream();
             throw new BooruEngineException(e);
         }
     }
 
-    public String getResponse() {
-        return this.mResponse;
+    public String getResponseMessage() throws BooruEngineException {
+        try {
+            if (this.mResponseMessage == null) {
+                this.mResponseMessage = mConnection.getResponseMessage();
+            }
+            return this.mResponseMessage;
+        }catch (IOException e){
+            mErrStream = mConnection.getErrorStream();
+            throw new BooruEngineException(e);
+        }
     }
 
-    public int getResponseCode() {
-        return this.mResponseCode;
-    }
-
-    public String getResponseMessage() {
-        return this.mResponseMessage;
-    }
-
-    public Map<String, List<String>> getHeaders() {
+    public Map<String, List<String>> getHeaders() throws BooruEngineException {
+        if (this.mResponseHeaders == null){
+            this.mResponseHeaders = mConnection.getHeaderFields();
+        }
         return this.mResponseHeaders;
     }
 
     public List<String> getHeader(String key) {
+        if (this.mResponseHeaders == null){
+            this.mResponseHeaders = mConnection.getHeaderFields();
+        }
         return this.mResponseHeaders.get(key);
     }
 
@@ -248,5 +245,30 @@ public class HttpsConnection {
                 return responseCode + " - Unknown Error.";
             }
         }
+    }
+
+    private void chooseProtocol(final URL url) throws BooruEngineException{
+        //choose protocol
+        try {
+            if (url.getProtocol().equals("https")) this.mConnection = (HttpsURLConnection) url.openConnection();
+            else this.mConnection = (HttpURLConnection) url.openConnection();
+            log.log(Level.INFO, "Using protocol: " + url.getProtocol());
+        }catch (IOException ioe1) {
+            mErrStream = mConnection.getErrorStream();
+            throw new BooruEngineException(ioe1);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return this.mRequestMethod + "\n" + this.mHeaders + "\n" + this.mBody;
+    }
+
+    public InputStream getErrorStrean(){
+        return this.mErrStream;
+    }
+
+    public URLConnection getConnection(){
+        return this.mConnection;
     }
 }
