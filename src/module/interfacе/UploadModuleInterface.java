@@ -1,4 +1,4 @@
-package module;
+package module.interfacе;
 
 import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;

@@ -4,7 +4,7 @@ import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
-import module.*;
+import module.interfacе.*;
 import source.Post;
 import source.еnum.Format;
 import source.еnum.Rating;
@@ -21,7 +21,9 @@ import java.util.regex.Pattern;
  * <p>
  * Describe Gelbooru.
  * <p>
- * Implements <tt>LoginModuleInterface</tt>, <tt>VotingModuleInterface</tt>, <tt>RemotePostModuleInterface</tt>, <tt>CommentModuleInterface</tt>.
+ * Implements <tt>LoginModuleInterface</tt>,<tt>VotingModuleInterface</tt>,
+ * <tt>RemotePostModuleInterface</tt>, <tt>CommentModuleInterface</tt>,
+ * <tt>UploadModuleInterface</tt>.
  */
 /*NOTE:
     Cookie are static and not update, when page is upload.
@@ -30,8 +32,16 @@ import java.util.regex.Pattern;
     Login is OK
     Commenting is OK
     Post Voting is OK
+    Uploading is OK
  */
-public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface, VotingModuleInterface, RemotePostModuleInterface, CommentModuleInterface, UploadModuleInterface {
+public class Gelbooru
+        extends AbstractBoorBasic
+        implements
+        LoginModuleInterface,
+        VotingModuleInterface,
+        RemotePostModuleInterface,
+        CommentModuleInterface,
+        UploadModuleInterface {
 
     private static final Gelbooru mInstance = new Gelbooru();
 

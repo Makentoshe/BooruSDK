@@ -1,6 +1,6 @@
 package source.boor;
 
-import module.RemotePostModuleInterface;
+import module.interfacе.RemotePostModuleInterface;
 import source.Post;
 import source.еnum.Format;
 

@@ -3,9 +3,9 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.HttpsConnection;
 import engine.Method;
-import module.CommentModuleInterface;
-import module.LoginModuleInterface;
-import module.RemotePostModuleInterface;
+import module.interfacе.CommentModuleInterface;
+import module.interfacе.LoginModuleInterface;
+import module.interfacе.RemotePostModuleInterface;
 import source.Post;
 import source.еnum.Format;
 
