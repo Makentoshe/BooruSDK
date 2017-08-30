@@ -1,7 +1,7 @@
 package engine;
 
 /**
- * Exception for BEL.
+ * Exception for BEL. It will be contain all another exceptions.
  */
 public class BooruEngineException extends Exception {
 

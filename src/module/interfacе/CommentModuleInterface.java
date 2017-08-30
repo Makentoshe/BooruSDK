@@ -15,7 +15,7 @@ public interface CommentModuleInterface {
      * @param id post id.
      * @param body comment body.
      * @param postAsAnon use {@code true} for anonymously posting. Not all *boors support this param.
-     * @param bumpPost ues {@code true} for bump up post. Not all *boors support this param.
+     * @param bumpPost use {@code true} for bump up post. Not all *boors support this param.
      * @return {@code true} if success.
      * @throws BooruEngineException if something go wrong.
      * Use <tt>getCause</tt> to see more details.

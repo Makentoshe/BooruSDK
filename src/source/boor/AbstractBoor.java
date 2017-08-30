@@ -17,7 +17,7 @@ public abstract class AbstractBoor {
     protected Api api;
 
     /**
-     * Get the result format of the current boor.
+     * Get the default result format of the current boor.
      *
      * @return result format. It can be {@code Format.JSON} or {@code Format.XML} or {@code Format.UNDEFINED}.
      */
@@ -26,7 +26,7 @@ public abstract class AbstractBoor {
     }
 
     /**
-     * Get the API of the current boor.
+     * Get the default API of the current boor.
      *
      * @return API format. It can be {@code Api.Basic} or {@code Api.Advanced} or {@code Api.UNDEFINED}.
      */
@@ -57,7 +57,7 @@ public abstract class AbstractBoor {
      * Construct request by id.
      *
      * @param id     post id.
-     * @param format result format.
+     * @param format result format (can be {@code Format.JSON} or {@code Format.XML}).
      * @return complete request for item with id.
      */
     public abstract String getPostByIdRequest(int id, Format format);
@@ -68,7 +68,7 @@ public abstract class AbstractBoor {
      * @param limit  how many posts must be in page.
      * @param tags   the tags to search for.
      * @param page   page index(from zero).
-     * @param format format result (can be {@code Format.JSON} or {@code Format.XML})
+     * @param format format result (can be {@code Format.JSON} or {@code Format.XML}).
      * @return constructed request to this server.
      */
     public abstract String getPackByTagsRequest(int limit, String tags, int page, Format format);
