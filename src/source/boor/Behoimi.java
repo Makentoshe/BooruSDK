@@ -164,11 +164,6 @@ public class Behoimi extends AbstractBoorAdvanced implements LoginModuleInterfac
     }
 
     @Override
-    public String getVotePostRequest() {
-        return null;
-    }
-
-    @Override
     public boolean commentPost(int id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
         String cbody = "comment%5Bpost_id%5D=" + id +
                 "&comment%5Bbody%5D=" + body.replaceAll(" ", "+") +

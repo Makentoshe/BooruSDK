@@ -47,21 +47,6 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModuleIn
     }
 
     @Override
-    public String getAuthenticateRequest() {
-        return null;
-    }
-
-    @Override
-    public String getVotePostRequest() {
-        return null;
-    }
-
-    @Override
-    public String getCreateCommentRequest(int id) {
-        return null;
-    }
-
-    @Override
     public Post newPostInstance(final Map<String, String> attributes) {
         Post post = new Post(instance);
         //create Entry

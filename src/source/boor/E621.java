@@ -235,11 +235,6 @@ public class E621 extends AbstractBoorAdvanced implements LoginModuleInterface, 
     }
 
     @Override
-    public String getCreateCommentRequest(int id) {
-        return null;
-    }
-
-    @Override
     public String getCookieFromLoginData() {
         return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
     }

@@ -235,11 +235,6 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
     }
 
     @Override
-    public String getCreateCommentRequest(int id) {
-        return null;
-    }
-
-    @Override
     public String getCookieFromLoginData() {
         return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
     }

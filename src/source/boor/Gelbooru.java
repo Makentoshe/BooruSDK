@@ -35,14 +35,8 @@ import java.util.regex.Pattern;
     Post Voting is OK
     Posting is OK
  */
-public class Gelbooru
-        extends AbstractBoorBasic
-        implements
-        LoginModuleInterface,
-        VotingModuleInterface,
-        RemotePostModuleInterface,
-        CommentModuleInterface,
-        UploadModuleInterface {
+public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface, VotingModuleInterface,
+        RemotePostModuleInterface, CommentModuleInterface, UploadModuleInterface {
 
     private static final Gelbooru mInstance = new Gelbooru();
 
@@ -322,10 +316,26 @@ public class Gelbooru
             throw new BooruEngineException(e);
         }
 
+        String errMessage = connection
+                .getResponse()
+                .split("You have mail</a></div><br><div id=\"content\" class=\"content\">")[1]
+                .split("<br /><form method=\"post\" action=\"index")[0];
+
         //get result
         boolean code = connection.getResponseCode() == 200;
         boolean message = connection.getResponse().contains("Image added.");
-        return code && message;
+
+        if (code && message) return true;
+
+        else{
+            if (errMessage.contains("Filetype not allowed.")){
+                throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
+            }
+            if (errMessage.contains("Generic error.")){
+                throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
+            }
+            else throw new BooruEngineException(errMessage);
+        }
     }
 
     @Override
