@@ -436,7 +436,7 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
 
         //get result
         boolean code = connection.getResponseCode() == 200;
-        boolean message = connection.getResponse().contains("Image added.");
+        boolean message = errMessage.equals("Image added.");
 
         if (code && message) return true;
 
