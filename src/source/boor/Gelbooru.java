@@ -150,12 +150,12 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
      * Get request for getting comments by post id.
      *
      * @param post_id post, for which comment will be searching.
-     * @param format result format (can be {@code Format.JSON} or {@code Format.XML}).
+     * @param format  result format (can be {@code Format.JSON} or {@code Format.XML}).
      * @return the constructed request to server.
      */
     @Override
     public String getCommentsByPostIdRequest(final int post_id, final Format format) {
-        return getCustomRequest("/index.php?page=dapi&q=index&s=comment&post_id=" + post_id + (format.equals(Format.JSON)?"&json=1":""));
+        return getCustomRequest("/index.php?page=dapi&q=index&s=comment&post_id=" + post_id + (format.equals(Format.JSON) ? "&json=1" : ""));
     }
 
     /**
@@ -163,8 +163,8 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
      *
      * @param login    user login
      * @param password user pass
-     * @throws BooruEngineException will be contain <code>AuthenticationException</code>.
-     * @exception AuthenticationException will be thrown when authentication was failed.
+     * @throws BooruEngineException    will be contain <code>AuthenticationException</code>.
+     * @throws AuthenticationException will be thrown when authentication was failed.
      */
     public void logIn(final String login, final String password) throws BooruEngineException {
         //create post body
@@ -181,7 +181,7 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
                 if (data.length == 2) this.loginData.put(data[0], data[1]);
             }
             //if unsuccessful
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             //throw exception
             throw new BooruEngineException(new AuthenticationException("Authentication failed."));
         }
@@ -218,7 +218,7 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
     /**
      * Get address for getting <code>Post</code> by post id.
      *
-     * @param id post id.
+     * @param id     post id.
      * @param format result format (can be {@code Format.JSON} or {@code Format.XML}).
      * @return the constructed request to server.
      */
@@ -235,10 +235,10 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
      * Use action can be only "up".
      *
      * @param post_id post id.
-     * @param action any action.
+     * @param action  any action.
      * @return true if success.
-     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
-     * @exception IllegalStateException will be thrown when the user data not defined.
+     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException will be thrown when the user data not defined.
      */
     @Override
     public boolean votePost(final int post_id, final String action) throws BooruEngineException {
@@ -276,8 +276,8 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
      * @param postAsAnon use {@code true} for anonymously posting.
      * @param bumpPost   use {@code true} for bump up post.
      * @return true if success.
-     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
-     * @exception IllegalStateException will be thrown when the user data not defined.
+     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException will be thrown when the user data not defined.
      */
     @Override
     public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
@@ -345,19 +345,19 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
 
     /**
      * Creating post.
-     * The <code>title</code> and the <code>sourse</code> params can be null, but they will be replaced " ".
+     * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced " ".
      *
-     * @param post image file.
-     * @param tags tags with " " separator.
-     * @param title post title. Not required
+     * @param post   image file.
+     * @param tags   tags with " " separator.
+     * @param title  post title. Not required
      * @param source post source. Not required
      * @param rating post rating.
      * @return true if success (Indicates complete). Otherwise will be thrown an exception.
-     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
-     * @exception IllegalStateException will be thrown when the user data not defined.
-     * @exception IllegalArgumentException will be thrown when the required data was not included,
-     * not image was specified, or a required field did not exist. As usual when tags not defined or defined bad.
-     * @exception IOException will be thrown when something go wrong on sending post step or when image file corrupt.
+     * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException    will be thrown when the user data not defined.
+     * @throws IllegalArgumentException will be thrown when the required data was not included,
+     *                                  not image was specified, or a required field did not exist. As usual when tags not defined or defined bad.
+     * @throws IOException              will be thrown when something go wrong on sending post step or when image file corrupt.
      */
     @Override
     public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating) throws BooruEngineException {
@@ -405,11 +405,11 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
 
             writer.append("--" + BOUNDARY + LINE_FEED);
             writer.append("Content-Disposition: form-data; name=\"source\"" + LINE_FEED + LINE_FEED);
-            writer.append((source==null?" ": source) + LINE_FEED);//put here source
+            writer.append((source == null ? " " : source) + LINE_FEED);//put here source
 
             writer.append("--" + BOUNDARY + LINE_FEED);
             writer.append("Content-Disposition: form-data; name=\"title\"" + LINE_FEED + LINE_FEED);
-            writer.append((title==null?" ": title) + LINE_FEED);//put here title
+            writer.append((title == null ? " " : title) + LINE_FEED);//put here title
 
             writer.append("--" + BOUNDARY + LINE_FEED);
             writer.append("Content-Disposition: form-data; name=\"tags\"" + LINE_FEED + LINE_FEED);
@@ -440,14 +440,13 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
 
         if (code && message) return true;
 
-        else{
-            if (errMessage.contains("Filetype not allowed.")){
+        else {
+            if (errMessage.contains("Filetype not allowed.")) {
                 throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
             }
-            if (errMessage.contains("Generic error.")){
+            if (errMessage.contains("Generic error.")) {
                 throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
-            }
-            else throw new BooruEngineException(errMessage);
+            } else throw new BooruEngineException(errMessage);
         }
     }
 
@@ -457,7 +456,7 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
      * @return the constructed request to server.
      */
     @Override
-    public String getCreatePostRequest(){
+    public String getCreatePostRequest() {
         return getCustomRequest("/index.php?page=post&s=add");
     }
 }
