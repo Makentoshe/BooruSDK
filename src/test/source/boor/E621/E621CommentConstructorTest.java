@@ -1,7 +1,7 @@
 package test.source.boor.E621;
 
-import engine.HttpsConnection;
-import engine.Method;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import engine.parser.JsonParser;
 import org.junit.Test;
 import source.Comment;

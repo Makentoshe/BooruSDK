@@ -1,8 +1,8 @@
 package test.engine;
 
 import engine.BooruEngineException;
-import engine.HttpsConnection;
-import engine.Method;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import org.junit.Test;
 import source.boor.Gelbooru;
 
@@ -12,7 +12,7 @@ public class HttpsConnectionTest {
 
     @Test
     public void successRequest_test() throws Exception {
-        HttpsConnection httpsConnection = new engine.HttpsConnection()
+        HttpsConnection httpsConnection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
                 .setUserAgent("BooruEngineLib(mkliverout@gmail.com)/1.0")
                 .openConnection(Gelbooru.get().getPackByTagsRequest(1, "touhou", 0));

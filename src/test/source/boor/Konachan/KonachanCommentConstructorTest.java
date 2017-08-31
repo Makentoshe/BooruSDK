@@ -1,7 +1,7 @@
 package test.source.boor.Konachan;
 
 
-import engine.HttpConnection;
+import engine.connector.HttpConnection;
 import engine.parser.JsonParser;
 import org.junit.Test;
 import source.Comment;

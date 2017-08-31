@@ -2,8 +2,9 @@ package source.boor;
 
 import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
-import engine.HttpsConnection;
-import engine.Method;
+import engine.MultipartConstructor;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import module.interfacе.*;
 import source.Post;
 import source.еnum.Format;
@@ -25,8 +26,7 @@ import java.util.regex.Pattern;
     Commenting is OK
     Post Voting is OK
     Posting is OK
- */
-
+*/
 /**
  * Singleton which describe Gelbooru. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
@@ -377,62 +377,76 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
                 .openConnection("https://gelbooru.com/index.php?page=post&s=view&id=1");
         getLoginData().put("PHPSESSID", connection.getHeader("Set-Cookie").get(0).split("=")[1].split("; ")[0]);
 
-        //Create connection
-        connection = new HttpsConnection()
-                .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                .setHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY)
-                .setCookies(getCookieFromLoginData())
-                .openConnection(getCreatePostRequest());
         //and write all data with stream to server
         try {
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(connection.getConnection().getOutputStream(), "UTF-8"), true);
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"upload\"; filename=\"" + post.getName() + "\"" + LINE_FEED);
-            writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(post.getName()) + LINE_FEED);
-            writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED).append(LINE_FEED);
-            writer.flush();
-            FileInputStream inputStream = new FileInputStream(post);
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                connection.getConnection().getOutputStream().write(buffer, 0, bytesRead);
-            }
-            connection.getConnection().getOutputStream().flush();
-            inputStream.close();
-            writer.append(LINE_FEED);
-            writer.flush();
+//            PrintWriter writer = new PrintWriter(new OutputStreamWriter(connection.getConnection().getOutputStream(), "UTF-8"), true);
+//            writer.append("--" + BOUNDARY + LINE_FEED);
+//            writer.append("Content-Disposition: form-data; name=\"upload\"; filename=\"" + post.getName() + "\"" + LINE_FEED);
+//            writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(post.getName()) + LINE_FEED);
+//            writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED).append(LINE_FEED);
+//            writer.flush();
+//            FileInputStream inputStream = new FileInputStream(post);
+//            byte[] buffer = new byte[4096];
+//            int bytesRead;
+//            while ((bytesRead = inputStream.read(buffer)) != -1) {
+//                connection.getConnection().getOutputStream().write(buffer, 0, bytesRead);
+//            }
+//            connection.getConnection().getOutputStream().flush();
+//            inputStream.close();
+//            writer.append(LINE_FEED);
+//            writer.flush();
+//
+//            writer.append("--" + BOUNDARY + LINE_FEED);
+//            writer.append("Content-Disposition: form-data; name=\"source\"" + LINE_FEED + LINE_FEED);
+//            writer.append((source == null ? " " : source) + LINE_FEED);//put here source
+//
+//            writer.append("--" + BOUNDARY + LINE_FEED);
+//            writer.append("Content-Disposition: form-data; name=\"title\"" + LINE_FEED + LINE_FEED);
+//            writer.append((title == null ? " " : title) + LINE_FEED);//put here title
+//
+//            writer.append("--" + BOUNDARY + LINE_FEED);
+//            writer.append("Content-Disposition: form-data; name=\"tags\"" + LINE_FEED + LINE_FEED);
+//            writer.append(tags + LINE_FEED);//put here tags
+//
+//            writer.append("--" + BOUNDARY + LINE_FEED);
+//            writer.append("Content-Disposition: form-data; name=\"rating\"" + LINE_FEED + LINE_FEED);
+//            writer.append(rating.toString().toLowerCase().charAt(0) + LINE_FEED);//put here rating
+//
+//            writer.append("--" + BOUNDARY + LINE_FEED);
+//            writer.append("Content-Disposition: form-data; name=\"submit\"" + LINE_FEED + LINE_FEED);
+//            writer.append("Upload" + LINE_FEED);
+//            writer.append("--" + BOUNDARY + "--" + LINE_FEED);
+//            writer.flush();
+//            writer.close();
+            //create constructor
+            MultipartConstructor constructor = new MultipartConstructor()
+                    .createFileBlock("upload", post)
+                    .createDataBlock("source", (source == null ? " " : source))
+                    .createDataBlock("title", (title == null ? " " : title))
+                    .createDataBlock("tags", tags)
+                    .createDataBlock("rating", "" + rating.toString().toLowerCase().charAt(0))
+                    .createDataBlock("submit", "Upload");
 
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"source\"" + LINE_FEED + LINE_FEED);
-            writer.append((source == null ? " " : source) + LINE_FEED);//put here source
+            //Create connection
+            connection = new HttpsConnection()
+                    .setRequestMethod(Method.POST)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.BOUNDARY)
+                    .setCookies(getCookieFromLoginData())
+                    .openConnection(getCreatePostRequest());
+            //send data
+            constructor.send(connection.getConnection().getOutputStream());
 
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"title\"" + LINE_FEED + LINE_FEED);
-            writer.append((title == null ? " " : title) + LINE_FEED);//put here title
-
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"tags\"" + LINE_FEED + LINE_FEED);
-            writer.append(tags + LINE_FEED);//put here tags
-
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"rating\"" + LINE_FEED + LINE_FEED);
-            writer.append(rating.toString().toLowerCase().charAt(0) + LINE_FEED);//put here rating
-
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"submit\"" + LINE_FEED + LINE_FEED);
-            writer.append("Upload" + LINE_FEED);
-            writer.append("--" + BOUNDARY + "--" + LINE_FEED);
-            writer.flush();
-            writer.close();
         } catch (IOException e) {
             throw new BooruEngineException(e);
         }
 
+        System.out.println(connection.getResponse());
+
         String errMessage = connection
                 .getResponse()
-                .split("You have mail</a></div><br><div id=\"content\" class=\"content\">")[1]
-                .split("<br /><form method=\"post\" action=\"index")[0];
+                .split("<div id=\"content\" class=\"content\">")[1]
+                .split("<br />")[0];
 
         //get result
         boolean code = connection.getResponseCode() == 200;

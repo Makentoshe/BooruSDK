@@ -1,18 +1,11 @@
 package test.source.boor.Danbooru;
 
-import engine.HttpConnection;
+import engine.connector.HttpConnection;
 import engine.parser.JsonParser;
-import org.junit.Before;
-import org.junit.Test;
 import source.Comment;
 import source.Post;
 import source.boor.Danbooru;
-import source.еnum.Boor;
-import source.еnum.Rating;
 import test.source.PostTest;
-
-import java.util.HashMap;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

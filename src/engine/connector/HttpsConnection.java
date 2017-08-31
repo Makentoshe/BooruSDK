@@ -1,6 +1,7 @@
-package engine;
+package engine.connector;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
+import engine.BooruEngineException;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
@@ -73,7 +74,7 @@ public class HttpsConnection {
         return this;
     }
 
-    private void setHeaders(final HttpURLConnection connection, final Map<String, String> headers) throws BooruEngineException{
+    private void setHeaders(final HttpURLConnection connection, final Map<String, String> headers) throws BooruEngineException {
         try {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 connection.setRequestProperty(entry.getKey(), entry.getValue());

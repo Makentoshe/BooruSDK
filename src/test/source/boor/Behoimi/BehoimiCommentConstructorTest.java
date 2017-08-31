@@ -1,13 +1,11 @@
 package test.source.boor.Behoimi;
 
-import engine.HttpConnection;
+import engine.connector.HttpConnection;
 import engine.parser.JsonParser;
 import org.junit.Test;
 import source.Comment;
 import source.Post;
 import source.boor.Behoimi;
-import source.boor.Danbooru;
-import source.еnum.Format;
 import test.source.PostTest;
 
 import static org.junit.Assert.assertEquals;

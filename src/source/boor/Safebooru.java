@@ -2,8 +2,8 @@ package source.boor;
 
 import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
-import engine.HttpsConnection;
-import engine.Method;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import module.interfacе.*;
 import source.Post;
 import source.еnum.Format;
@@ -21,9 +21,10 @@ import java.util.Set;
     csrf-token disable.
 
     Login is OK
-    Commenting is ...
+    Uploading is OK
+    Commenting is OK
     Post Voting is OK
- */
+*/
 /**
  * Singleton which describe Safebooru. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
@@ -399,6 +400,3 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
         return getCustomRequest("/index.php?page=post&s=add");
     }
 }
-
-
-//Generic error. This error will be given if not image was specified, or a required field did not exist, or the required data was not included.

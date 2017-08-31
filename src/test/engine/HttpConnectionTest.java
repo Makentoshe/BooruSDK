@@ -1,17 +1,8 @@
 package test.engine;
 
 import engine.BooruEngineException;
-import engine.HttpConnection;
-import org.junit.Before;
-import org.junit.Rule;
+import engine.connector.HttpConnection;
 import org.junit.Test;
-import source.boor.Danbooru;
-import source.boor.Gelbooru;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import static org.junit.Assert.*;
 

@@ -1,8 +1,8 @@
 package source.boor;
 
 import engine.BooruEngineException;
-import engine.HttpsConnection;
-import engine.Method;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import module.interfacе.LoginModuleInterface;
 import module.interfacе.RemotePostModuleInterface;
 import module.interfacе.VotingModuleInterface;

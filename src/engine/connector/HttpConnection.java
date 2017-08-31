@@ -1,4 +1,6 @@
-package engine;
+package engine.connector;
+
+import engine.BooruEngineException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

@@ -1,14 +1,10 @@
 package test;
 
 import engine.BooruEngineException;
-import engine.HttpsConnection;
-import engine.Method;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import org.junit.Test;
 import source.boor.*;
-
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 
 import static org.junit.Assert.*;
 

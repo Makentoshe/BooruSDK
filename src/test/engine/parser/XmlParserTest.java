@@ -1,7 +1,7 @@
 package test.engine.parser;
 
-import engine.HttpsConnection;
-import engine.Method;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import engine.parser.XmlParser;
 import org.junit.Test;
 import source.boor.Gelbooru;

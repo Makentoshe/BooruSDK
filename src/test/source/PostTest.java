@@ -1,6 +1,6 @@
 package test.source;
 
-import engine.HttpConnection;
+import engine.connector.HttpConnection;
 import engine.parser.JsonParser;
 import engine.parser.XmlParser;
 import source.boor.*;

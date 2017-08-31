@@ -2,8 +2,8 @@ package source.boor;
 
 import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
-import engine.HttpsConnection;
-import engine.Method;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import module.interfacе.*;
 import source.Post;
 import source.еnum.Format;
