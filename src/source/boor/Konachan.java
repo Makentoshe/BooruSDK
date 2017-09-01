@@ -249,13 +249,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
     }
 
     @Override
-    public boolean createPost(
-            final @NotNull File post,
-            final @NotNull String tags,
-            final String title,
-            final String source,
-            final @NotNull Rating rating,
-            final String parent
+    public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id
     ) throws BooruEngineException {
         //check userdata
         String token;
@@ -277,7 +271,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
                     .createFileBlock("post[file]", post)
                     .createDataBlock("post[source]", (source == null ? "" : source))
                     .createDataBlock("post[tags]", tags)
-                    .createDataBlock("post[parent_id]", (parent == null ? "" : parent))
+                    .createDataBlock("post[parent_id]", (parent_id == null ? "" : parent_id))
                     //capitalise data
                     .createDataBlock("post[rating]", rating.toString().toLowerCase().substring(0, 1).toUpperCase() + rating.toString().toLowerCase().substring(1));
 
@@ -309,14 +303,6 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
         } catch (Exception e){
             throw new BooruEngineException(connection.getResponseMessage(), e);
         }
-//        else {
-//            if (errMessage.contains("Filetype not allowed.")) {
-//                throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
-//            }
-//            if (errMessage.contains("Generic error.")) {
-//                throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
-//            } else throw new BooruEngineException(errMessage);
-//        }
     }
 
     /**

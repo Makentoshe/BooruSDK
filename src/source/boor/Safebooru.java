@@ -40,7 +40,7 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
 
     private static final Safebooru instance = new Safebooru();
 
-    private Map<String, String> loginData = new HashMap<>(2);
+    private Map<String, String> loginData = new HashMap<>();
 
     private Safebooru() {
         super();
@@ -219,10 +219,16 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
      * @return true if success.
      * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
      * @throws IllegalStateException will be thrown when the user data not defined.
+     * @exception UnsupportedOperationException will be thrown when action is not supporting.
      */
     @Override
     public boolean votePost(final int post_id, @NotNull final String action) throws BooruEngineException {
-        if (!action.equals("up") && !action.equals("down")) return false;
+        if (!action.equals("up") && !action.equals("down")) throw new BooruEngineException(new UnsupportedOperationException(action));
+
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined"));
+        }
 
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
@@ -256,6 +262,11 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
      */
     @Override
     public boolean commentPost(int post_id, @NotNull String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined"));
+        }
+
         String cbody =
                 "comment=" + body +
                         "&post_anonymous=" + (postAsAnon ? "on" : "off") +
@@ -294,14 +305,14 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
 
     /**
      * Creating post.
-     * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced by " ".
+     * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced " ".
      *
      * @param post      image file.
      * @param tags      tags with " " separator.
      * @param title     post title. Not required
      * @param source    post source. Not required
      * @param rating    post rating.
-     * @param parent_id parent id. Not used.
+     * @param parent_id parent id. Not using.
      * @return true if success (Indicates complete). Otherwise will be thrown an exception.
      * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
      * @throws IllegalStateException    will be thrown when the user data not defined.
@@ -316,6 +327,7 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
+
         //Create connection
         HttpsConnection connection;
         //and write all data with stream to server

@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
     Post Voting is OK
     Posting is OK
 */
+
 /**
  * Singleton which describe Gelbooru. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
@@ -40,7 +41,7 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
 
     private static final Gelbooru mInstance = new Gelbooru();
 
-    private final Map<String, String> loginData = new HashMap<>(2);
+    private final Map<String, String>  loginData = new HashMap<>();
 
     /**
      * Get access to Gelbooru.
@@ -70,8 +71,6 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
      * Remote <code>Post</code> constructor specified on posts from Gelbooru.
      * Implement same as Post#defaultConstructor.
      * <p>
-     * If *boor have specified attribute names
-     * there will be Ok to realise <code>Post</code> construction here.
      *
      * @param attributes map of all post attributes.
      * @return the constructed <code>Post</code>.
@@ -239,9 +238,12 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
      * @return true if success.
      * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
      * @throws IllegalStateException will be thrown when the user data not defined.
+     * @exception UnsupportedOperationException will be thrown when action is not supporting.
      */
     @Override
     public boolean votePost(final int post_id, final String action) throws BooruEngineException {
+        if (!action.equals("up")) throw new BooruEngineException(new UnsupportedOperationException(action));
+
         //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
@@ -347,11 +349,12 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
      * Creating post.
      * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced " ".
      *
-     * @param post   image file.
-     * @param tags   tags with " " separator.
-     * @param title  post title. Not required
-     * @param source post source. Not required
-     * @param rating post rating.
+     * @param post      image file.
+     * @param tags      tags with " " separator.
+     * @param title     post title. Not required
+     * @param source    post source. Not required
+     * @param rating    post rating.
+     * @param parent_id parent id. Not using.
      * @return true if success (Indicates complete). Otherwise will be thrown an exception.
      * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
      * @throws IllegalStateException    will be thrown when the user data not defined.
@@ -379,8 +382,8 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
             //create constructor
             MultipartConstructor constructor = new MultipartConstructor()
                     .createFileBlock("upload", post)
-                    .createDataBlock("source", (source == null ? " " : source))
-                    .createDataBlock("title", (title == null ? " " : title))
+                    .createDataBlock("source", source)
+                    .createDataBlock("title", title)
                     .createDataBlock("tags", tags)
                     .createDataBlock("rating", "" + rating.toString().toLowerCase().charAt(0))
                     .createDataBlock("submit", "Upload");

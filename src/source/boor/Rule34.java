@@ -9,96 +9,125 @@ import source.Post;
 import source.еnum.Format;
 import source.еnum.Rating;
 
+import javax.naming.AuthenticationException;
 import java.io.*;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Singleton.
- * <p>
- * Describe Rule34.
- * <p>
- * Implements <tt>LoginModuleInterface</tt>, <tt>VotingModuleInterface</tt>, <tt>RemotePostModuleInterface</tt>, <tt>CommentModuleInterface</tt>.
- */
 /*NOTE:
     Cookie are static.
     csrf-token disable.
 
     Login is OK
+    Uploading is OK
     Commenting is OK
     Post Voting is OK
+ */
+/**
+ * Singleton which describe Rule34. This class can help user to login, vote posts, create posts, comment posts, etc.
+ * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
+ * <p>
+ * Implements <code>LoginModuleInterface</code>,<code>VotingModuleInterface</code>,
+ * <code>RemotePostModuleInterface</code>, <code>CommentModuleInterface</code>,
+ * <code>UploadModuleInterface</code>.
  */
 public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, VotingModuleInterface,
         RemotePostModuleInterface, CommentModuleInterface, UploadModuleInterface {
 
     private static final Rule34 instance = new Rule34();
 
-    private Map<String, String> loginData = new HashMap<>(2);
+    private Map<String, String> loginData = new HashMap<>();
 
+    private Rule34() {
+        super();
+    }
+
+    /**
+     * Get access to Rule34.
+     *
+     * @return self.
+     */
     public static Rule34 get() {
         return instance;
     }
 
-    private Rule34(){
-        super();
-    }
-
+    /**
+     * Get a host machine name and create custom request.
+     *
+     * @param request request.
+     * @return the host machine address.
+     */
     @Override
     public String getCustomRequest(String request) {
         return "https://rule34.xxx" + request;
     }
 
+    /**
+     * Get request for getting comments by post id.
+     *
+     * @param post_id post, for which comment will be searching.
+     * @param format  result format (can be {@code Format.JSON} or {@code Format.XML}).
+     * @return the constructed request to server.
+     */
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
         return getCustomRequest("/index.php?page=dapi&q=index&s=comment&post_id=" + post_id);
     }
 
+    /**
+     * Remote <code>Post</code> constructor specified on posts from Rule34.
+     * Implement same as Post#defaultConstructor.
+     *
+     * @param attributes map of all post attributes.
+     * @return the constructed <code>Post</code>.
+     */
     @Override
-    public Post newPostInstance(final Map<String, String> attributes){
+    public Post newPostInstance(final Map<String, String> attributes) {
         Post post = new Post(instance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
         //for each attribute
         for (Map.Entry<String, String> pair : entrySet) {
-            switch (pair.getKey()){
-                case "id":{
+            switch (pair.getKey()) {
+                case "id": {
                     post.setId(Integer.parseInt(pair.getValue()));
                     break;
                 }
-                case "md5":{
+                case "md5": {
                     post.setMd5(pair.getValue());
                     break;
                 }
-                case "rating":{
+                case "rating": {
                     post.setRating(pair.getValue());
                     break;
                 }
-                case "score":{
+                case "score": {
                     post.setScore(Integer.parseInt(pair.getValue()));
                     break;
                 }
-                case "preview_url":{
+                case "preview_url": {
                     post.setPreview_url(pair.getValue());
                     break;
                 }
-                case "tags":{
+                case "tags": {
                     post.setTags(pair.getValue());
                     break;
                 }
-                case "sample_url":{
+                case "sample_url": {
                     post.setSample_url(pair.getValue());
                     break;
                 }
-                case "file_url":{
+                case "file_url": {
                     post.setFile_url(pair.getValue());
                     break;
                 }
-                case "source":{
+                case "source": {
                     post.setSource(pair.getValue());
                     break;
-                }case "creator_id": {
+                }
+                case "creator_id": {
                     post.setCreator_id(Integer.parseInt(pair.getValue()));
                     break;
                 }
@@ -110,28 +139,41 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
                     }
                     break;
                 }
-                case "created_at":{
+                case "created_at": {
                     post.setCreate_Time(pair.getValue());
                     break;
                 }
             }
         }
         //after all check comments flag
-        if (post.isHas_comments()){
+        if (post.isHas_comments()) {
             //and if true - setup comments url.
             post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
         }
         return post;
     }
 
+    /**
+     * Get address for sending {@code Method.POST} request for authentication to server.
+     *
+     * @return the constructed request to server.
+     */
     @Override
     public String getAuthenticateRequest() {
         return getCustomRequest("/index.php?page=account&s=login&code=00");
     }
 
+    /**
+     * Authenticate user by login and pass.
+     *
+     * @param login    user login
+     * @param password user pass
+     * @throws BooruEngineException    will be contain <code>AuthenticationException</code>.
+     * @throws AuthenticationException will be thrown when authentication was failed.
+     */
     @Override
     public void logIn(final String login, final String password) throws BooruEngineException {
-        String postData = "user="+login+"&pass="+password+"&submit=Log+in";
+        String postData = "user=" + login + "&pass=" + password + "&submit=Log+in";
 
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
@@ -139,45 +181,92 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
                 .setBody(postData)
                 .openConnection(getAuthenticateRequest());
 
-        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
-            String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
-            if (data.length == 2) this.loginData.put(data[0], data[1]);        }
+        try {
+            for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
+                String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+                if (data.length == 2) this.loginData.put(data[0], data[1]);
+            }
+            //if unsuccessful
+        } catch (NullPointerException e) {
+            //throw exception
+            throw new BooruEngineException(new AuthenticationException("Authentication failed."));
+        }
     }
 
+    /**
+     * Log off user. Remove all user data.
+     */
     @Override
-    public void logOff(){
+    public void logOff() {
         this.loginData.clear();
     }
 
+    /**
+     * Get access to login data. All data storage in <code>Hashmap&lt;String, String&gt;</code>.
+     *
+     * @return the HashMap which contain a user data.
+     */
     @Override
-    public Map<String, String> getLoginData(){
+    public Map<String, String> getLoginData() {
         return this.loginData;
     }
 
-    //up of down
+    /**
+     * Voting post.
+     * <p>
+     * Use action can be "up" or "down".
+     *
+     * @param post_id post id.
+     * @param action  any action.
+     * @return true if success.
+     * @throws BooruEngineException          when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException         will be thrown when the user data not defined.
+     * @throws UnsupportedOperationException will be thrown when action is not supporting.
+     */
     @Override
-    public boolean votePost(final int id, final String action) throws BooruEngineException{
-        if (!action.equals("up")) return false;
+    public boolean votePost(final int post_id, final String action) throws BooruEngineException {
+        if (!action.equals("up")) throw new BooruEngineException(new UnsupportedOperationException(action));
+
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined"));
+        }
 
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
-                .openConnection(getVotePostRequest() + "&id=" + id + "&type=" + action);
+                .openConnection(getVotePostRequest() + "&id=" + post_id + "&type=" + action);
 
         return !connection.getResponse().equals("");
     }
 
+    /**
+     * Get address for creating <code>Method.POST</code> request for voting post.
+     *
+     * @return the constructed request to server.
+     */
     @Override
     public String getVotePostRequest() {
         return getCustomRequest("/index.php?page=post&s=vote");
     }
 
+    /**
+     * Create comment for post with id: post_id.
+     *
+     * @param post_id    post id.
+     * @param body       comment body.
+     * @param postAsAnon use {@code true} for anonymously posting.
+     * @param bumpPost   not support.
+     * @return true if success.
+     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException will be thrown when the user data not defined.
+     */
     @Override
-    public boolean commentPost(int id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+    public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
         String cbody =
-                "comment="+body.replaceAll(" ", "+")+
-                        "&post_anonymous="+ (postAsAnon?"on":"off") +
+                "comment=" + body.replaceAll(" ", "+") +
+                        "&post_anonymous=" + (postAsAnon ? "on" : "off") +
                         "&submit=Post+comment&conf=2";
 
         HttpsConnection connection = new HttpsConnection()
@@ -185,21 +274,51 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .setBody(cbody)
-                .openConnection(getCreateCommentRequest(id));
+                .openConnection(getCreateCommentRequest(post_id));
 
         return connection.getResponse().equals("") && connection.getResponseCode() == 302;
     }
 
+    /**
+     * Get address for creating <code>Method.POST</code> request for creating comment.
+     *
+     * @param post_id post id.
+     * @return the constructed request to server.
+     */
     @Override
-    public String getCreateCommentRequest(final int id) {
-        return getCustomRequest("/index.php?page=comment&id="+id+"&s=save");
+    public String getCreateCommentRequest(final int post_id) {
+        return getCustomRequest("/index.php?page=comment&post_id=" + post_id + "&s=save");
     }
 
+    /**
+     * Remake user data current format to <code>String</code> which will be contain user cookie.
+     *
+     * @return the user cookie.
+     */
     @Override
     public String getCookieFromLoginData() {
-        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
     }
 
+    /**
+     * Creating post.
+     * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced " ".
+     *
+     * @param post      image file.
+     * @param tags      tags with " " separator.
+     * @param title     post title. Not required
+     * @param source    post source. Not required
+     * @param rating    post rating.
+     * @param parent_id parent id. Not using.
+     * @return true if success (Indicates complete). Otherwise will be thrown an exception.
+     * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException    will be thrown when the user data not defined.
+     * @throws IllegalArgumentException will be thrown when the required data was not included,
+     *                                  not image was specified, or a required field did not exist.
+     *                                  As usual when tags not defined or defined bad.
+     * @throws IOException              will be thrown when something go wrong on sending post step or
+     *                                  when image file corrupt.
+     */
     @Override
     public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {
         //check userdata
@@ -274,17 +393,21 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
 
 
         if (code && message) return true;
-        else{
-            if (errMessage.contains("Filetype not allowed.")){
+        else {
+            if (errMessage.contains("Filetype not allowed.")) {
                 throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
             }
-            if (errMessage.contains("Generic error.")){
+            if (errMessage.contains("Generic error.")) {
                 throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
-            }
-            else throw new BooruEngineException(errMessage);
+            } else throw new BooruEngineException(errMessage);
         }
     }
 
+    /**
+     * Get address for creating <code>Method.POST</code> request for creating post.
+     *
+     * @return the constructed request to server.
+     */
     @Override
     public String getCreatePostRequest() {
         return getCustomRequest("/index.php?page=post&s=add");
