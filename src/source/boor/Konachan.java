@@ -277,9 +277,6 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
         loginData.put("authenticity_token", data);
     }
 
-
-    //score - 0 is remove, from 1 to 3. 3 is favorite.
-
     /**
      * Voting post.
      * <p>

@@ -2,6 +2,7 @@ package source.boor;
 
 import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
+import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import module.interfacе.*;
@@ -326,58 +327,27 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
 
-        final String BOUNDARY = "----WebKitFormBoundaryBooruEngineLib";
-        final String LINE_FEED = "\r\n";
-
         //Create connection
-        HttpsConnection connection = new HttpsConnection()
-                .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                .setHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY)
-                .setCookies(getCookieFromLoginData())
-                .openConnection(getCreatePostRequest());
+        HttpsConnection connection;
         //and write all data with stream to server
-
         try {
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(connection.getConnection().getOutputStream(), "UTF-8"), true);
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"upload\"; filename=\"" + post.getName() + "\"" + LINE_FEED);
-            writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(post.getName()) + LINE_FEED);
-            writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED).append(LINE_FEED);
-            writer.flush();
-            FileInputStream inputStream = new FileInputStream(post);
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                connection.getConnection().getOutputStream().write(buffer, 0, bytesRead);
-            }
-            connection.getConnection().getOutputStream().flush();
-            inputStream.close();
-            writer.append(LINE_FEED);
-            writer.flush();
+            MultipartConstructor constructor = new MultipartConstructor()
+                    .createFileBlock("upload", post)
+                    .createDataBlock("source", source)
+                    .createDataBlock("title", title)
+                    .createDataBlock("tags", tags)
+                    .createDataBlock("rating", "" + rating.toString().toLowerCase().charAt(0))
+                    .createDataBlock("submit", "Upload");
 
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"source\"" + LINE_FEED + LINE_FEED);
-            writer.append((source == null ? " " : source) + LINE_FEED);//put here source
+            //Create connection
+            connection = new HttpsConnection()
+                    .setRequestMethod(Method.POST)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.BOUNDARY)
+                    .setCookies(getCookieFromLoginData())
+                    .openConnection(getCreatePostRequest());
 
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"title\"" + LINE_FEED + LINE_FEED);
-            writer.append((title == null ? " " : title) + LINE_FEED);//put here title
-
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"tags\"" + LINE_FEED + LINE_FEED);
-            writer.append(tags + LINE_FEED);//put here tags
-
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"rating\"" + LINE_FEED + LINE_FEED);
-            writer.append(rating.toString().toLowerCase().charAt(0) + LINE_FEED);//put here rating
-
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"submit\"" + LINE_FEED + LINE_FEED);
-            writer.append("Upload" + LINE_FEED);
-            writer.append("--" + BOUNDARY + "--" + LINE_FEED);
-            writer.flush();
-            writer.close();
+                    constructor.send(connection.getConnection().getOutputStream());
         } catch (IOException e) {
             throw new BooruEngineException(e);
         }
