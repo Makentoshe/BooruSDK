@@ -14,9 +14,11 @@ public interface UploadModuleInterface {
     boolean createPost(
             @NotNull final File post,
             @NotNull final String tags,
-            @NotNull final String title,
-            @NotNull final String source,
-            @NotNull final Rating rating
+            final String title,
+            final String source,
+            @NotNull final Rating rating,
+            final String parent
+
     )
             throws BooruEngineException;
 

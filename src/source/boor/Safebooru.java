@@ -307,8 +307,7 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
      * @exception IOException will be thrown when something go wrong on sending post step or when image file corrupt.
      */
     @Override
-    public boolean createPost(@NotNull File post, @NotNull String tags, @NotNull String title, @NotNull String source, @NotNull Rating rating) throws BooruEngineException {
-        //check userdata
+    public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {        //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }

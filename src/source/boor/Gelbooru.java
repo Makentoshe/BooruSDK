@@ -360,14 +360,11 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
      * @throws IOException              will be thrown when something go wrong on sending post step or when image file corrupt.
      */
     @Override
-    public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating) throws BooruEngineException {
+    public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {
         //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
-
-        final String BOUNDARY = "----WebKitFormBoundaryBooruEngineLib";
-        final String LINE_FEED = "\r\n";
 
         //get PHPSESSID
         HttpsConnection connection = new HttpsConnection()
@@ -379,45 +376,6 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
 
         //and write all data with stream to server
         try {
-//            PrintWriter writer = new PrintWriter(new OutputStreamWriter(connection.getConnection().getOutputStream(), "UTF-8"), true);
-//            writer.append("--" + BOUNDARY + LINE_FEED);
-//            writer.append("Content-Disposition: form-data; name=\"upload\"; filename=\"" + post.getName() + "\"" + LINE_FEED);
-//            writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(post.getName()) + LINE_FEED);
-//            writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED).append(LINE_FEED);
-//            writer.flush();
-//            FileInputStream inputStream = new FileInputStream(post);
-//            byte[] buffer = new byte[4096];
-//            int bytesRead;
-//            while ((bytesRead = inputStream.read(buffer)) != -1) {
-//                connection.getConnection().getOutputStream().write(buffer, 0, bytesRead);
-//            }
-//            connection.getConnection().getOutputStream().flush();
-//            inputStream.close();
-//            writer.append(LINE_FEED);
-//            writer.flush();
-//
-//            writer.append("--" + BOUNDARY + LINE_FEED);
-//            writer.append("Content-Disposition: form-data; name=\"source\"" + LINE_FEED + LINE_FEED);
-//            writer.append((source == null ? " " : source) + LINE_FEED);//put here source
-//
-//            writer.append("--" + BOUNDARY + LINE_FEED);
-//            writer.append("Content-Disposition: form-data; name=\"title\"" + LINE_FEED + LINE_FEED);
-//            writer.append((title == null ? " " : title) + LINE_FEED);//put here title
-//
-//            writer.append("--" + BOUNDARY + LINE_FEED);
-//            writer.append("Content-Disposition: form-data; name=\"tags\"" + LINE_FEED + LINE_FEED);
-//            writer.append(tags + LINE_FEED);//put here tags
-//
-//            writer.append("--" + BOUNDARY + LINE_FEED);
-//            writer.append("Content-Disposition: form-data; name=\"rating\"" + LINE_FEED + LINE_FEED);
-//            writer.append(rating.toString().toLowerCase().charAt(0) + LINE_FEED);//put here rating
-//
-//            writer.append("--" + BOUNDARY + LINE_FEED);
-//            writer.append("Content-Disposition: form-data; name=\"submit\"" + LINE_FEED + LINE_FEED);
-//            writer.append("Upload" + LINE_FEED);
-//            writer.append("--" + BOUNDARY + "--" + LINE_FEED);
-//            writer.flush();
-//            writer.close();
             //create constructor
             MultipartConstructor constructor = new MultipartConstructor()
                     .createFileBlock("upload", post)
@@ -434,14 +392,12 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModuleInterface,
                     .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.BOUNDARY)
                     .setCookies(getCookieFromLoginData())
                     .openConnection(getCreatePostRequest());
+
             //send data
             constructor.send(connection.getConnection().getOutputStream());
-
         } catch (IOException e) {
             throw new BooruEngineException(e);
         }
-
-        System.out.println(connection.getResponse());
 
         String errMessage = connection
                 .getResponse()

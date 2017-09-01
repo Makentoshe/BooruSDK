@@ -1,15 +1,23 @@
 package source.boor;
 
+import com.google.gson.JsonSyntaxException;
+import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
+import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
+import engine.parser.JsonParser;
 import module.interfacе.LoginModuleInterface;
 import module.interfacе.RemotePostModuleInterface;
+import module.interfacе.UploadModuleInterface;
 import module.interfacе.VotingModuleInterface;
 import source.Post;
 import source.еnum.Format;
+import source.еnum.Rating;
 
 import javax.naming.AuthenticationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -28,7 +36,8 @@ import java.util.regex.Pattern;
     Commenting is ... TODO: make CommentModuleInterface implementation(do it after ~2 weeks).
     Post Voting is OK
  */
-public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterface, VotingModuleInterface, RemotePostModuleInterface {
+public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterface, VotingModuleInterface,
+        RemotePostModuleInterface, UploadModuleInterface {
 
     private static final Konachan instance = new Konachan();
 
@@ -38,7 +47,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
         return instance;
     }
 
-    private Konachan(){
+    private Konachan() {
         super();
     }
 
@@ -197,29 +206,29 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
     }
 
     protected void setToken(final HttpsConnection connection) throws BooruEngineException {
-            String s = connection.getResponse();
-            String data = s.split("name=\"csrf-param\" />")[1]
-                    .split(" name=\"csrf-token\" />")[0]
-                    .replaceAll("\"", "")
-                    .replace("<meta content=", "")
-                    .replaceAll(Pattern.quote("+"), "%2B");
-            loginData.put("authenticity_token", data);
+        String s = connection.getResponse();
+        String data = s.split("name=\"csrf-param\" />")[1]
+                .split(" name=\"csrf-token\" />")[0]
+                .replaceAll("\"", "")
+                .replace("<meta content=", "")
+                .replaceAll(Pattern.quote("+"), "%2B");
+        loginData.put("authenticity_token", data);
     }
 
     //score - 0 is remove, from 1 to 3. 3 is favorite.
     @Override
     public boolean votePost(final int id, final String score) throws BooruEngineException {
         String data;
-        try{
-             data = loginData.get("authenticity_token").replaceAll("%2B", "+");
-        } catch (NullPointerException e){
-            throw new BooruEngineException("User data not defined.", new AuthenticationException());
+        try {
+            data = loginData.get("authenticity_token").replaceAll("%2B", "+");
+        } catch (NullPointerException e) {
+            throw new BooruEngineException("User data not defined.", new IllegalStateException());
         }
         try {
             new HttpsConnection()
                     .setRequestMethod(Method.POST)
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                    .setCookies(loginData.toString().replaceAll(", ", "; "))
+                    .setCookies(getCookieFromLoginData())
                     .setHeader("X-CSRF-Token", data)
                     .setBody("id=" + id + "&score=" + score)
                     .openConnection(getCustomRequest("/post/vote.json"));
@@ -236,6 +245,87 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
 
     @Override
     public String getCookieFromLoginData() {
-        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
+    }
+
+    @Override
+    public boolean createPost(
+            final @NotNull File post,
+            final @NotNull String tags,
+            final String title,
+            final String source,
+            final @NotNull Rating rating,
+            final String parent
+    ) throws BooruEngineException {
+        //check userdata
+        String token;
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined."));
+        }
+        try {
+            token = loginData.get("authenticity_token").replaceAll("%2B", "+");
+        } catch (NullPointerException e) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined."));
+        }
+
+        //write all data with stream to server
+        HttpsConnection connection;
+        try {
+            //create constructor
+            MultipartConstructor constructor = new MultipartConstructor()
+                    .createDataBlock("authenticity_token", token)
+                    .createFileBlock("post[file]", post)
+                    .createDataBlock("post[source]", (source == null ? "" : source))
+                    .createDataBlock("post[tags]", tags)
+                    .createDataBlock("post[parent_id]", (parent == null ? "" : parent))
+                    //capitalise data
+                    .createDataBlock("post[rating]", rating.toString().toLowerCase().substring(0, 1).toUpperCase() + rating.toString().toLowerCase().substring(1));
+
+            //Create connection
+            connection = new HttpsConnection()
+                    .setRequestMethod(Method.POST)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.BOUNDARY)
+                    .setCookies(getCookieFromLoginData())
+                    .openConnection(getCreatePostRequest());
+
+            //send data
+            constructor.send(connection.getConnection().getOutputStream());
+        } catch (IOException e) {
+            throw new BooruEngineException(e);
+        }
+        //get response
+        try {
+            JsonParser parser = new JsonParser();
+            parser.startParse(connection.getResponse());
+            List<HashMap<String, String>> jsonResult = parser.getResult();
+            //if success - true
+            if (jsonResult.get(0).get("success").equals("true")) return true;
+            //else throw exception with reason
+            else {
+                throw new BooruEngineException(jsonResult.get(0).get("reason"), new IOException());
+            }
+            //when something go wring catch anu exception and throw in BEE
+        } catch (Exception e){
+            throw new BooruEngineException(connection.getResponseMessage(), e);
+        }
+//        else {
+//            if (errMessage.contains("Filetype not allowed.")) {
+//                throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
+//            }
+//            if (errMessage.contains("Generic error.")) {
+//                throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
+//            } else throw new BooruEngineException(errMessage);
+//        }
+    }
+
+    /**
+     * Get address for creating <code>Method.POST</code> request for creating post.
+     *
+     * @return the constructed request to server.
+     */
+    @Override
+    public String getCreatePostRequest() {
+        return getCustomRequest("/post/create.json");
     }
 }
