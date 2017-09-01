@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class GelbooruLoginModuleTest {
 
-    private LoginModuleInterface boor;
+    private final LoginModuleInterface boor;
 
     public GelbooruLoginModuleTest(){
         boor = Gelbooru.get();
