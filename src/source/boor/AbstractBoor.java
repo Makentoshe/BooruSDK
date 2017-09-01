@@ -35,6 +35,20 @@ public abstract class AbstractBoor {
     }
 
     /**
+     * Set the default result format of the current boor.
+     */
+    public void setFormat(Format format){
+        this.format = format;
+    }
+
+    /**
+     * Set the default API of the current boor.
+     */
+    public void setApi(Api api){
+        this.api = api;
+    }
+
+    /**
      * Construct custom request.
      *
      * @param request request.

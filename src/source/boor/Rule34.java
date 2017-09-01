@@ -214,7 +214,7 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
     /**
      * Voting post.
      * <p>
-     * Use action can be "up" or "down".
+     * Use action can be only "up".
      *
      * @param post_id post id.
      * @param action  any action.

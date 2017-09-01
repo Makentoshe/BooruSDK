@@ -12,7 +12,6 @@ import source.еnum.Rating;
 
 import javax.naming.AuthenticationException;
 import java.io.*;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +26,6 @@ import java.util.regex.Pattern;
     Post Voting is OK
     Posting is OK
 */
-
 /**
  * Singleton which describe Gelbooru. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
