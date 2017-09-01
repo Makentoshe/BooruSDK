@@ -7,7 +7,7 @@ import org.junit.Test;
 import source.Comment;
 import source.Post;
 import source.boor.E621;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,7 +17,7 @@ public class E621CommentConstructorTest {
 
     public E621CommentConstructorTest() throws Exception {
         if (comment != null) return;
-        Post post = new Post(PostTest.getDataFromBoorAdvanced(E621.get(), 8595), E621.get());
+        Post post = new Post(TestHelper.getDataFromBoorAdvanced(E621.get(), 8595), E621.get());
 
         String responseData = new HttpsConnection()
                 .setRequestMethod(Method.GET)

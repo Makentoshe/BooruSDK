@@ -6,7 +6,7 @@ import source.Post;
 import source.boor.Konachan;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -20,7 +20,7 @@ public class KonachanRemotePostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = Konachan.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Konachan.get(), 246946));
+        post = Konachan.get().newPostInstance(TestHelper.getDataFromBoorAdvanced(Konachan.get(), 246946));
     }
 
     @Test

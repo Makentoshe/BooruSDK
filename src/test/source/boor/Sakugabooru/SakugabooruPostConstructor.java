@@ -6,7 +6,7 @@ import source.Post;
 import source.boor.Sakugabooru;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +17,7 @@ public class SakugabooruPostConstructor {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = new Post(PostTest.getDataFromBoorAdvanced(Sakugabooru.get(), 36635), Sakugabooru.get());
+        post = new Post(TestHelper.getDataFromBoorAdvanced(Sakugabooru.get(), 36635), Sakugabooru.get());
     }
 
     @Test

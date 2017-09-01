@@ -5,10 +5,17 @@ import engine.parser.JsonParser;
 import engine.parser.XmlParser;
 import source.boor.*;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.Scanner;
 
 
-public class PostTest {
+public class TestHelper {
+
+    private static File getDataFile(){
+        return new File(new File("").getAbsolutePath() + "\\src\\Data");
+    }
 
     public static HashMap<String, String> getDataFromBoorAdvanced(AbstractBoorAdvanced boor, int id) throws Exception {
         String request1 = boor.getPostByIdRequest(id);
@@ -31,5 +38,21 @@ public class PostTest {
 
         parser.startParse(request1);
         return parser.getResult().get(0);
+    }
+
+    public static String getLogin() throws Exception{
+        Scanner scanner = new Scanner(new FileInputStream(getDataFile()));
+        while(true){
+            String s = scanner.nextLine();
+            if (s.contains("login=")) return s.split("login=")[1];
+        }
+    }
+
+    public static String getPass() throws Exception{
+        Scanner scanner = new Scanner(new FileInputStream(getDataFile()));
+        while(true){
+            String s = scanner.nextLine();
+            if (s.contains("pass=")) return s.split("pass=")[1];
+        }
     }
 }

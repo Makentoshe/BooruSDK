@@ -1,11 +1,10 @@
 package test.source.boor.Danbooru;
 
-import org.junit.Test;
 import source.Post;
 import source.boor.Danbooru;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -17,7 +16,7 @@ public class DanbooruRemotePostConstructorTest {
 
     public DanbooruRemotePostConstructorTest() throws Exception{
         if (post != null)return;
-        post = Danbooru.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Danbooru.get(), 2794154));
+        post = Danbooru.get().newPostInstance(TestHelper.getDataFromBoorAdvanced(Danbooru.get(), 2794154));
     }
 
     //    @Test

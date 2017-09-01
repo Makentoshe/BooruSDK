@@ -1,12 +1,11 @@
 package test.source.boor.Konachan;
 
-import org.junit.Before;
 import org.junit.Test;
 import source.Post;
 import source.boor.Konachan;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +16,7 @@ public class KonachanPostConstructorTest {
 
     public KonachanPostConstructorTest() throws Exception{
         if (post != null) return;
-        post = new Post(PostTest.getDataFromBoorAdvanced(Konachan.get(), 246946), Konachan.get());
+        post = new Post(TestHelper.getDataFromBoorAdvanced(Konachan.get(), 246946), Konachan.get());
     }
 
     @Test

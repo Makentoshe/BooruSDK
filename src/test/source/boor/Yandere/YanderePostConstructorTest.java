@@ -6,7 +6,7 @@ import source.Post;
 import source.boor.Yandere;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.*;
 
@@ -18,7 +18,7 @@ public class YanderePostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = new Post(PostTest.getDataFromBoorAdvanced(Yandere.get(), 401662), Yandere.get());
+        post = new Post(TestHelper.getDataFromBoorAdvanced(Yandere.get(), 401662), Yandere.get());
     }
 
     @Test

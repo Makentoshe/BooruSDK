@@ -6,7 +6,7 @@ import source.Post;
 import source.boor.Rule34;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.*;
 
@@ -18,7 +18,7 @@ public class Rule34PostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = new Post(PostTest.getDataFromBoorBasic(Rule34.get(), 2421106), Rule34.get());
+        post = new Post(TestHelper.getDataFromBoorBasic(Rule34.get(), 2421106), Rule34.get());
     }
 
     @Test

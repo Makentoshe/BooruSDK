@@ -5,7 +5,7 @@ import source.Post;
 import source.boor.E621;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -18,7 +18,7 @@ public class E621RemotePostConstructorTest {
 
     public E621RemotePostConstructorTest() throws Exception{
         if (post != null) return;
-        post = E621.get().newPostInstance(PostTest.getDataFromBoorAdvanced(E621.get(), 1263892));
+        post = E621.get().newPostInstance(TestHelper.getDataFromBoorAdvanced(E621.get(), 1263892));
     }
 
     @Test

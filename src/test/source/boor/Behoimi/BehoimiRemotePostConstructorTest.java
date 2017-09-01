@@ -6,7 +6,7 @@ import source.Post;
 import source.boor.Behoimi;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -18,12 +18,12 @@ public class BehoimiRemotePostConstructorTest {
 
     public BehoimiRemotePostConstructorTest() throws Exception {
         if (post != null) return;
-        post = Behoimi.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Behoimi.get(), 633053));
+        post = Behoimi.get().newPostInstance(TestHelper.getDataFromBoorAdvanced(Behoimi.get(), 633053));
     }
 
     @Before
     public void setUp() throws Exception {
-        post = Behoimi.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Behoimi.get(), 633053));
+        post = Behoimi.get().newPostInstance(TestHelper.getDataFromBoorAdvanced(Behoimi.get(), 633053));
     }
 
     @Test

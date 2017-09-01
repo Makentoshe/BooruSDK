@@ -5,7 +5,7 @@ import source.Post;
 import source.boor.Behoimi;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.*;
 
@@ -15,7 +15,7 @@ public class BehoimiPostConstructorTest {
 
     public BehoimiPostConstructorTest() throws Exception {
         if (post != null) return;
-        post = new Post(PostTest.getDataFromBoorAdvanced(Behoimi.get(), 633053), Behoimi.get());
+        post = new Post(TestHelper.getDataFromBoorAdvanced(Behoimi.get(), 633053), Behoimi.get());
     }
 
     @Test

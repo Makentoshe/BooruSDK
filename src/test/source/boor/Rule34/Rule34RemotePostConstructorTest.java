@@ -6,7 +6,7 @@ import source.Post;
 import source.boor.Rule34;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,7 +21,7 @@ public class Rule34RemotePostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = Rule34.get().newPostInstance(PostTest.getDataFromBoorBasic(Rule34.get(), 2421106));
+        post = Rule34.get().newPostInstance(TestHelper.getDataFromBoorBasic(Rule34.get(), 2421106));
     }
 
     @Test

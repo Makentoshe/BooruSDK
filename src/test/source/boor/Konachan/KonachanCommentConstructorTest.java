@@ -7,7 +7,7 @@ import org.junit.Test;
 import source.Comment;
 import source.Post;
 import source.boor.Konachan;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,7 +17,7 @@ public class KonachanCommentConstructorTest {
 
     public KonachanCommentConstructorTest() throws Exception{
         if (comment != null)  return;
-        Post post = new Post(PostTest.getDataFromBoorAdvanced(Konachan.get(), 246937), Konachan.get());
+        Post post = new Post(TestHelper.getDataFromBoorAdvanced(Konachan.get(), 246937), Konachan.get());
         HttpConnection connection = new HttpConnection(false);
         String responseData = connection.getRequest(post.getComments_url());
         JsonParser parser = new JsonParser();

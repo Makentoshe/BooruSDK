@@ -3,11 +3,10 @@ package test.source.boor.Yandere;
 import org.junit.Before;
 import org.junit.Test;
 import source.Post;
-import source.boor.Konachan;
 import source.boor.Yandere;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,7 +20,7 @@ public class YandereRemotePostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = Yandere.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Yandere.get(), 401662));
+        post = Yandere.get().newPostInstance(TestHelper.getDataFromBoorAdvanced(Yandere.get(), 401662));
     }
 
     @Test

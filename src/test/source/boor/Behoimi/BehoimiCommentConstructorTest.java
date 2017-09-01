@@ -6,7 +6,7 @@ import org.junit.Test;
 import source.Comment;
 import source.Post;
 import source.boor.Behoimi;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,7 +17,7 @@ public class BehoimiCommentConstructorTest {
 
     public BehoimiCommentConstructorTest() throws Exception{
         if (comment != null)  return;
-        Post post = new Post(PostTest.getDataFromBoorAdvanced(Behoimi.get(), 608453), Behoimi.get());
+        Post post = new Post(TestHelper.getDataFromBoorAdvanced(Behoimi.get(), 608453), Behoimi.get());
         HttpConnection connection = new HttpConnection(false);
         String responseData = connection.getRequest(post.getComments_url());
         JsonParser parser = new JsonParser();

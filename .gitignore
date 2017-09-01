@@ -28,5 +28,6 @@ hs_err_pid*
 out/
 
 /src/Main.java
-/test/TestData.java
+/src/Data
+
 
