@@ -1,5 +1,7 @@
 package engine;
 
+import com.sun.istack.internal.NotNull;
+
 import java.io.*;
 import java.net.URLConnection;
 import java.security.SecureRandom;
@@ -16,12 +18,12 @@ public class MultipartConstructor {
 
     private List<InputStream> mData = new ArrayList<>();
 
-    public MultipartConstructor createDataBlock(final String name, final String data){
-        this.mData.add(new Multipart(name, data, BOUNDARY).getResult());
+    public MultipartConstructor createDataBlock(@NotNull final String name, final String data) {
+        this.mData.add(new Multipart(name, (data == null ? "" : data), BOUNDARY).getResult());
         return this;
     }
 
-    public MultipartConstructor createFileBlock(final String name, final File file) throws IOException {
+    public MultipartConstructor createFileBlock(@NotNull final String name, @NotNull final File file) throws IOException {
         this.mData.add(new Multipart(name, file, BOUNDARY).getResult());
         return this;
     }
@@ -32,7 +34,7 @@ public class MultipartConstructor {
         byte[] buffer = new byte[4096];
         int bytesRead;
 
-        for (InputStream inputStream : this.mData){
+        for (InputStream inputStream : this.mData) {
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 stream.write(buffer, 0, bytesRead);
             }
@@ -90,7 +92,7 @@ class Multipart {
 
     }
 
-    static InputStream createFinalisation(final String boundary){
+    static InputStream createFinalisation(final String boundary) {
         return new ByteArrayInputStream(("--" + boundary + "--" + LINE_FEED).getBytes());
     }
 

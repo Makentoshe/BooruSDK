@@ -2,6 +2,7 @@ package source.boor;
 
 import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
+import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import module.interfacе.*;
@@ -25,6 +26,7 @@ import java.util.Set;
     Commenting is OK
     Post Voting is OK
 */
+
 /**
  * Singleton which describe Safebooru. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
@@ -68,12 +70,12 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
      * Get request for getting comments by post id.
      *
      * @param post_id post, for which comment will be searching.
-     * @param format result format (can be {@code Format.JSON} or {@code Format.XML}).
+     * @param format  result format (can be {@code Format.JSON} or {@code Format.XML}).
      * @return the constructed request to server.
      */
     @Override
     public String getCommentsByPostIdRequest(int post_id, @NotNull Format format) {
-        return getCustomRequest("/index.php?page=dapi&q=index&s=comment&post_id=" + post_id + (format.equals(Format.JSON)?"&json=1":""));
+        return getCustomRequest("/index.php?page=dapi&q=index&s=comment&post_id=" + post_id + (format.equals(Format.JSON) ? "&json=1" : ""));
     }
 
     /**
@@ -168,8 +170,8 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
      *
      * @param login    user login
      * @param password user pass
-     * @throws BooruEngineException will be contain <code>AuthenticationException</code>.
-     * @exception AuthenticationException will be thrown when authentication was failed.
+     * @throws BooruEngineException    will be contain <code>AuthenticationException</code>.
+     * @throws AuthenticationException will be thrown when authentication was failed.
      */
     @Override
     public void logIn(@NotNull final String login, @NotNull final String password) throws BooruEngineException {
@@ -213,10 +215,10 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
      * Use action can be "up" or "down".
      *
      * @param post_id post id.
-     * @param action any action.
+     * @param action  any action.
      * @return true if success.
-     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
-     * @exception IllegalStateException will be thrown when the user data not defined.
+     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException will be thrown when the user data not defined.
      */
     @Override
     public boolean votePost(final int post_id, @NotNull final String action) throws BooruEngineException {
@@ -249,8 +251,8 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
      * @param postAsAnon use {@code true} for anonymously posting.
      * @param bumpPost   not support.
      * @return true if success.
-     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
-     * @exception IllegalStateException will be thrown when the user data not defined.
+     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException will be thrown when the user data not defined.
      */
     @Override
     public boolean commentPost(int post_id, @NotNull String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
@@ -287,83 +289,54 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
      */
     @Override
     public String getCookieFromLoginData() {
-        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
     }
 
     /**
      * Creating post.
-     * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced " ".
+     * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced by " ".
      *
-     * @param post image file.
-     * @param tags tags with " " separator.
-     * @param title post title. Not required
-     * @param source post source. Not required
-     * @param rating post rating.
+     * @param post      image file.
+     * @param tags      tags with " " separator.
+     * @param title     post title. Not required
+     * @param source    post source. Not required
+     * @param rating    post rating.
+     * @param parent_id parent id. Not used.
      * @return true if success (Indicates complete). Otherwise will be thrown an exception.
-     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
-     * @exception IllegalStateException will be thrown when the user data not defined.
-     * @exception IllegalArgumentException will be thrown when the required data was not included,
-     * not image was specified, or a required field did not exist. As usual when tags not defined or defined bad.
-     * @exception IOException will be thrown when something go wrong on sending post step or when image file corrupt.
+     * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException    will be thrown when the user data not defined.
+     * @throws IllegalArgumentException will be thrown when the required data was not included,
+     *                                  not image was specified, or a required field did not exist.
+     *                                  As usual when tags not defined or defined bad.
+     * @throws IOException              will be thrown when something go wrong on sending post step or
+     *                                  when image file corrupt.
      */
     @Override
     public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {        //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
-
-        final String BOUNDARY = "----WebKitFormBoundaryBooruEngineLib";
-        final String LINE_FEED = "\r\n";
-
         //Create connection
-        HttpsConnection connection = new HttpsConnection()
-                .setRequestMethod(Method.POST)
-                .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                .setHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY)
-                .setCookies(getCookieFromLoginData())
-                .openConnection(getCreatePostRequest());
+        HttpsConnection connection;
         //and write all data with stream to server
-
         try {
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(connection.getConnection().getOutputStream(), "UTF-8"), true);
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"upload\"; filename=\"" + post.getName() + "\"" + LINE_FEED);
-            writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(post.getName()) + LINE_FEED);
-            writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED).append(LINE_FEED);
-            writer.flush();
-            FileInputStream inputStream = new FileInputStream(post);
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                connection.getConnection().getOutputStream().write(buffer, 0, bytesRead);
-            }
-            connection.getConnection().getOutputStream().flush();
-            inputStream.close();
-            writer.append(LINE_FEED);
-            writer.flush();
-
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"source\"" + LINE_FEED + LINE_FEED);
-            writer.append((source == null ? " " : source) + LINE_FEED);//put here source
-
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"title\"" + LINE_FEED + LINE_FEED);
-            writer.append((title == null ? " " : title) + LINE_FEED);//put here title
-
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"tags\"" + LINE_FEED + LINE_FEED);
-            writer.append(tags + LINE_FEED);//put here tags
-
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"rating\"" + LINE_FEED + LINE_FEED);
-            writer.append(rating.toString().toLowerCase().charAt(0) + LINE_FEED);//put here rating
-
-            writer.append("--" + BOUNDARY + LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"submit\"" + LINE_FEED + LINE_FEED);
-            writer.append("Upload" + LINE_FEED);
-            writer.append("--" + BOUNDARY + "--" + LINE_FEED);
-            writer.flush();
-            writer.close();
+            //create constructor
+            MultipartConstructor constructor = new MultipartConstructor()
+                    .createFileBlock("upload", post)
+                    .createDataBlock("source", source)
+                    .createDataBlock("title", title)
+                    .createDataBlock("tags", tags)
+                    .createDataBlock("rating", "" + rating.toString().toLowerCase().charAt(0))
+                    .createDataBlock("submit", "Upload");
+            //define connection
+            connection = new HttpsConnection()
+                    .setRequestMethod(Method.POST)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.BOUNDARY)
+                    .setCookies(getCookieFromLoginData())
+                    .openConnection(getCreatePostRequest());
+            //send data to stream
+            constructor.send(connection.getConnection().getOutputStream());
         } catch (IOException e) {
             throw new BooruEngineException(e);
         }
@@ -378,14 +351,13 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
         boolean message = errMessage.equals("Image added.");
 
         if (code && message) return true;
-        else{
-            if (errMessage.contains("Filetype not allowed.")){
+        else {
+            if (errMessage.contains("Filetype not allowed.")) {
                 throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
             }
-            if (errMessage.contains("Generic error.")){
+            if (errMessage.contains("Generic error.")) {
                 throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
-            }
-            else throw new BooruEngineException(errMessage);
+            } else throw new BooruEngineException(errMessage);
         }
     }
 
