@@ -12,7 +12,6 @@ import source.еnum.Rating;
 
 import javax.naming.AuthenticationException;
 import java.io.*;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

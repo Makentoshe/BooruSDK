@@ -299,24 +299,24 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
      */
     @Override
     public boolean votePost(final int post_id, final String score) throws BooruEngineException {
-        String data;
+        String token;
         try {
             int s = Integer.parseInt(score);
 
-            if (s > 3 || s < 0)
+            if (s > 3 || s < 0) {
                 throw new BooruEngineException("Score can't be more then the 3 and less than the 0", new IllegalArgumentException(score));
-
-            data = loginData.get("authenticity_token").replaceAll("%2B", "+");
+            }
+            token = loginData.get("authenticity_token").replaceAll("%2B", "+");
 
             new HttpsConnection()
                     .setRequestMethod(Method.POST)
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setCookies(getCookieFromLoginData())
-                    .setHeader("X-CSRF-Token", data)
+                    .setHeader("X-CSRF-Token", token)
                     .setBody("id=" + post_id + "&score=" + score)
                     .openConnection(getCustomRequest("/post/vote.json"));
         } catch (NumberFormatException e) {
-
+            throw new BooruEngineException(new IllegalArgumentException(score));
         } catch (NullPointerException e) {
             throw new BooruEngineException("User data not defined.", new IllegalStateException());
         } catch (BooruEngineException e) {

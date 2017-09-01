@@ -3,6 +3,7 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
+import engine.parser.JsonParser;
 import module.interfacе.CommentModuleInterface;
 import module.interfacе.LoginModuleInterface;
 import module.interfacе.RemotePostModuleInterface;
@@ -34,7 +35,8 @@ import java.util.regex.Pattern;
     Commenting is ...
     Post Voting is OK
  */
-public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterface, RemotePostModuleInterface, VotingModuleInterface, CommentModuleInterface {
+public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterface, RemotePostModuleInterface,
+        VotingModuleInterface, CommentModuleInterface {
 
     private static final Yandere instance = new Yandere();
 
@@ -151,11 +153,11 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
 
         //if already have not cookie - throw an exception
         if (!loginData.containsKey("yande.re")) {
-            throw new BooruEngineException("Can't find \"yande.re\" cookie in login data.");
+            throw new BooruEngineException("Can't find \"yande.re\" cookie in login data.", new IllegalStateException());
         }
         //if already have not token - throw an exception
         if (!loginData.containsKey("authenticity_token")) {
-            throw new BooruEngineException("Can't find \"authenticity_token\" in login data.");
+            throw new BooruEngineException("Can't find \"authenticity_token\" in login data.", new IllegalStateException());
         }
 
         //create new connection for login
@@ -171,13 +173,15 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
                 .setCookies(cookie)
                 .openConnection(getAuthenticateRequest());
 
-        if (connection.getHeader("Set-Cookie") == null) {
-            throw new BooruEngineException(new NullPointerException());
-        }
-
-        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
-            String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
-            if (data.length == 2) this.loginData.put(data[0], data[1]);
+        try {
+            for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
+                String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+                if (data.length == 2) this.loginData.put(data[0], data[1]);
+            }
+            //if unsuccessful
+        } catch (NullPointerException e) {
+            //throw exception
+            throw new BooruEngineException(new AuthenticationException("Authentication failed."));
         }
     }
 
@@ -207,7 +211,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
                 });
     }
 
-    private void setToken(final HttpsConnection connection)throws BooruEngineException {
+    private String setToken(final HttpsConnection connection)throws BooruEngineException {
         String s = connection.getResponse();
         String data = s.split("\"csrf-token\" content=\"")[1]
                 .split("\" />")[0]
@@ -215,30 +219,43 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
                 .replaceAll(Pattern.quote("+"), "%2B");
 
         loginData.put("authenticity_token", data);
+        return data;
     }
 
     @Override
-    public boolean votePost(int id, String score) throws BooruEngineException {
+    public boolean votePost(int post_id, String score) throws BooruEngineException {
+        setToken(new HttpsConnection().setRequestMethod(Method.GET).setCookies(getCookieFromLoginData()).openConnection(getCustomRequest("/user/home")));
+
         String token;
         try{
+            //validate action
+            int s = Integer.parseInt(score);
+            if (s > 3 || s < 0) {
+                throw new BooruEngineException("Score can't be more then the 3 and less than the 0",
+                        new IllegalArgumentException(score)
+                );
+            }
+            //create connection
             token = loginData.get("authenticity_token").replaceAll("%2B", "+");
-        } catch (NullPointerException e){
-            throw new BooruEngineException("User data not defined.", new AuthenticationException());
-        }
-        try {
             HttpsConnection connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                    .setCookies(loginData.toString().replaceAll(", ", "; "))
+                    .setCookies(getCookieFromLoginData())
                     .setHeader("X-CSRF-Token", token)
-                    .setBody("id=" + id + "&score=" + score)
-                    .openConnection(getVotePostRequest());
+                    .setBody("id=" + post_id + "&score=" + score)
+                    .openConnection(getCustomRequest("/post/vote.json"));
 
-            return connection.getResponse().split("\"success\":")[1].equals("true}");
+            token = connection.getResponse();
 
+        } catch (NumberFormatException e) {
+            throw new BooruEngineException(new IllegalArgumentException(score));
+        } catch (NullPointerException e) {
+            throw new BooruEngineException("User data not defined.", new IllegalStateException());
         } catch (BooruEngineException e) {
             throw new BooruEngineException(e.getCause().getMessage());
         }
+
+        return token.split("\"success\":")[1].contains("true");
     }
 
     @Override
