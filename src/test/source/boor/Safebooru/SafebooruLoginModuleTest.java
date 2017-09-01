@@ -1,9 +1,9 @@
-package test.source.boor.Gelbooru;
+package test.source.boor.Safebooru;
 
 import engine.BooruEngineException;
 import module.interfacе.LoginModuleInterface;
 import org.junit.Test;
-import source.boor.Gelbooru;
+import source.boor.Safebooru;
 import test.source.TestHelper;
 
 import javax.naming.AuthenticationException;
@@ -11,12 +11,12 @@ import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
-public class GelbooruLoginModuleTest {
+public class SafebooruLoginModuleTest {
 
     private final LoginModuleInterface boor;
 
-    public GelbooruLoginModuleTest(){
-        boor = Gelbooru.get();
+    public SafebooruLoginModuleTest(){
+        boor = Safebooru.get();
     }
 
     @Test
@@ -36,7 +36,7 @@ public class GelbooruLoginModuleTest {
 
     @Test
     public void getAuthenticateRequest_Test() throws Exception {
-        assertEquals("https://gelbooru.com/index.php?page=account&s=login&code=00", boor.getAuthenticateRequest());
+        assertEquals("https://safebooru.org/index.php?page=account&s=login&code=00", boor.getAuthenticateRequest());
     }
 
     @Test
@@ -52,4 +52,5 @@ public class GelbooruLoginModuleTest {
         ((HashMap<String, String>)boor.getLoginData()).put("Asa", "321");
         assertEquals("Sas=123; Asa=321", boor.getCookieFromLoginData());
     }
+
 }

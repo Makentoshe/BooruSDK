@@ -183,9 +183,16 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
                 .setBody(postData)
                 .openConnection(getAuthenticateRequest());
 
-        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
-            String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
-            if (data.length == 2) this.loginData.put(data[0], data[1]);
+        //try to parse response
+        try {
+            for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
+                String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+                if (data.length == 2) this.loginData.put(data[0], data[1]);
+            }
+            //if unsuccessful
+        } catch (NullPointerException e) {
+            //throw exception
+            throw new BooruEngineException(new AuthenticationException("Authentication failed."));
         }
     }
 
@@ -300,6 +307,7 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
      */
     @Override
     public String getCookieFromLoginData() {
+        if (getLoginData().size() == 0) return null;
         return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
     }
 
