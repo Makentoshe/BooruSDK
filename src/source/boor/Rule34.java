@@ -297,8 +297,8 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
      */
     @Override
     public String getCookieFromLoginData() {
-        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
-    }
+        if (getLoginData().size() == 0) return null;
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");    }
 
     /**
      * Creating post.
@@ -321,6 +321,7 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
      */
     @Override
     public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {
+        System.out.println();
         //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));

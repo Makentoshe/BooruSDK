@@ -1,6 +1,8 @@
 package test.source;
 
 import engine.connector.HttpConnection;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import engine.parser.JsonParser;
 import engine.parser.XmlParser;
 import source.boor.*;
@@ -12,6 +14,7 @@ import java.util.Scanner;
 
 
 public class TestHelper {
+//TODO: do something with uploading tests
 
     private static File getDataFile(){
         return new File(new File("").getAbsolutePath() + "\\src\\Data");
@@ -20,12 +23,16 @@ public class TestHelper {
     public static HashMap<String, String> getDataFromBoorAdvanced(AbstractBoorAdvanced boor, int id) throws Exception {
         String request1 = boor.getPostByIdRequest(id);
         //System.out.println(request1);
-        HttpConnection connection = new HttpConnection(false);
-        String responseData1 = connection.getRequest(request1);
+
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .openConnection(request1);
+
 
         JsonParser parser = new JsonParser();
 
-        parser.startParse(responseData1);
+        parser.startParse(connection.getResponse());
 
         return parser.getResult().get(0);
     }

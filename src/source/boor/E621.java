@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
     Commenting is ...
     Post Voting is OK
  */
+@Deprecated
 public class E621 extends AbstractBoorAdvanced implements LoginModuleInterface, RemotePostModuleInterface, VotingModuleInterface {
 
     private static final E621 instance = new E621();
