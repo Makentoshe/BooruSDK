@@ -299,7 +299,12 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
      */
     @Override
     public boolean votePost(final int post_id, final String score) throws BooruEngineException {
+        //check userdata
         String token;
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined."));
+        }
+
         try {
             int s = Integer.parseInt(score);
 
@@ -308,13 +313,15 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
             }
             token = loginData.get("authenticity_token").replaceAll("%2B", "+");
 
-            new HttpsConnection()
+            token = new HttpsConnection()
                     .setRequestMethod(Method.POST)
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setCookies(getCookieFromLoginData())
                     .setHeader("X-CSRF-Token", token)
                     .setBody("id=" + post_id + "&score=" + score)
-                    .openConnection(getCustomRequest("/post/vote.json"));
+                    .openConnection(getVotePostRequest())
+                    .getResponse();
+
         } catch (NumberFormatException e) {
             throw new BooruEngineException(new IllegalArgumentException(score));
         } catch (NullPointerException e) {
@@ -322,7 +329,8 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
         } catch (BooruEngineException e) {
             throw new BooruEngineException(e.getCause().getMessage());
         }
-        return true;
+
+        return token.split("\"success\":")[1].contains("true");
     }
 
     /**
@@ -332,7 +340,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
      */
     @Override
     public String getVotePostRequest() {
-        return null;
+        return getCustomRequest("/post/vote.json");
     }
 
     /**

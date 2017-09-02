@@ -230,7 +230,9 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
      */
     @Override
     public boolean votePost(final int post_id, @NotNull final String action) throws BooruEngineException {
-        if (!action.equals("up") && !action.equals("down")) throw new BooruEngineException(new UnsupportedOperationException(action));
+        if (!action.equals("up") && !action.equals("down")) {
+            throw new BooruEngineException("Action can be \"up\" or \"down\".", new IllegalArgumentException(action));
+        }
 
         //check userdata
         if (getCookieFromLoginData() == null) {

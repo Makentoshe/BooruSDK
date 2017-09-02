@@ -225,7 +225,7 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
      */
     @Override
     public boolean votePost(final int post_id, final String action) throws BooruEngineException {
-        if (!action.equals("up")) throw new BooruEngineException(new UnsupportedOperationException(action));
+        if (!action.equals("up")) throw new BooruEngineException("Action can be only \"up\".", new IllegalArgumentException(action));
 
         //check userdata
         if (getCookieFromLoginData() == null) {

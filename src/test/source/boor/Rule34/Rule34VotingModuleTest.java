@@ -23,11 +23,11 @@ public class Rule34VotingModuleTest {
     }
 
     @Test
-    public void votePostFail_UnsupportedOperation_Test() throws Exception {
+    public void votePostFail_IllegalArgument_Test() throws Exception {
         try {
             boor.votePost(2489243, "sas");
         } catch (BooruEngineException e) {
-            assertEquals(UnsupportedOperationException.class, e.getCause().getClass());
+            assertEquals(IllegalArgumentException.class, e.getCause().getClass());
         }
     }
 
