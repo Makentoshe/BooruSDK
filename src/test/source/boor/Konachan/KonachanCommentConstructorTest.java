@@ -2,6 +2,8 @@ package test.source.boor.Konachan;
 
 
 import engine.connector.HttpConnection;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import engine.parser.JsonParser;
 import org.junit.Test;
 import source.Comment;
@@ -18,8 +20,11 @@ public class KonachanCommentConstructorTest {
     public KonachanCommentConstructorTest() throws Exception{
         if (comment != null)  return;
         Post post = new Post(TestHelper.getDataFromBoorAdvanced(Konachan.get(), 246937), Konachan.get());
-        HttpConnection connection = new HttpConnection(false);
-        String responseData = connection.getRequest(post.getComments_url());
+        String responseData = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .openConnection(post.getComments_url())
+                .getResponse();
         JsonParser parser = new JsonParser();
         parser.startParse(responseData);
         comment = new Comment(parser.getResult().get(0));
