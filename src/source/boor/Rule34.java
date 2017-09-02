@@ -343,7 +343,7 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
             connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.BOUNDARY)
+                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
                     .openConnection(getCreatePostRequest());
 

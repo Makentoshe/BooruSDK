@@ -12,7 +12,6 @@ import source.еnum.Rating;
 
 import javax.naming.AuthenticationException;
 import java.io.*;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -354,7 +353,7 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
             connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.BOUNDARY)
+                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
                     .openConnection(getCreatePostRequest());
             //send data to stream

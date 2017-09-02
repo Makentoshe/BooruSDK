@@ -23,7 +23,8 @@ import java.util.regex.Pattern;
  * <p>
  * Describe Yandere.
  * <p>
- * Implements <tt>LoginModuleInterface</tt>, <tt>VotingModuleInterface</tt>, <tt>RemotePostModuleInterface</tt>, <tt>CommentModuleInterface</tt>.
+ * Implements <code>LoginModuleInterface</code>, <code>VotingModuleInterface</code>, <code>RemotePostModuleInterface</code>,
+ * <code>CommentModuleInterface</code>.
  */
 /*NOTE:
     Not supported "has_comments" and comment searching.

@@ -1,6 +1,5 @@
 package source.boor;
 
-import com.google.gson.JsonSyntaxException;
 import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
 import engine.MultipartConstructor;
@@ -21,13 +20,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-/**
- * Singleton.
- * <p>
- * Describe Konachan.
- * <p>
- * Implements <tt>LoginModuleInterface</tt>, <tt>VotingModuleInterface</tt>, <tt>RemotePostModuleInterface</tt>.
- */
+
 /*NOTE:
     Cookie is static
     csrf-token is static
@@ -350,6 +343,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
      */
     @Override
     public String getCookieFromLoginData() {
+        if (getLoginData().size() == 0) return null;
         return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
     }
 
@@ -401,7 +395,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
             connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.BOUNDARY)
+                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
                     .openConnection(getCreatePostRequest());
 
