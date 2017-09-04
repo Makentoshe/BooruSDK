@@ -3,7 +3,6 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import engine.parser.JsonParser;
 import module.interfacе.CommentModuleInterface;
 import module.interfacе.LoginModuleInterface;
 import module.interfacе.RemotePostModuleInterface;
@@ -18,14 +17,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-/**
- * Singleton.
- * <p>
- * Describe Yandere.
- * <p>
- * Implements <code>LoginModuleInterface</code>, <code>VotingModuleInterface</code>, <code>RemotePostModuleInterface</code>,
- * <code>CommentModuleInterface</code>.
- */
 /*NOTE:
     Not supported "has_comments" and comment searching.
 
@@ -33,8 +24,16 @@ import java.util.regex.Pattern;
     csrf-token are not static
 
     Login is OK
-    Commenting is ...
+    Commenting is OK
     Post Voting is OK
+*/
+/**
+ * Singleton which describe Yandere. This class can help user to login, vote posts, create posts, comment posts, etc.
+ * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
+ * <p>
+ * Implements <code>LoginModuleInterface</code>,<code>VotingModuleInterface</code>,
+ * <code>RemotePostModuleInterface</code>, <code>CommentModuleInterface</code>,
+ * <code>UploadModuleInterface</code>.
  */
 public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterface, RemotePostModuleInterface,
         VotingModuleInterface, CommentModuleInterface {
@@ -43,80 +42,117 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
 
     private final Map<String, String> loginData = new HashMap<>();
 
+    /**
+     * Get access to Yandere.
+     *
+     * @return self.
+     */
     public static Yandere get() {
         return instance;
     }
 
-    public void setFormat(Format format){
-        this.format = format;
-    }
-
-    private Yandere(){
+    private Yandere() {
         super();
     }
 
+    /**
+     * Get a host machine name and create custom request.
+     *
+     * @param request request.
+     * @return the host machine address.
+     */
     @Override
     public String getCustomRequest(String request) {
         return "https://yande.re" + request;
     }
 
+    /**
+     * Create request for getting some posts by tags.
+     *
+     * @param limit  how many items must be in page.
+     * @param tags   the tags to search for.
+     * @param page   page index(from zero).
+     * @param format format result.
+     * @return constructed request to this server.
+     */
     @Override
     public String getPackByTagsRequest(int limit, String tags, int page, Format format) {
-        return getCustomRequest("/post."+format.toString().toLowerCase()+
-                "?tags="+tags+"&limit=" + limit + "&page=" + page);
+        return getCustomRequest("/post." + format.toString().toLowerCase() +
+                "?tags=" + tags + "&limit=" + limit + "&page=" + page);
     }
 
+    /**
+     * Get address for getting <code>Post</code> by post id.
+     *
+     * @param id     post id.
+     * @param format result format (can be {@code Format.JSON} or {@code Format.XML}).
+     * @return the constructed request to server.
+     */
     @Override
     public String getPostByIdRequest(int id, Format format) {
         return getCustomRequest("/post." + format.toString().toLowerCase() + "?tags=id:" + id);
     }
 
+    /**
+     * <strong>NOT SUPPORTED.</strong>
+     *
+     * @param post_id post, for which comment will be searching.
+     * @param format  result format (can be {@code Format.JSON} or {@code Format.XML}).
+     * @return always null.
+     */
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
         return null;
     }
 
+    /**
+     * Remote <code>Post</code> constructor specified on posts from Yandere.
+     * Implement same as Post#defaultConstructor.
+     *
+     * @param attributes map of all post attributes.
+     * @return the constructed <code>Post</code>.
+     */
     @Override
-    public Post newPostInstance(final Map<String, String> attributes){
+    public Post newPostInstance(final Map<String, String> attributes) {
         Post post = new Post(instance);
         //create Entry
         Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
         //for each attribute
         for (Map.Entry<String, String> pair : entrySet) {
-            switch (pair.getKey()){
-                case "id":{
+            switch (pair.getKey()) {
+                case "id": {
                     post.setId(Integer.parseInt(pair.getValue()));
                     break;
                 }
-                case "md5":{
+                case "md5": {
                     post.setMd5(pair.getValue());
                     break;
                 }
-                case "rating":{
+                case "rating": {
                     post.setRating(pair.getValue());
                     break;
                 }
-                case "score":{
+                case "score": {
                     post.setScore(Integer.parseInt(pair.getValue()));
                     break;
                 }
-                case "preview_url":{
+                case "preview_url": {
                     post.setPreview_url(pair.getValue());
                     break;
                 }
-                case "tags":{
+                case "tags": {
                     post.setTags(pair.getValue());
                     break;
                 }
-                case "sample_url":{
+                case "sample_url": {
                     post.setSample_url(pair.getValue());
                     break;
                 }
-                case "file_url":{
+                case "file_url": {
                     post.setFile_url(pair.getValue());
                     break;
                 }
-                case "source":{
+                case "source": {
                     post.setSource(pair.getValue());
                     break;
                 }
@@ -124,7 +160,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
                     post.setCreator_id(Integer.parseInt(pair.getValue()));
                     break;
                 }
-                case "created_at":{
+                case "created_at": {
                     post.setCreate_Time(pair.getValue());
                     break;
                 }
@@ -133,6 +169,16 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
         return post;
     }
 
+    /**
+     * Authenticate user by login and pass.
+     *
+     * @param login    user login
+     * @param password user pass
+     * @throws BooruEngineException    will be contain <code>AuthenticationException</code>.
+     * @throws AuthenticationException will be thrown when authentication was failed.
+     * @throws IllegalStateException   will be thrown when something go wrong
+     *                                 with getting cookie and token before login request.
+     */
     @Override
     public void logIn(final String login, final String password) throws BooruEngineException {
         if (!loginData.containsKey("yande.re") || !loginData.containsKey("authenticity_token")) {
@@ -186,16 +232,29 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
         }
     }
 
+    /**
+     * Log off user. Remove all user data.
+     */
     @Override
     public void logOff() {
         this.loginData.clear();
     }
 
+    /**
+     * Get access to login data. All data storage in <code>Hashmap&lt;String, String&gt;</code>.
+     *
+     * @return the HashMap which contain a user data.
+     */
     @Override
     public Object getLoginData() {
         return this.loginData;
     }
 
+    /**
+     * Get address for sending {@code Method.POST} request for authentication to server.
+     *
+     * @return the constructed request to server.
+     */
     @Override
     public String getAuthenticateRequest() {
         return getCustomRequest("/user/authenticate");
@@ -212,7 +271,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
                 });
     }
 
-    private String setToken(final HttpsConnection connection)throws BooruEngineException {
+    private String setToken(final HttpsConnection connection) throws BooruEngineException {
         String s = connection.getResponse();
         String data = s.split("\"csrf-token\" content=\"")[1]
                 .split("\" />")[0]
@@ -223,12 +282,32 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
         return data;
     }
 
+    /**
+     * Voting post.
+     * <p>
+     * Scores can be:
+     * <p>
+     * 0 - remove vote.
+     * <p>
+     * 1 or 2 - vote.
+     * <p>
+     * 3 - vote and add to favorites.
+     * <p>
+     *
+     * @param post_id post id.
+     * @param score   scores to post.
+     * @return true if success.
+     * @throws BooruEngineException          when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException         will be thrown when the user data not defined.
+     * @throws UnsupportedOperationException will be thrown when action is not supporting.
+     * @throws IllegalArgumentException      will be thrown when score param not contain expected value.
+     */
     @Override
     public boolean votePost(int post_id, String score) throws BooruEngineException {
         setToken(new HttpsConnection().setRequestMethod(Method.GET).setCookies(getCookieFromLoginData()).openConnection(getCustomRequest("/user/home")));
 
         String token;
-        try{
+        try {
             //validate action
             int s = Integer.parseInt(score);
             if (s > 3 || s < 0) {
@@ -259,13 +338,39 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
         return token.split("\"success\":")[1].contains("true");
     }
 
+    /**
+     * Get address for creating <code>Method.POST</code> request for voting post.
+     *
+     * @return the constructed request to server.
+     */
     @Override
     public String getVotePostRequest() {
         return getCustomRequest("/post/vote.json");
     }
 
+    /**
+     * Create comment for post with id: post_id.
+     * <p>
+     * Note: Be careful: Not all *boors support "postAsAnon" or "bumpPost" param.
+     *
+     * @param post_id    post id.
+     * @param body       comment body.
+     * @param postAsAnon use {@code true} for anonymously posting.
+     * @param bumpPost   use {@code true} for bump up post.
+     * @return true if success.
+     * @throws BooruEngineException  when something go wrong.
+     *                               Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException will be thrown when the user data not defined.
+     * @throws NoSuchElementException will be thrown when the Set-Cookie header was not got.
+     * @throws RuntimeException will be thrown when the Set-Cookie header was got, but comment was not created
+     */
     @Override
-    public boolean commentPost(int id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+    public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined"));
+        }
+
         boolean out = false;
         HttpsConnection connection;
         StringBuilder cbody = new StringBuilder();
@@ -279,7 +384,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
 
         //create post body
         cbody.append("authenticity_token=").append(loginData.get("authenticity_token"))
-                .append("&comment%5Bpost_id%5D=").append(id)
+                .append("&comment%5Bpost_id%5D=").append(post_id)
                 .append("&comment%5Bbody%5D=").append(body.replaceAll(" ", "+"))
                 .append("&commit=Post");
 
@@ -289,14 +394,14 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .setBody(cbody.toString())
-                .openConnection(getCreateCommentRequest(id));
+                .openConnection(getCreateCommentRequest(post_id));
 
         //try to get Set-Cookie header
         //if failed(NPE) - catch and throw BEE
         try {
             for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
                 String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
-                //if notice=Comment+created - OK
+                //if cookie notice=Comment+created - OK
                 //else throw RE
                 if (data[0].equals("notice")) {
                     if (data[1].equals("Comment+created")) {
@@ -318,13 +423,23 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
         return out;
     }
 
+    /**
+     * Get address for creating <code>Method.POST</code> request for creating post.
+     *
+     * @return the constructed request to server.
+     */
     @Override
     public String getCreateCommentRequest(int id) {
         return getCustomRequest("/comment/create");
     }
 
+    /**
+     * Remake user data current format to <code>String</code> which will be contain user cookie.
+     *
+     * @return the user cookie.
+     */
     @Override
     public String getCookieFromLoginData() {
-        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{","").replaceAll("\\}", "");
+        return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
     }
 }
