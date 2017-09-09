@@ -21,7 +21,6 @@ public class TestHelper {
 
     public static HashMap<String, String> getDataFromBoorAdvanced(AbstractBoorAdvanced boor, int id) throws Exception {
         String request1 = boor.getPostByIdRequest(id);
-        //System.out.println(request1);
 
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
@@ -38,7 +37,6 @@ public class TestHelper {
 
     public static HashMap<String, String> getDataFromBoorBasic(AbstractBoorBasic boor, int id) throws Exception {
         String request1 = boor.getPostByIdRequest(id);
-        //System.out.println(request1);
 
         XmlParser parser = new XmlParser();
 

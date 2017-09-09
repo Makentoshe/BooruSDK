@@ -40,7 +40,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
 
     private static final Yandere instance = new Yandere();
 
-    private final Map<String, String> loginData = new HashMap<>();
+    private final HashMap<String, String> loginData = new HashMap<>();
 
     /**
      * Get access to Yandere.
@@ -246,7 +246,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
      * @return the HashMap which contain a user data.
      */
     @Override
-    public Object getLoginData() {
+    public HashMap<String, String> getLoginData() {
         return this.loginData;
     }
 
@@ -304,9 +304,14 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
      */
     @Override
     public boolean votePost(int post_id, String score) throws BooruEngineException {
-        setToken(new HttpsConnection().setRequestMethod(Method.GET).setCookies(getCookieFromLoginData()).openConnection(getCustomRequest("/user/home")));
-
         String token;
+        HttpsConnection connection;
+
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined."));
+        }
+
         try {
             //validate action
             int s = Integer.parseInt(score);
@@ -315,9 +320,29 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
                         new IllegalArgumentException(score)
                 );
             }
+
+            //set necessary data
+            connection = new HttpsConnection()
+                    .setRequestMethod(Method.GET)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                    .openConnection(getCustomRequest("/user/login"));
+            //set cookie
+            if (!loginData.containsKey("yande.re")) {
+                setCookie(connection);
+            }
+            //set token
+            if (!loginData.containsKey("authenticity_token")) {
+                setToken(connection);
+            }
+
+            try {
+                token = loginData.get("authenticity_token").replaceAll("%2B", "+");
+            } catch (NullPointerException e) {
+                throw new BooruEngineException(new IllegalStateException("User data not defined."));
+            }
+
             //create connection
-            token = loginData.get("authenticity_token").replaceAll("%2B", "+");
-            HttpsConnection connection = new HttpsConnection()
+            connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setCookies(getCookieFromLoginData())
@@ -440,6 +465,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
      */
     @Override
     public String getCookieFromLoginData() {
+        if (getLoginData().size() == 0) return null;
         return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
     }
 

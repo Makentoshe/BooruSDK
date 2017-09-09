@@ -28,6 +28,8 @@ hs_err_pid*
 out/
 
 /src/Main.java
+
+#File with the user confidential data for tests
 /src/Data
 
 

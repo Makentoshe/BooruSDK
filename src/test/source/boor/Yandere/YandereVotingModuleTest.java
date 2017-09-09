@@ -1,36 +1,37 @@
-package test.source.boor.Konachan;
+package test.source.boor.Yandere;
 
 import engine.BooruEngineException;
 import module.interfacе.LoginModuleInterface;
 import module.interfacе.VotingModuleInterface;
-import org.junit.Before;
 import org.junit.Test;
 import source.boor.Konachan;
+import source.boor.Yandere;
 import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class KonachanVotingModuleTest {
+public class YandereVotingModuleTest {
 
     private final VotingModuleInterface voteBoor;
     private final LoginModuleInterface loginBoor;
+    private static final int post_id = 409015;
 
-    public KonachanVotingModuleTest() {
-        voteBoor = Konachan.get();
-        loginBoor = Konachan.get();
+    public YandereVotingModuleTest() {
+        voteBoor = Yandere.get();
+        loginBoor = Yandere.get();
     }
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://konachan.com/post/vote.json", voteBoor.getVotePostRequest());
+        assertEquals("https://yande.re/post/vote.json", voteBoor.getVotePostRequest());
     }
 
     @Test
     public void votePostFail_IllegalArgument_Test() throws Exception {
         loginBoor.logIn(TestHelper.getLogin(), TestHelper.getPass());
         try {
-            voteBoor.votePost(248044, "sas");
+            voteBoor.votePost(post_id, "sas");
         } catch (BooruEngineException e) {
             assertEquals(IllegalArgumentException.class, e.getCause().getClass());
         }
@@ -40,7 +41,7 @@ public class KonachanVotingModuleTest {
     @Test
     public void votePostFail_WithoutUserData_Test() throws Exception {
         try {
-            voteBoor.votePost(248044, "0");
+            voteBoor.votePost(post_id, "0");
         } catch (BooruEngineException e) {
             assertEquals(IllegalStateException.class, e.getCause().getClass());
         }
@@ -49,7 +50,7 @@ public class KonachanVotingModuleTest {
     @Test
     public void votePostUpSuccess_Test() throws Exception {
         loginBoor.logIn(TestHelper.getLogin(), TestHelper.getPass());
-        assertTrue(voteBoor.votePost(248044, "3"));
+        assertTrue(voteBoor.votePost(post_id, "3"));
     }
 
 }
