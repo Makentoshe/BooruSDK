@@ -313,14 +313,11 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
      * @return true if success (Indicates complete). Otherwise will be thrown an exception.
      * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
      * @throws IllegalStateException    will be thrown when the user data not defined.
-     * @throws IllegalArgumentException will be thrown when the required data was not included,
-     *                                  not image was specified, or a required field did not exist.
-     *                                  As usual when tags not defined or defined bad.
      * @throws IOException              will be thrown when something go wrong on sending post step or
      *                                  when image file corrupt.
      */
     @Override
-    public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {
+    public String createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {
         System.out.println();
         //check userdata
         if (getCookieFromLoginData() == null) {
@@ -352,25 +349,27 @@ public class Rule34 extends AbstractBoorBasic implements LoginModuleInterface, V
             throw new BooruEngineException(e);
         }
 
-        String errMessage = connection
-                .getResponse()
-                .split("You have mail</a></div><div id=\"content\" class=\"content\">")[1]
-                .split("<br /><form method=\"post\" action=\"index")[0];
-
-        //get result
-        boolean code = connection.getResponseCode() == 200;
-        boolean message = errMessage.equals("Image added.");
-
-
-        if (code && message) return true;
-        else {
-            if (errMessage.contains("Filetype not allowed.")) {
-                throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
-            }
-            if (errMessage.contains("Generic error.")) {
-                throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
-            } else throw new BooruEngineException(errMessage);
-        }
+        return connection.getResponse();
+//
+//        String errMessage = connection
+//                .getResponse()
+//                .split("You have mail</a></div><div id=\"content\" class=\"content\">")[1]
+//                .split("<br /><form method=\"post\" action=\"index")[0];
+//
+//        //get result
+//        boolean code = connection.getResponseCode() == 200;
+//        boolean message = errMessage.equals("Image added.");
+//
+//
+//        if (code && message) return true;
+//        else {
+//            if (errMessage.contains("Filetype not allowed.")) {
+//                throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
+//            }
+//            if (errMessage.contains("Generic error.")) {
+//                throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
+//            } else throw new BooruEngineException(errMessage);
+//        }
     }
 
     /**

@@ -362,10 +362,9 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
      * @throws IllegalStateException will be thrown when the user data not defined.
      * @throws IOException           will be thrown when something go wrong on sending post step or
      *                               when image file corrupt.
-     * @throws Exception             when catch unspecified exception.
      */
     @Override
-    public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id
+    public String createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id
     ) throws BooruEngineException {
         //check userdata
         String token;
@@ -404,21 +403,23 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterfa
         } catch (IOException e) {
             throw new BooruEngineException(e);
         }
+
+        return connection.getResponse();
         //get response
-        try {
-            JsonParser parser = new JsonParser();
-            parser.startParse(connection.getResponse());
-            List<HashMap<String, String>> jsonResult = parser.getResult();
-            //if success - true
-            if (jsonResult.get(0).get("success").equals("true")) return true;
-                //else throw exception with reason
-            else {
-                throw new BooruEngineException(jsonResult.get(0).get("reason"), new IOException());
-            }
-            //when something go wrong - catch any exception and throw in BEE
-        } catch (Exception e) {
-            throw new BooruEngineException(connection.getResponseMessage(), e);
-        }
+//        try {
+//            JsonParser parser = new JsonParser();
+//            parser.startParse(connection.getResponse());
+//            List<HashMap<String, String>> jsonResult = parser.getResult();
+//            //if success - true
+//            if (jsonResult.get(0).get("success").equals("true")) return true;
+//                //else throw exception with reason
+//            else {
+//                throw new BooruEngineException(jsonResult.get(0).get("reason"), new IOException());
+//            }
+//            //when something go wrong - catch any exception and throw in BEE
+//        } catch (Exception e) {
+//            throw new BooruEngineException(connection.getResponseMessage(), e);
+//        }
     }
 
     /**

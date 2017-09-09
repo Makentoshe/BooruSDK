@@ -1,20 +1,20 @@
 package source.boor;
 
+import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
+import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import module.interfacе.CommentModuleInterface;
-import module.interfacе.LoginModuleInterface;
-import module.interfacе.RemotePostModuleInterface;
-import module.interfacе.VotingModuleInterface;
+import engine.parser.JsonParser;
+import module.interfacе.*;
 import source.Post;
 import source.еnum.Format;
+import source.еnum.Rating;
 
 import javax.naming.AuthenticationException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /*NOTE:
@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  * <code>UploadModuleInterface</code>.
  */
 public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterface, RemotePostModuleInterface,
-        VotingModuleInterface, CommentModuleInterface {
+        VotingModuleInterface, CommentModuleInterface, UploadModuleInterface {
 
     private static final Yandere instance = new Yandere();
 
@@ -441,5 +441,101 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
     @Override
     public String getCookieFromLoginData() {
         return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
+    }
+
+    /**
+     * Creating post.
+     * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced "".
+     *
+     * @param post      image file.
+     * @param tags      tags with " " separator.
+     * @param title     post title. Not using.
+     * @param source    post source. Not required.
+     * @param rating    post rating.
+     * @param parent_id parent id.
+     * @return response of post request.
+     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException will be thrown when the user data not defined.
+     * @throws IOException           will be thrown when something go wrong on sending post step or
+     *                               when image file corrupt.
+     */
+    @Override
+    public String createPost(final @NotNull File post, final @NotNull String tags, final String title,
+                             final String source, final @NotNull Rating rating, final String parent_id)
+            throws BooruEngineException {
+        //check userdata
+        String token;
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined."));
+        }
+        //set necessary data
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .openConnection(getCustomRequest("/user/login"));
+        //set cookie
+        if (!loginData.containsKey("yande.re")) {
+            setCookie(connection);
+        }
+        //set token
+        if (!loginData.containsKey("authenticity_token")) {
+            setToken(connection);
+        }
+
+        try {
+            token = loginData.get("authenticity_token").replaceAll("%2B", "+");
+        } catch (NullPointerException e) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined."));
+        }
+
+        //write all data with stream to server
+        try {
+            //create constructor
+            MultipartConstructor constructor = new MultipartConstructor()
+                    .createDataBlock("authenticity_token", token)
+                    .createFileBlock("post[file]", post)
+                    .createDataBlock("post[source]", source)
+                    .createDataBlock("post[tags]", tags)
+                    .createDataBlock("post[parent_id]", parent_id)
+                    //capitalise data
+                    .createDataBlock("post[rating]", rating.toString().substring(0, 1) + rating.toString().toLowerCase().substring(1));
+
+            //Create connection
+            connection = new HttpsConnection()
+                    .setRequestMethod(Method.POST)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
+                    .setCookies(getCookieFromLoginData())
+                    .openConnection(getCreatePostRequest());
+
+            //send data
+            constructor.send(connection.getConnection().getOutputStream());
+        } catch (IOException e) {
+            throw new BooruEngineException(e);
+        }
+        //get response
+        //will be return {"post_id":409015,"location":"https://yande.re/post/show/409015","success":true}
+
+        return connection.getResponse();
+
+//        try {
+//            JsonParser parser = new JsonParser();
+//            parser.startParse(connection.getResponse());
+//            List<HashMap<String, String>> jsonResult = parser.getResult();
+//            //if success - true
+//            if (jsonResult.get(0).get("success").equals("true")) return true;
+//                //else throw exception with reason
+//            else {
+//                throw new BooruEngineException(jsonResult.get(0).get("reason"), new IOException());
+//            }
+//            //when something go wrong - catch any exception and throw in BEE
+//        } catch (Exception e) {
+//            throw new BooruEngineException(connection.getResponseMessage(), e);
+//        }
+    }
+
+    @Override
+    public String getCreatePostRequest() {
+        return getCustomRequest("/post/create.json");
     }
 }

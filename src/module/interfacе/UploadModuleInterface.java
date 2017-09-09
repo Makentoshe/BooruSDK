@@ -11,7 +11,7 @@ import java.io.File;
  */
 public interface UploadModuleInterface {
 
-    boolean createPost(
+    String createPost(
             @NotNull final File post,
             @NotNull final String tags,
             final String title,
@@ -19,8 +19,7 @@ public interface UploadModuleInterface {
             @NotNull final Rating rating,
             final String parent
 
-    )
-            throws BooruEngineException;
+    ) throws BooruEngineException;
 
      String getCreatePostRequest();
 }

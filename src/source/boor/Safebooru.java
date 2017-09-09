@@ -332,7 +332,7 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
      *                                  when image file corrupt.
      */
     @Override
-    public boolean createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {        //check userdata
+    public String createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {        //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
@@ -362,24 +362,26 @@ public class Safebooru extends AbstractBoorBasic implements LoginModuleInterface
             throw new BooruEngineException(e);
         }
 
-        String errMessage = connection
-                .getResponse()
-                .split("You have mail</a></div><div id=\"content\" class=\"content\">")[1]
-                .split("<br /><form method=\"post\" action=\"index")[0];
+        return connection.getResponse();
 
-        //get result
-        boolean code = connection.getResponseCode() == 200;
-        boolean message = errMessage.equals("Image added.");
-
-        if (code && message) return true;
-        else {
-            if (errMessage.contains("Filetype not allowed.")) {
-                throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
-            }
-            if (errMessage.contains("Generic error.")) {
-                throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
-            } else throw new BooruEngineException(errMessage);
-        }
+//        String errMessage = connection
+//                .getResponse()
+//                .split("You have mail</a></div><div id=\"content\" class=\"content\">")[1]
+//                .split("<br /><form method=\"post\" action=\"index")[0];
+//
+//        //get result
+//        boolean code = connection.getResponseCode() == 200;
+//        boolean message = errMessage.equals("Image added.");
+//
+//        if (code && message) return true;
+//        else {
+//            if (errMessage.contains("Filetype not allowed.")) {
+//                throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
+//            }
+//            if (errMessage.contains("Generic error.")) {
+//                throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
+//            } else throw new BooruEngineException(errMessage);
+//        }
     }
 
     /**
