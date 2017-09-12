@@ -94,7 +94,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
     }
 
     /**
-     * <strong>NOT SUPPORTED.</strong>
+     * <strong>NOT SUPPORTED NOW.</strong>
      *
      * @param post_id post, for which comment will be searching.
      * @param format  result format (can be {@code Format.JSON} or {@code Format.XML}).
@@ -260,7 +260,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
         return getCustomRequest("/user/authenticate");
     }
 
-    private void setCookie(final HttpsConnection connection) {
+    protected void setCookie(final HttpsConnection connection) {
         connection
                 .getHeader("Set-Cookie")
                 .stream()
@@ -271,7 +271,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
                 });
     }
 
-    private String setToken(final HttpsConnection connection) throws BooruEngineException {
+    protected String setToken(final HttpsConnection connection) throws BooruEngineException {
         String s = connection.getResponse();
         String data = s.split("\"csrf-token\" content=\"")[1]
                 .split("\" />")[0]
@@ -460,6 +460,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
 
     /**
      * Remake user data current format to <code>String</code> which will be contain user cookie.
+     * If data not defined the method will be return <code>null</code>.
      *
      * @return the user cookie.
      */
@@ -560,6 +561,11 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterfac
 //        }
     }
 
+    /**
+     * Get address for creating <code>Method.POST</code> request for creating post.
+     *
+     * @return the constructed request to server.
+     */
     @Override
     public String getCreatePostRequest() {
         return getCustomRequest("/post/create.json");
