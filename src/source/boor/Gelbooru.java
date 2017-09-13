@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
     Post Voting is OK
     Posting is OK
 */
+
 /**
  * Singleton which describe Gelbooru. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
@@ -40,7 +41,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingModule,
 
     private static final Gelbooru mInstance = new Gelbooru();
 
-    private final Map<String, String>  loginData = new HashMap<>();
+    private final Map<String, String> loginData = new HashMap<>();
 
     /**
      * Get access to Gelbooru.
@@ -225,7 +226,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingModule,
      * @return constructed request for getting Post array.
      */
     @Override
-    public String getPackByTagsRequest(int limit, String tags, int page, Format format){
+    public String getPackByTagsRequest(int limit, String tags, int page, Format format) {
         return getCustomRequest("/index.php?page=dapi&q=index&s=post&limit=" + limit +
                 "&tags=" + tags + "&pid=" + page) + (format.equals(Format.JSON) ? "&json=1" : "");
     }
@@ -252,13 +253,14 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingModule,
      * @param post_id post id.
      * @param action  any action.
      * @return true if success.
-     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
-     * @exception UnsupportedOperationException will be thrown when action is not supporting.
+     * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException    will be thrown when the user data not defined.
+     * @throws IllegalArgumentException will be thrown when {@param action} not contain expected value.
      */
     @Override
     public boolean votePost(final int post_id, final String action) throws BooruEngineException {
-        if (!action.equals("up")) throw new BooruEngineException("Action can be only \"up\".", new IllegalArgumentException(action));
+        if (!action.equals("up"))
+            throw new BooruEngineException("Action can be only \"up\".", new IllegalArgumentException(action));
 
         //check userdata
         if (getCookieFromLoginData() == null) {
@@ -372,9 +374,9 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingModule,
      * @param rating    post rating.
      * @param parent_id parent id. Not using.
      * @return true if success (Indicates complete). Otherwise will be thrown an exception.
-     * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException    will be thrown when the user data not defined.
-     * @throws IOException              will be thrown when something go wrong on sending post step or when image file corrupt.
+     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException will be thrown when the user data not defined.
+     * @throws IOException           will be thrown when something go wrong on sending post step or when image file corrupt.
      */
     @Override
     public String createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {

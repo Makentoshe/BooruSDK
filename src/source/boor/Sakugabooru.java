@@ -205,11 +205,11 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
 
         //if already have not cookie - throw an exception
         if (!loginData.containsKey("sakugabooru")) {
-            throw new BooruEngineException("Can't find \"sakugabooru\" cookie in login data.");
+            throw new BooruEngineException("Can't find \"sakugabooru\" cookie in login data.", new IllegalStateException());
         }
         //if already have not token - throw an exception
         if (!loginData.containsKey("authenticity_token")) {
-            throw new BooruEngineException("Can't find \"authenticity_token\" in login data.");
+            throw new BooruEngineException("Can't find \"authenticity_token\" in login data.", new IllegalStateException());
         }
 
         //create new connection for login
@@ -225,13 +225,16 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
                 .setCookies(cookie)
                 .openConnection(getAuthenticateRequest());
 
-        if (connection.getHeader("Set-Cookie") == null) {
-            throw new BooruEngineException(new NullPointerException());
-        }
-
-        for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
-            String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
-            if (data.length == 2) this.loginData.put(data[0], data[1]);
+        //try to parse response
+        try {
+            for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
+                String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+                if (data.length == 2) this.loginData.put(data[0], data[1]);
+            }
+            //if unsuccessful
+        } catch (NullPointerException e) {
+            //throw exception
+            throw new BooruEngineException(new AuthenticationException("Authentication failed."));
         }
     }
 
@@ -301,10 +304,9 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
      * @param post_id post id.
      * @param score   scores to post.
      * @return true if success.
-     * @throws BooruEngineException          when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException         will be thrown when the user data not defined.
-     * @throws UnsupportedOperationException will be thrown when action is not supporting.
-     * @throws IllegalArgumentException      will be thrown when score param not contain expected value.
+     * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException    will be thrown when the user data not defined.
+     * @throws IllegalArgumentException will be thrown when {@param score} not contain expected value.
      */
     @Override
     public boolean votePost(int post_id, String score) throws BooruEngineException {
@@ -314,13 +316,13 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
             throw new BooruEngineException(new IllegalStateException("User data not defined."));
         }
         //validate action
-        try{
+        try {
             int s = Integer.parseInt(score);
 
             if (s > 3 || s < 0) {
                 throw new BooruEngineException("Score can't be more then the 3 and less than the 0", new IllegalArgumentException(score));
             }
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new BooruEngineException(new IllegalArgumentException(score));
         }
         //setup fresh data
@@ -338,7 +340,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
                 .setHeader("X-CSRF-Token", token)
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(getCookieFromLoginData())
-                .setBody("id="+post_id+"&score=" + score)
+                .setBody("id=" + post_id + "&score=" + score)
                 .openConnection(getVotePostRequest());
 
         return connection.getResponse().split("\"success\":")[1].contains("true");
@@ -441,6 +443,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
     }
 
     //TODO: test method
+
     /**
      * Creating post.
      * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced "".
