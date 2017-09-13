@@ -1,7 +1,6 @@
 package test.source.boor.Konachan;
 
 
-import engine.connector.HttpConnection;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import engine.parser.JsonParser;
