@@ -5,7 +5,7 @@ import engine.BooruEngineException;
 import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import engine.parser.JsonParser;
+import module.*;
 import module.interfacе.*;
 import source.Post;
 import source.еnum.Format;
@@ -31,12 +31,12 @@ import java.util.regex.Pattern;
  * Singleton which describe Yandere. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
  * <p>
- * Implements <code>LoginModuleInterface</code>,<code>VotingModuleInterface</code>,
- * <code>RemotePostModuleInterface</code>, <code>CommentModuleInterface</code>,
- * <code>UploadModuleInterface</code>.
+ * Implements <code>LoginModule</code>,<code>VotingModule</code>,
+ * <code>RemotePostModule</code>, <code>CommentModule</code>,
+ * <code>UploadModule</code>.
  */
-public class Yandere extends AbstractBoorAdvanced implements LoginModuleInterface, RemotePostModuleInterface,
-        VotingModuleInterface, CommentModuleInterface, UploadModuleInterface {
+public class Yandere extends AbstractBoorAdvanced implements LoginModule, RemotePostModule,
+        VotingModule, CommentModule, UploadModule {
 
     private static final Yandere instance = new Yandere();
 

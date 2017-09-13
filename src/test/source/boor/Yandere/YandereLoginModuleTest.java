@@ -1,9 +1,8 @@
 package test.source.boor.Yandere;
 
 import engine.BooruEngineException;
-import module.interfacе.LoginModuleInterface;
+import module.LoginModule;
 import org.junit.Test;
-import source.boor.Konachan;
 import source.boor.Yandere;
 import test.source.TestHelper;
 
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 
 public class YandereLoginModuleTest {
 
-    private final LoginModuleInterface boor;
+    private final LoginModule boor;
 
     public YandereLoginModuleTest(){
         boor = Yandere.get();

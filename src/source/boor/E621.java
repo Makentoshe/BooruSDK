@@ -3,9 +3,9 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import module.interfacе.LoginModuleInterface;
-import module.interfacе.RemotePostModuleInterface;
-import module.interfacе.VotingModuleInterface;
+import module.LoginModule;
+import module.RemotePostModule;
+import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * <p>
  * Describe E621.
  * <p>
- * Implements <tt>LoginModuleInterface</tt>, <tt>VotingModuleInterface</tt>, <tt>RemotePostModuleInterface</tt>.
+ * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>.
  */
 /*NOTE:
     Cookie are static and not update, when page is upload.
@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
     Post Voting is OK
  */
 @Deprecated
-public class E621 extends AbstractBoorAdvanced implements LoginModuleInterface, RemotePostModuleInterface, VotingModuleInterface {
+public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule {
 
     private static final E621 instance = new E621();
 

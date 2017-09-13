@@ -1,4 +1,4 @@
-package module.interfacе;
+package module;
 
 import source.Post;
 
@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Interface with the single method for remote <tt>Post</tt> creating.
  */
-public interface RemotePostModuleInterface {
+public interface RemotePostModule {
 
     /**
      * Here a <tt>Post</tt> remote constructor implementation.

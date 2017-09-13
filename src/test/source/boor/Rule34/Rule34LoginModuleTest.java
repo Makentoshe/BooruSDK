@@ -1,10 +1,9 @@
 package test.source.boor.Rule34;
 
 import engine.BooruEngineException;
-import module.interfacе.LoginModuleInterface;
+import module.LoginModule;
 import org.junit.Test;
 import source.boor.Rule34;
-import source.boor.Safebooru;
 import test.source.TestHelper;
 
 import javax.naming.AuthenticationException;
@@ -14,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 
 public class Rule34LoginModuleTest {
 
-    private final LoginModuleInterface boor;
+    private final LoginModule boor;
 
     public Rule34LoginModuleTest(){
         boor = Rule34.get();

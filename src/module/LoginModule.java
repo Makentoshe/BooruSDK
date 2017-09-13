@@ -1,4 +1,4 @@
-package module.interfacе;
+package module;
 
 import com.sun.istack.internal.Nullable;
 import engine.BooruEngineException;
@@ -8,7 +8,7 @@ import engine.BooruEngineException;
  * <p>
  * Give access for login and other actions, which requires user data.
  */
-public interface LoginModuleInterface {
+public interface LoginModule {
 //TODO: use URLEncoder.encode(data, String.valueOf(Charset.defaultCharset()))
     /**
      * Login a user.

@@ -5,11 +5,10 @@ import engine.BooruEngineException;
 import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import engine.parser.JsonParser;
-import module.interfacе.LoginModuleInterface;
-import module.interfacе.RemotePostModuleInterface;
-import module.interfacе.UploadModuleInterface;
-import module.interfacе.VotingModuleInterface;
+import module.LoginModule;
+import module.RemotePostModule;
+import module.UploadModule;
+import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 import source.еnum.Rating;
@@ -26,7 +25,7 @@ import java.util.regex.Pattern;
     csrf-token is static
 
     Login is OK
-    Commenting is ... TODO: make CommentModuleInterface implementation(do it after ~2 weeks).
+    Commenting is ... TODO: make CommentModule implementation(do it after ~2 weeks).
     Post Voting is OK
  */
 
@@ -34,12 +33,12 @@ import java.util.regex.Pattern;
  * Singleton which describe Konachan. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
  * <p>
- * Implements <code>LoginModuleInterface</code>,<code>VotingModuleInterface</code>,
- * <code>RemotePostModuleInterface</code>, <code>CommentModuleInterface</code>,
- * <code>UploadModuleInterface</code>.
+ * Implements <code>LoginModule</code>,<code>VotingModule</code>,
+ * <code>RemotePostModule</code>, <code>CommentModule</code>,
+ * <code>UploadModule</code>.
  */
-public class Konachan extends AbstractBoorAdvanced implements LoginModuleInterface, VotingModuleInterface,
-        RemotePostModuleInterface, UploadModuleInterface {
+public class Konachan extends AbstractBoorAdvanced implements LoginModule, VotingModule,
+        RemotePostModule, UploadModule {
 
     private static final Konachan instance = new Konachan();
 

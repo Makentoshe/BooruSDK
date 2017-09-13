@@ -1,7 +1,7 @@
 package test.source.boor.Yandere;
 
 import engine.BooruEngineException;
-import module.interfacе.UploadModuleInterface;
+import module.UploadModule;
 import org.junit.Test;
 import source.boor.Yandere;
 import source.еnum.Rating;
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 public class YandereUploadModuleTest {
 
-    private final UploadModuleInterface boor;
+    private final UploadModule boor;
 
     public YandereUploadModuleTest() {
         boor = Yandere.get();

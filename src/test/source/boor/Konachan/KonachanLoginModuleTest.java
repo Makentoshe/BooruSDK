@@ -1,10 +1,9 @@
 package test.source.boor.Konachan;
 
 import engine.BooruEngineException;
-import module.interfacе.LoginModuleInterface;
+import module.LoginModule;
 import org.junit.Test;
 import source.boor.Konachan;
-import source.boor.Rule34;
 import test.source.TestHelper;
 
 import javax.naming.AuthenticationException;
@@ -16,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class KonachanLoginModuleTest {
 
-    private final LoginModuleInterface boor;
+    private final LoginModule boor;
 
     public KonachanLoginModuleTest(){
         boor = Konachan.get();

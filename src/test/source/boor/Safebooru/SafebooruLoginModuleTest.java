@@ -1,7 +1,7 @@
 package test.source.boor.Safebooru;
 
 import engine.BooruEngineException;
-import module.interfacе.LoginModuleInterface;
+import module.LoginModule;
 import org.junit.Test;
 import source.boor.Safebooru;
 import test.source.TestHelper;
@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class SafebooruLoginModuleTest {
 
-    private final LoginModuleInterface boor;
+    private final LoginModule boor;
 
     public SafebooruLoginModuleTest(){
         boor = Safebooru.get();

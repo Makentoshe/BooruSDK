@@ -1,7 +1,7 @@
 package test.source.boor.Gelbooru;
 
 import engine.BooruEngineException;
-import module.interfacе.LoginModuleInterface;
+import module.LoginModule;
 import org.junit.Test;
 import source.boor.Gelbooru;
 import test.source.TestHelper;
@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class GelbooruLoginModuleTest {
 
-    private final LoginModuleInterface boor;
+    private final LoginModule boor;
 
     public GelbooruLoginModuleTest(){
         boor = Gelbooru.get();

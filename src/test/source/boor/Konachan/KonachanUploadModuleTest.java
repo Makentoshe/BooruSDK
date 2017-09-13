@@ -1,11 +1,9 @@
 package test.source.boor.Konachan;
 
 import engine.BooruEngineException;
-import module.interfacе.LoginModuleInterface;
-import module.interfacе.UploadModuleInterface;
+import module.UploadModule;
 import org.junit.Test;
 import source.boor.Konachan;
-import source.boor.Rule34;
 import source.еnum.Rating;
 
 import java.io.File;
@@ -14,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 public class KonachanUploadModuleTest {
 
-    private final UploadModuleInterface boor;
+    private final UploadModule boor;
 
     public KonachanUploadModuleTest() {
         boor = Konachan.get();

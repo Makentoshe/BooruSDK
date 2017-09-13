@@ -1,12 +1,11 @@
 package test.source.boor.Sakugabooru;
 
 import engine.BooruEngineException;
-import module.interfacе.LoginModuleInterface;
-import module.interfacе.VotingModuleInterface;
+import module.LoginModule;
+import module.VotingModule;
 import org.junit.Test;
 import source.boor.AbstractBoor;
 import source.boor.Sakugabooru;
-import source.boor.Yandere;
 import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
@@ -23,24 +22,24 @@ public class SakugabooruVotingModuleTest extends TestHelper{
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://sakugabooru.com/post/vote.json", ((VotingModuleInterface)boor).getVotePostRequest());
+        assertEquals("https://sakugabooru.com/post/vote.json", ((VotingModule)boor).getVotePostRequest());
     }
 
     @Test
     public void votePostFail_IllegalArgument_Test() throws Exception {
-        ((LoginModuleInterface)boor).logIn(TestHelper.getLogin(), TestHelper.getPass());
+        ((LoginModule)boor).logIn(TestHelper.getLogin(), TestHelper.getPass());
         try {
-            ((VotingModuleInterface)boor).votePost(post_id, "sas");
+            ((VotingModule)boor).votePost(post_id, "sas");
         } catch (BooruEngineException e) {
             assertEquals(IllegalArgumentException.class, e.getCause().getClass());
         }
-        ((LoginModuleInterface)boor).logOff();
+        ((LoginModule)boor).logOff();
     }
 
     @Test
     public void votePostFail_WithoutUserData_Test() throws Exception {
         try {
-            ((VotingModuleInterface)boor).votePost(post_id, "0");
+            ((VotingModule)boor).votePost(post_id, "0");
         } catch (BooruEngineException e) {
             assertEquals(IllegalStateException.class, e.getCause().getClass());
         }
@@ -48,8 +47,8 @@ public class SakugabooruVotingModuleTest extends TestHelper{
 
     @Test
     public void votePostUpSuccess_Test() throws Exception {
-        ((LoginModuleInterface)boor).logIn(getLogin(), getPass());
-        assertTrue(((VotingModuleInterface)boor).votePost(post_id, "1"));
+        ((LoginModule)boor).logIn(getLogin(), getPass());
+        assertTrue(((VotingModule)boor).votePost(post_id, "1"));
     }
 
 }

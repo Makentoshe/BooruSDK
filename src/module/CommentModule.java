@@ -1,13 +1,13 @@
-package module.interfacе;
+package module;
 
 import engine.BooruEngineException;
 
 /**
  * Interface with the basic methods for commenting *boor posts.
  * <p>
- * Require login information - so use <tt>LoginModuleInterface</tt> for getting access to user data.
+ * Require login information - so use <tt>LoginModule</tt> for getting access to user data.
  */
-public interface CommentModuleInterface {
+public interface CommentModule {
 
     /**
      * Create comment for post.

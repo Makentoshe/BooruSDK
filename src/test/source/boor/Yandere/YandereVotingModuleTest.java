@@ -1,10 +1,9 @@
 package test.source.boor.Yandere;
 
 import engine.BooruEngineException;
-import module.interfacе.LoginModuleInterface;
-import module.interfacе.VotingModuleInterface;
+import module.LoginModule;
+import module.VotingModule;
 import org.junit.Test;
-import source.boor.Konachan;
 import source.boor.Yandere;
 import test.source.TestHelper;
 
@@ -13,8 +12,8 @@ import static org.junit.Assert.assertTrue;
 
 public class YandereVotingModuleTest {
 
-    private final VotingModuleInterface voteBoor;
-    private final LoginModuleInterface loginBoor;
+    private final VotingModule voteBoor;
+    private final LoginModule loginBoor;
     private static final int post_id = 409015;
 
     public YandereVotingModuleTest() {

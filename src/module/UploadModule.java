@@ -1,4 +1,4 @@
-package module.interfacе;
+package module;
 
 import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
@@ -9,7 +9,7 @@ import java.io.File;
 /**
  * Interface for creating posts and upload images on *boor.
  */
-public interface UploadModuleInterface {
+public interface UploadModule {
 
     String createPost(
             @NotNull final File post,

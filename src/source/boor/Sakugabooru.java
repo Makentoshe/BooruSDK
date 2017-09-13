@@ -4,6 +4,7 @@ import engine.BooruEngineException;
 import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
+import module.*;
 import module.interfacе.*;
 import source.Post;
 import source.еnum.Format;
@@ -34,12 +35,12 @@ import java.util.regex.Pattern;
  * Singleton which describe Yandere. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
  * <p>
- * Implements <code>LoginModuleInterface</code>,<code>VotingModuleInterface</code>,
- * <code>RemotePostModuleInterface</code>, <code>CommentModuleInterface</code>,
- * <code>UploadModuleInterface</code>.
+ * Implements <code>LoginModule</code>,<code>VotingModule</code>,
+ * <code>RemotePostModule</code>, <code>CommentModule</code>,
+ * <code>UploadModule</code>.
  */
-public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInterface, RemotePostModuleInterface,
-        VotingModuleInterface, CommentModuleInterface, UploadModuleInterface {
+public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, RemotePostModule,
+        VotingModule, CommentModule, UploadModule {
 
     private final static Sakugabooru instance = new Sakugabooru();
 
@@ -440,6 +441,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInte
         return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
     }
 
+    //TODO: test method
     /**
      * Creating post.
      * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced "".

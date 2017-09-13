@@ -1,4 +1,4 @@
-package module.interfacе;
+package module;
 
 
 import source.Post;
@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Interface with the single method for remote <tt>Comment</tt> creating.
  */
-public interface RemoteCommentModuleInterface {
+public interface RemoteComment {
 
     /**
      * Here a <tt>Comment</tt> remote constructor implementation.

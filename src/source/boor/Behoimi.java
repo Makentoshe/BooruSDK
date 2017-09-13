@@ -3,9 +3,9 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import module.interfacе.CommentModuleInterface;
-import module.interfacе.LoginModuleInterface;
-import module.interfacе.RemotePostModuleInterface;
+import module.CommentModule;
+import module.LoginModule;
+import module.RemotePostModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -18,14 +18,14 @@ import java.util.Set;
  * <p>
  * Describe Behoimi.
  * <p>
- * Implements <tt>LoginModuleInterface</tt>, <tt>RemotePostModuleInterface</tt>, <tt>CommentModuleInterface</tt>.
+ * Implements <tt>LoginModule</tt>, <tt>RemotePostModule</tt>, <tt>CommentModule</tt>.
  */
 /*
     Loging is OK.
     Commenting is OK.
     Post Voting disable.
  */
-public class Behoimi extends AbstractBoorAdvanced implements LoginModuleInterface, RemotePostModuleInterface, CommentModuleInterface {
+public class Behoimi extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, CommentModule {
 
     private static final Behoimi instance = new Behoimi();
 

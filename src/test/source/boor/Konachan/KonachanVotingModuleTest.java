@@ -1,9 +1,8 @@
 package test.source.boor.Konachan;
 
 import engine.BooruEngineException;
-import module.interfacе.LoginModuleInterface;
-import module.interfacе.VotingModuleInterface;
-import org.junit.Before;
+import module.LoginModule;
+import module.VotingModule;
 import org.junit.Test;
 import source.boor.Konachan;
 import test.source.TestHelper;
@@ -13,8 +12,8 @@ import static org.junit.Assert.assertTrue;
 
 public class KonachanVotingModuleTest {
 
-    private final VotingModuleInterface voteBoor;
-    private final LoginModuleInterface loginBoor;
+    private final VotingModule voteBoor;
+    private final LoginModule loginBoor;
 
     public KonachanVotingModuleTest() {
         voteBoor = Konachan.get();

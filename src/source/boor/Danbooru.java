@@ -1,6 +1,6 @@
 package source.boor;
 
-import module.interfacе.RemotePostModuleInterface;
+import module.RemotePostModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -13,7 +13,7 @@ import java.util.Set;
  * NO LONGER SUPPORTED.
  */
 @Deprecated
-public class Danbooru extends AbstractBoorAdvanced implements RemotePostModuleInterface {
+public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule {
 
     private static final Danbooru instance = new Danbooru();
 

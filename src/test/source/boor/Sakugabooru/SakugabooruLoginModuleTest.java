@@ -1,10 +1,9 @@
 package test.source.boor.Sakugabooru;
 
 import engine.BooruEngineException;
-import module.interfacе.LoginModuleInterface;
+import module.LoginModule;
 import org.junit.Test;
 import source.boor.Sakugabooru;
-import source.boor.Yandere;
 import test.source.TestHelper;
 
 import javax.naming.AuthenticationException;
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 
 public class SakugabooruLoginModuleTest extends TestHelper{
 
-    private final LoginModuleInterface boor;
+    private final LoginModule boor;
 
     public SakugabooruLoginModuleTest(){
         boor = Sakugabooru.get();
