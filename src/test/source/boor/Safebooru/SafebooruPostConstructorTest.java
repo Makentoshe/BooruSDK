@@ -18,7 +18,7 @@ public class SafebooruPostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null)  return;
-        post = new Post(TestHelper.getDataFromBoorBasic(Safebooru.get(), 2278871), Safebooru.get());
+        post = new Post(TestHelper.getPostFromBoor(Safebooru.get(), 2278871), Safebooru.get());
     }
 
     @Test

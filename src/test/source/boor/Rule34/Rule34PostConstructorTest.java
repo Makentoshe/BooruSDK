@@ -18,7 +18,7 @@ public class Rule34PostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = new Post(TestHelper.getDataFromBoorBasic(Rule34.get(), 2421106), Rule34.get());
+        post = new Post(TestHelper.getPostFromBoor(Rule34.get(), 2421106), Rule34.get());
     }
 
     @Test

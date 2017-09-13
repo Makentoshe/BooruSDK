@@ -16,7 +16,7 @@ public class Rule34CommentConstructorTest {
 
     public Rule34CommentConstructorTest() throws Exception{
         if (comment != null)  return;
-        Post post = new Post(TestHelper.getDataFromBoorBasic(Rule34.get(), 2231007), Rule34.get());
+        Post post = new Post(TestHelper.getPostFromBoor(Rule34.get(), 2231007), Rule34.get());
         XmlParser parser = new XmlParser();
         parser.startParse(post.getComments_url());
         comment = new Comment(parser.getResult().get(0));

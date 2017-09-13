@@ -16,7 +16,7 @@ public class GelbooruCommentConstructorTest {
 
     public GelbooruCommentConstructorTest() throws Exception{
         if (comment != null)  return;
-        Post post = new Post(TestHelper.getDataFromBoorBasic(Gelbooru.get(), 3535254), Gelbooru.get());
+        Post post = new Post(TestHelper.getPostFromBoor(Gelbooru.get(), 3535254), Gelbooru.get());
         System.out.println(post.getComments_url());
         XmlParser parser = new XmlParser();
         parser.startParse(post.getComments_url());

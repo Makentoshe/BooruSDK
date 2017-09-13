@@ -16,7 +16,7 @@ public class SafebooruCommentConstructorTest {
 
     public SafebooruCommentConstructorTest() throws Exception{
         if (comment != null)  return;
-        Post post = new Post(TestHelper.getDataFromBoorBasic(Safebooru.get(), 2244511), Safebooru.get());
+        Post post = new Post(TestHelper.getPostFromBoor(Safebooru.get(), 2244511), Safebooru.get());
         XmlParser parser = new XmlParser();
         parser.startParse(post.getComments_url());
         comment = new Comment(parser.getResult().get(0));

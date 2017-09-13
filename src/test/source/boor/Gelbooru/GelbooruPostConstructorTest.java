@@ -18,7 +18,7 @@ public class GelbooruPostConstructorTest {
 
     public GelbooruPostConstructorTest() throws Exception {
         if (post != null) return;
-        post = new Post(TestHelper.getDataFromBoorBasic(Gelbooru.get(), 3785972), Gelbooru.get());
+        post = new Post(TestHelper.getPostFromBoor(Gelbooru.get(), 3785972), Gelbooru.get());
     }
 
     @Test

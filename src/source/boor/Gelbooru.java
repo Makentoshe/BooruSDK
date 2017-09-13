@@ -6,8 +6,8 @@ import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import module.*;
-import module.interfacе.*;
 import source.Post;
+import source.еnum.Api;
 import source.еnum.Format;
 import source.еnum.Rating;
 
@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * <code>RemotePostModule</code>, <code>CommentModule</code>,
  * <code>UploadModule</code>.
  */
-public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingModule,
+public class Gelbooru extends AbstractBoor implements LoginModule, VotingModule,
         RemotePostModule, CommentModule, UploadModule {
 
     private static final Gelbooru mInstance = new Gelbooru();
@@ -52,7 +52,8 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
     }
 
     private Gelbooru() {
-        super();
+        format = Format.XML;
+        api = Api.BASICS;
     }
 
     /**
@@ -211,6 +212,22 @@ public class Gelbooru extends AbstractBoorBasic implements LoginModule, VotingMo
     @Override
     public String getAuthenticateRequest() {
         return getCustomRequest("/index.php?page=account&s=login&code=00");
+    }
+
+
+    /**
+     * Create request for getting a list of Posts.
+     *
+     * @param limit  how many posts must be in page.
+     * @param tags   the tags to search for.
+     * @param page   page index(from zero).
+     * @param format format result (can be {@code Format.JSON} or {@code Format.XML}).
+     * @return constructed request for getting Post array.
+     */
+    @Override
+    public String getPackByTagsRequest(int limit, String tags, int page, Format format){
+        return getCustomRequest("/index.php?page=dapi&q=index&s=post&limit=" + limit +
+                "&tags=" + tags + "&pid=" + page) + (format.equals(Format.JSON) ? "&json=1" : "");
     }
 
     /**

@@ -21,7 +21,7 @@ public class Rule34RemotePostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = Rule34.get().newPostInstance(TestHelper.getDataFromBoorBasic(Rule34.get(), 2421106));
+        post = Rule34.get().newPostInstance(TestHelper.getPostFromBoor(Rule34.get(), 2421106));
     }
 
     @Test

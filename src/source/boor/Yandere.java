@@ -6,7 +6,6 @@ import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import module.*;
-import module.interfacе.*;
 import source.Post;
 import source.еnum.Format;
 import source.еnum.Rating;

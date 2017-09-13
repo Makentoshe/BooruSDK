@@ -6,8 +6,8 @@ import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import module.*;
-import module.interfacе.*;
 import source.Post;
+import source.еnum.Api;
 import source.еnum.Format;
 import source.еnum.Rating;
 
@@ -34,7 +34,7 @@ import java.util.Set;
  * <code>RemotePostModule</code>, <code>CommentModule</code>,
  * <code>UploadModule</code>.
  */
-public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModule,
+public class Rule34 extends AbstractBoor implements LoginModule, VotingModule,
         RemotePostModule, CommentModule, UploadModule {
 
     private static final Rule34 instance = new Rule34();
@@ -42,7 +42,8 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModu
     private Map<String, String> loginData = new HashMap<>();
 
     private Rule34() {
-        super();
+        format = Format.XML;
+        api = Api.BASICS;
     }
 
     /**
@@ -63,6 +64,33 @@ public class Rule34 extends AbstractBoorBasic implements LoginModule, VotingModu
     @Override
     public String getCustomRequest(String request) {
         return "https://rule34.xxx" + request;
+    }
+
+    /**
+     * Create request for getting a list of Posts.
+     *
+     * @param limit  how many posts must be in page.
+     * @param tags   the tags to search for.
+     * @param page   page index(from zero).
+     * @param format format result (can be {@code Format.JSON} or {@code Format.XML}).
+     * @return constructed request for getting Post array.
+     */
+    @Override
+    public String getPackByTagsRequest(int limit, String tags, int page, Format format){
+        return getCustomRequest("/index.php?page=dapi&q=index&s=post&limit=" + limit +
+                "&tags=" + tags + "&pid=" + page) + (format.equals(Format.JSON) ? "&json=1" : "");
+    }
+
+    /**
+     * Get address for getting <code>Post</code> by post id.
+     *
+     * @param id     post id.
+     * @param format result format (can be {@code Format.JSON} or {@code Format.XML}).
+     * @return the constructed request to server.
+     */
+    @Override
+    public String getPostByIdRequest(int id, Format format) {
+        return getCustomRequest("/index.php?page=dapi&q=index&s=post&id=" + String.valueOf(id) + (format.equals(Format.JSON) ? "json=1" : ""));
     }
 
     /**
