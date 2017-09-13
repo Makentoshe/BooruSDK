@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
     Commenting is OK
     Post Voting is OK
  */
+
 /**
  * Singleton which describe Yandere. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
@@ -196,13 +197,10 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInte
                     .openConnection(getCustomRequest("/user/login"));
 
             //set cookie
-            if (!loginData.containsKey("sakugabooru")) {
-                setCookie(connection);
-            }
+            if (!loginData.containsKey("sakugabooru")) setCookie(connection);
+
             //set token
-            if (!loginData.containsKey("authenticity_token")) {
-                setToken(connection);
-            }
+            if (!loginData.containsKey("authenticity_token")) setToken(connection);
         }
 
         //if already have not cookie - throw an exception
@@ -287,6 +285,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInte
 
         loginData.put("authenticity_token", data);
     }
+
     /**
      * Voting post.
      * <p>
@@ -309,26 +308,40 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInte
      */
     @Override
     public boolean votePost(int post_id, String score) throws BooruEngineException {
+        //check userdata
         String token;
-        try {
-            token = loginData.get("authenticity_token").replaceAll("%2B", "+");
-        } catch (NullPointerException e) {
-            throw new BooruEngineException("User data not defined.", new AuthenticationException());
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined."));
         }
-        try {
-            HttpsConnection connection = new HttpsConnection()
-                    .setRequestMethod(Method.POST)
-                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                    .setCookies(loginData.toString().replaceAll(", ", "; "))
-                    .setHeader("X-CSRF-Token", token)
-                    .setBody("id=" + post_id + "&score=" + score)
-                    .openConnection(getVotePostRequest());
+        //validate action
+        try{
+            int s = Integer.parseInt(score);
 
-            return connection.getResponse().split("\"success\":")[1].equals("true");
-
-        } catch (BooruEngineException e) {
-            throw new BooruEngineException(e.getCause().getMessage());
+            if (s > 3 || s < 0) {
+                throw new BooruEngineException("Score can't be more then the 3 and less than the 0", new IllegalArgumentException(score));
+            }
+        } catch (NumberFormatException e){
+            throw new BooruEngineException(new IllegalArgumentException(score));
         }
+        //setup fresh data
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .openConnection(getCustomRequest(""));
+        setToken(connection);
+        setCookie(connection);
+        //setup token
+        token = loginData.get("authenticity_token").replaceAll("%2B", "+").replaceAll("%3D", "=").replaceAll("%2F", "/");
+        //create request
+        connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setHeader("X-CSRF-Token", token)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .setCookies(getCookieFromLoginData())
+                .setBody("id="+post_id+"&score=" + score)
+                .openConnection(getVotePostRequest());
+
+        return connection.getResponse().split("\"success\":")[1].contains("true");
     }
 
     /**
@@ -351,11 +364,11 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModuleInte
      * @param postAsAnon use {@code true} for anonymously posting.
      * @param bumpPost   use {@code true} for bump up post.
      * @return true if success.
-     * @throws BooruEngineException  when something go wrong.
-     *                               Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
+     * @throws BooruEngineException   when something go wrong.
+     *                                Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException  will be thrown when the user data not defined.
      * @throws NoSuchElementException will be thrown when the Set-Cookie header was not got.
-     * @throws RuntimeException will be thrown when the Set-Cookie header was got, but comment was not created
+     * @throws RuntimeException       will be thrown when the Set-Cookie header was got, but comment was not created
      */
     @Override
     public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
