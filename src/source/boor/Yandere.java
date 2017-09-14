@@ -205,7 +205,6 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
         if (!loginData.containsKey("authenticity_token")) {
             throw new BooruEngineException("Can't find \"authenticity_token\" in login data.", new IllegalStateException());
         }
-
         //create new connection for login
         String postData = "authenticity_token=" + loginData.get("authenticity_token") + "&user%5Bname%5D=" + login +
                 "&user%5Bpassword%5D=" + password + "&commit=Login";

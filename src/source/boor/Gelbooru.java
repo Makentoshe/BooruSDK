@@ -41,7 +41,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingModule,
 
     private static final Gelbooru mInstance = new Gelbooru();
 
-    private final Map<String, String> loginData = new HashMap<>();
+    private final HashMap<String, String> loginData = new HashMap<>();
 
     /**
      * Get access to Gelbooru.
@@ -201,7 +201,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingModule,
      * @return the HashMap which contain a user data.
      */
     @Override
-    public Map<String, String> getLoginData() {
+    public HashMap<String, String> getLoginData() {
         return this.loginData;
     }
 

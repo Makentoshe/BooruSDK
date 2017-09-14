@@ -17,13 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-/**
- * Singleton.
- * <p>
- * Describe E621.
- * <p>
- * Implements <tt>LoginModule</tt>, <tt>VotingModule</tt>, <tt>RemotePostModule</tt>.
- */
+
 /*NOTE:
     Cookie are static and not update, when page is upload.
     csrf-token are static and not update.
@@ -31,6 +25,14 @@ import java.util.regex.Pattern;
     Login is OK
     Commenting is ...
     Post Voting is OK
+ */
+/**
+ * Singleton which describe E621. This class can help user to login, vote posts, create posts, comment posts, etc.
+ * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
+ * <p>
+ * Implements <code>LoginModule</code>,<code>VotingModule</code>,
+ * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
+ * <code>UploadModule</code>.
  */
 public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule,
         CommentCreatorModule, UploadModule {
