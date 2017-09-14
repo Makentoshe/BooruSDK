@@ -374,6 +374,11 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
      */
     @Override
     public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined"));
+        }
+
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
@@ -389,7 +394,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
         connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                .setCookies(loginData.toString().replaceAll(", ", "; "))
+                .setCookies(getCookieFromLoginData())
                 .setBody(cbody)
                 .openConnection(getCreateCommentRequest(post_id));
 
@@ -443,7 +448,6 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
     }
 
     //TODO: test method
-
     /**
      * Creating post.
      * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced "".

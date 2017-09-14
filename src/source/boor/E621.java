@@ -3,6 +3,7 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
+import module.CommentModule;
 import module.LoginModule;
 import module.RemotePostModule;
 import module.VotingModule;
@@ -12,6 +13,7 @@ import source.еnum.Format;
 import javax.naming.AuthenticationException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -30,7 +32,7 @@ import java.util.regex.Pattern;
     Commenting is ...
     Post Voting is OK
  */
-public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule {
+public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule, CommentModule {
 
     private static final E621 instance = new E621();
 
@@ -334,5 +336,56 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
                 .replaceAll(", ", "; ")
                 .replaceAll("\\{", "")
                 .replaceAll("\\}", "");
+    }
+
+    /**
+     * Create comment for post with id: post_id.
+     * <p>
+     * Note: Be careful: Not all *boors support "postAsAnon" or "bumpPost" param.
+     *
+     * @param post_id    post id.
+     * @param body       comment body.
+     * @param postAsAnon use {@code true} for anonymously posting - not support on this boor.
+     * @param bumpPost   use {@code true} for bump up post - not support on this boor.
+     * @return true if success.
+     * @throws BooruEngineException  when something go wrong.
+     *                               Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException will be thrown when the user data not defined.
+     */
+    @Override
+    public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        StringBuilder cbody = new StringBuilder();
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined"));
+        }
+
+        //create post body
+        cbody.append("authenticity_token=").append(loginData.get("authenticity_token"))
+                .append("&comment%5Bpost_id%5D=").append(post_id)
+                .append("&origin_controller=post&origin_action=show")
+                .append("&comment%5Bbody%5D=").append(body);
+
+        //send body to server
+        String response = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .setCookies(getCookieFromLoginData())
+                .setBody(cbody.toString())
+                .openConnection(getCreateCommentRequest(post_id))
+                .getResponse();
+
+        System.out.println(response);
+        return true;
+    }
+
+    /**
+     * Get address for creating <code>Method.POST</code> request for creating post.
+     *
+     * @return the constructed request to server.
+     */
+    @Override
+    public String getCreateCommentRequest(int id) {
+        return getCustomRequest("/comment/create");
     }
 }
