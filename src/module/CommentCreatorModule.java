@@ -7,7 +7,7 @@ import engine.BooruEngineException;
  * <p>
  * Require login information - so use <tt>LoginModule</tt> for getting access to user data.
  */
-public interface CommentModule {
+public interface CommentCreatorModule {
 
     /**
      * Create comment for post.

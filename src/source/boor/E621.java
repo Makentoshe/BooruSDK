@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -34,7 +33,7 @@ import java.util.regex.Pattern;
     Post Voting is OK
  */
 public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule,
-        CommentModule, UploadModule {
+        CommentCreatorModule, UploadModule {
 
     private static final E621 instance = new E621();
 
@@ -451,6 +450,11 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
         return connection.getResponse();
     }
 
+    /**
+     * Get address for creating <code>Method.POST</code> request for creating post.
+     *
+     * @return the constructed request to server.
+     */
     @Override
     public String getCreatePostRequest() {
         return getCustomRequest("/post/create");

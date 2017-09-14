@@ -32,11 +32,11 @@ import java.util.Set;
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
  * <p>
  * Implements <code>LoginModule</code>,<code>VotingModule</code>,
- * <code>RemotePostModule</code>, <code>CommentModule</code>,
+ * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
 public class Safebooru extends AbstractBoor implements LoginModule, VotingModule,
-        RemotePostModule, CommentModule, UploadModule {
+        RemotePostModule, CommentCreatorModule, UploadModule {
 
     private static final Safebooru instance = new Safebooru();
 

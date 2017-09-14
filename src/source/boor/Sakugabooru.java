@@ -35,11 +35,11 @@ import java.util.regex.Pattern;
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
  * <p>
  * Implements <code>LoginModule</code>,<code>VotingModule</code>,
- * <code>RemotePostModule</code>, <code>CommentModule</code>,
+ * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
 public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, RemotePostModule,
-        VotingModule, CommentModule, UploadModule {
+        VotingModule, CommentCreatorModule, UploadModule {
 
     private final static Sakugabooru instance = new Sakugabooru();
 

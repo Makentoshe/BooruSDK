@@ -3,7 +3,6 @@ package test.source.boor.E621;
 import engine.BooruEngineException;
 import org.junit.Test;
 import source.boor.E621;
-import source.boor.Gelbooru;
 import source.еnum.Rating;
 import test.source.TestHelper;
 

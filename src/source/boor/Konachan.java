@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
     csrf-token is static
 
     Login is OK
-    Commenting is ... TODO: make CommentModule implementation(do it after ~2 weeks).
+    Commenting is ... TODO: make CommentCreatorModule implementation(do it after ~2 weeks).
     Post Voting is OK
  */
 
@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
  * <p>
  * Implements <code>LoginModule</code>,<code>VotingModule</code>,
- * <code>RemotePostModule</code>, <code>CommentModule</code>,
+ * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
 public class Konachan extends AbstractBoorAdvanced implements LoginModule, VotingModule,
