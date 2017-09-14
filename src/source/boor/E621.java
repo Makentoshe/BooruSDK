@@ -1,16 +1,17 @@
 package source.boor;
 
 import engine.BooruEngineException;
+import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import module.CommentModule;
-import module.LoginModule;
-import module.RemotePostModule;
-import module.VotingModule;
+import module.*;
 import source.Post;
 import source.еnum.Format;
+import source.еnum.Rating;
 
 import javax.naming.AuthenticationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -32,7 +33,8 @@ import java.util.regex.Pattern;
     Commenting is ...
     Post Voting is OK
  */
-public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule, CommentModule {
+public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule,
+        CommentModule, UploadModule {
 
     private static final E621 instance = new E621();
 
@@ -387,5 +389,70 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
     @Override
     public String getCreateCommentRequest(int id) {
         return getCustomRequest("/comment/create");
+    }
+
+    /**
+     * Creating post.
+     * The <code>description</code>, the <code>parent_id</code> and the <code>source</code> params can be null,
+     * but they will be replaced "".
+     *
+     * @param post        image file.
+     * @param tags        tags with " " separator.
+     * @param description post description.
+     * @param source      post source.
+     * @param rating      post rating.
+     * @param parent_id   parent id.
+     * @return response of post request.
+     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException will be thrown when the user data not defined.
+     * @throws IOException           will be thrown when something go wrong on sending post step or
+     *                               when image file corrupt.
+     */
+    @Override
+    public String createPost(File post, String tags, String description, String source, Rating rating, String parent_id) throws BooruEngineException {
+        HttpsConnection connection;
+        String token;
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined."));
+        }
+        //get token
+        try {
+            token = loginData.get("authenticity_token").replaceAll("%2B", "+");
+        } catch (NullPointerException e) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined."));
+        }
+        //write all data with stream to server
+        try {
+            //create constructor
+            MultipartConstructor constructor = new MultipartConstructor()
+                    .createDataBlock("authenticity_token", token)
+                    .createFileBlock("post[file]", post)
+                    .createDataBlock("post[upload_url]", "")
+                    .createDataBlock("post[tags]", tags)
+                    .createDataBlock("post[source]", source)
+                    .createDataBlock("post[description]", description)
+                    .createDataBlock("post[parent_id]", parent_id)
+                    //capitalise data
+                    .createDataBlock("post[rating]", rating.toString().substring(0, 1) + rating.toString().toLowerCase().substring(1));
+            //Create connection
+            connection = new HttpsConnection()
+                    .setRequestMethod(Method.POST)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
+                    .setCookies(getCookieFromLoginData())
+                    .openConnection(getCreatePostRequest());
+            //send data
+            constructor.send(connection.getConnection().getOutputStream());
+        } catch (IOException e) {
+            throw new BooruEngineException(e);
+        }
+        //get response
+        return connection.getResponse();
+    }
+
+    @Override
+    public String getCreatePostRequest() {
+        return getCustomRequest("/post/create");
     }
 }
