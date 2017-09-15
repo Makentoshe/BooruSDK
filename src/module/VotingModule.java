@@ -21,7 +21,8 @@ public interface VotingModule {
     /**
      * Get request for voting post.
      *
+     * @param post_id post id.
      * @return constructed request to server.
      */
-    String getVotePostRequest();
+    String getVotePostRequest(int post_id);
 }

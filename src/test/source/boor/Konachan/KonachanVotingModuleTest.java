@@ -22,7 +22,7 @@ public class KonachanVotingModuleTest {
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://konachan.com/post/vote.json", voteBoor.getVotePostRequest());
+        assertEquals("https://konachan.com/post/vote.json", voteBoor.getVotePostRequest(0));
     }
 
     @Test

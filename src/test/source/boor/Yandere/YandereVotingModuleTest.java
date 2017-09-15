@@ -23,7 +23,7 @@ public class YandereVotingModuleTest {
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://yande.re/post/vote.json", voteBoor.getVotePostRequest());
+        assertEquals("https://yande.re/post/vote.json", voteBoor.getVotePostRequest(0));
     }
 
     @Test

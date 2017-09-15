@@ -5,6 +5,7 @@ import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import module.LoginModule;
 import module.RemotePostModule;
+import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 

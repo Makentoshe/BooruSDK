@@ -20,7 +20,7 @@ public class E621VotingModuleTest extends TestHelper{
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://e621.net/post/vote.json", boor.getVotePostRequest());
+        assertEquals("https://e621.net/post/vote.json", boor.getVotePostRequest(0));
     }
 
     @Test

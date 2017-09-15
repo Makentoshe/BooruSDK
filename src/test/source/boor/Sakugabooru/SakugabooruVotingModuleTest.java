@@ -22,7 +22,7 @@ public class SakugabooruVotingModuleTest extends TestHelper{
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://sakugabooru.com/post/vote.json", ((VotingModule)boor).getVotePostRequest());
+        assertEquals("https://sakugabooru.com/post/vote.json", ((VotingModule)boor).getVotePostRequest(0));
     }
 
     @Test

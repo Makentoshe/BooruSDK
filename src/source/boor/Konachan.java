@@ -311,7 +311,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
                     .setCookies(getCookieFromLoginData())
                     .setHeader("X-CSRF-Token", token)
                     .setBody("id=" + post_id + "&score=" + score)
-                    .openConnection(getVotePostRequest())
+                    .openConnection(getVotePostRequest(post_id))
                     .getResponse();
 
         } catch (NumberFormatException e) {
@@ -331,7 +331,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
      * @return the constructed request to server.
      */
     @Override
-    public String getVotePostRequest() {
+    public String getVotePostRequest(int post_id) {
         return getCustomRequest("/post/vote.json");
     }
 

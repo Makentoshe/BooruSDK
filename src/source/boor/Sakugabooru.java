@@ -341,7 +341,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(getCookieFromLoginData())
                 .setBody("id=" + post_id + "&score=" + score)
-                .openConnection(getVotePostRequest());
+                .openConnection(getVotePostRequest(post_id));
 
         return connection.getResponse().split("\"success\":")[1].contains("true");
     }
@@ -352,7 +352,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
      * @return the constructed request to server.
      */
     @Override
-    public String getVotePostRequest() {
+    public String getVotePostRequest(int post_id) {
         return getCustomRequest("/post/vote.json");
     }
 

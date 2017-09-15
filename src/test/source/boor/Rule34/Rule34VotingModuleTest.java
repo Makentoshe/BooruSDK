@@ -19,7 +19,7 @@ public class Rule34VotingModuleTest {
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://rule34.xxx/index.php?page=post&s=vote", boor.getVotePostRequest());
+        assertEquals("https://rule34.xxx/index.php?page=post&s=vote", boor.getVotePostRequest(0));
     }
 
     @Test

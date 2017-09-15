@@ -312,7 +312,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .setBody(body)
-                .openConnection(getVotePostRequest());
+                .openConnection(getVotePostRequest(post_id));
 
         return connection.getResponse().split("\"success\":")[1].contains("true");
     }
@@ -323,7 +323,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
      * @return the constructed request to server.
      */
     @Override
-    public String getVotePostRequest() {
+    public String getVotePostRequest(int post_id) {
         return getCustomRequest("/post/vote.json");
     }
 

@@ -271,7 +271,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingModule,
                 .setRequestMethod(Method.GET)
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(getCookieFromLoginData())
-                .openConnection(getVotePostRequest() + "&id=" + post_id + "&type=" + action);
+                .openConnection(getVotePostRequest(post_id) + "&id=" + post_id + "&type=" + action);
 
         return !connection.getResponse().equals("");
     }
@@ -282,7 +282,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingModule,
      * @return the constructed request to server.
      */
     @Override
-    public String getVotePostRequest() {
+    public String getVotePostRequest(int post_id) {
         return getCustomRequest("/index.php?page=post&s=vote");
     }
 

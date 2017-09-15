@@ -217,7 +217,6 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
                 .setBody(postData)
                 .setCookies(cookie)
                 .openConnection(getAuthenticateRequest());
-
         try {
             for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
                 String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
@@ -346,7 +345,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
                     .setCookies(getCookieFromLoginData())
                     .setHeader("X-CSRF-Token", token)
                     .setBody("id=" + post_id + "&score=" + score)
-                    .openConnection(getCustomRequest("/post/vote.json"));
+                    .openConnection(getVotePostRequest(post_id));
 
             token = connection.getResponse();
 
@@ -367,7 +366,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
      * @return the constructed request to server.
      */
     @Override
-    public String getVotePostRequest() {
+    public String getVotePostRequest(int post_id) {
         return getCustomRequest("/post/vote.json");
     }
 
