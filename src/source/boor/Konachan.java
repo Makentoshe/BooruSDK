@@ -8,7 +8,7 @@ import engine.connector.Method;
 import module.LoginModule;
 import module.RemotePostModule;
 import module.UploadModule;
-import module.VotingModule;
+import module.VotingPostModule;
 import source.Post;
 import source.еnum.Format;
 import source.еnum.Rating;
@@ -33,11 +33,11 @@ import java.util.regex.Pattern;
  * Singleton which describe Konachan. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
  * <p>
- * Implements <code>LoginModule</code>,<code>VotingModule</code>,
+ * Implements <code>LoginModule</code>,<code>VotingPostModule</code>,
  * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
-public class Konachan extends AbstractBoorAdvanced implements LoginModule, VotingModule,
+public class Konachan extends AbstractBoorAdvanced implements LoginModule, VotingPostModule,
         RemotePostModule, UploadModule {
 
     private static final Konachan instance = new Konachan();

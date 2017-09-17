@@ -30,11 +30,11 @@ import java.util.Set;
  * Singleton which describe Rule34. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
  * <p>
- * Implements <code>LoginModule</code>,<code>VotingModule</code>,
+ * Implements <code>LoginModule</code>,<code>VotingPostModule</code>,
  * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
-public class Rule34 extends AbstractBoor implements LoginModule, VotingModule,
+public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModule,
         RemotePostModule, CommentCreatorModule, UploadModule {
 
     private static final Rule34 instance = new Rule34();

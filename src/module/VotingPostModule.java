@@ -5,7 +5,7 @@ import engine.BooruEngineException;
 /**
  * Interface with the method for a voting posts on any *boor.
  */
-public interface VotingModule {
+public interface VotingPostModule {
 
     /**
      * Voting a post. To perform this action need any identification data,

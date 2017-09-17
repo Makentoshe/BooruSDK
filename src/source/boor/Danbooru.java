@@ -6,7 +6,6 @@ import engine.connector.Method;
 import module.CommentCreatorModule;
 import module.LoginModule;
 import module.RemotePostModule;
-import module.VotingModule;
 import source.Post;
 import source.еnum.Format;
 
@@ -15,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-
 
 //token not static
 //cookies are static

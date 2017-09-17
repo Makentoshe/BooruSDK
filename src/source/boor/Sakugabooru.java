@@ -34,12 +34,12 @@ import java.util.regex.Pattern;
  * Singleton which describe Yandere. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
  * <p>
- * Implements <code>LoginModule</code>,<code>VotingModule</code>,
+ * Implements <code>LoginModule</code>,<code>VotingPostModule</code>,
  * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
 public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, RemotePostModule,
-        VotingModule, CommentCreatorModule, UploadModule {
+        VotingPostModule, CommentCreatorModule, UploadModule {
 
     private final static Sakugabooru instance = new Sakugabooru();
 

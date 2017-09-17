@@ -30,11 +30,11 @@ import java.util.regex.Pattern;
  * Singleton which describe E621. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
  * <p>
- * Implements <code>LoginModule</code>,<code>VotingModule</code>,
+ * Implements <code>LoginModule</code>,<code>VotingPostModule</code>,
  * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
-public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingModule,
+public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingPostModule,
         CommentCreatorModule, UploadModule {
 
     private static final E621 instance = new E621();

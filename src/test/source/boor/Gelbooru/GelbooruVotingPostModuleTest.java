@@ -7,11 +7,11 @@ import test.source.TestHelper;
 
 import static org.junit.Assert.*;
 
-public class GelbooruVotingModuleTest {
+public class GelbooruVotingPostModuleTest {
 
     private final Gelbooru boor;
 
-    public GelbooruVotingModuleTest() {
+    public GelbooruVotingPostModuleTest() {
         boor = Gelbooru.get();
     }
 
