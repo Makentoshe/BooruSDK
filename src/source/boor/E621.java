@@ -375,7 +375,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(getCookieFromLoginData())
                 .setBody(cbody.toString())
-                .openConnection(getCreateCommentRequest(post_id))
+                .openConnection(getCommentRequest(post_id))
                 .getResponse();
 
         System.out.println(response);
@@ -388,7 +388,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
      * @return the constructed request to server.
      */
     @Override
-    public String getCreateCommentRequest(int id) {
+    public String getCommentRequest(int id) {
         return getCustomRequest("/comment/create");
     }
 
@@ -442,7 +442,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
-                    .openConnection(getCreatePostRequest());
+                    .openConnection(getPostRequest());
             //send data
             constructor.send(connection.getConnection().getOutputStream());
         } catch (IOException e) {
@@ -458,7 +458,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
      * @return the constructed request to server.
      */
     @Override
-    public String getCreatePostRequest() {
+    public String getPostRequest() {
         return getCustomRequest("/post/create");
     }
 }

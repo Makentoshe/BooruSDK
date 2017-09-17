@@ -336,7 +336,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setBody(cbody)
                 .setCookies(getCookieFromLoginData())
-                .openConnection(getCreateCommentRequest(post_id));
+                .openConnection(getCommentRequest(post_id));
 
         return connection.getResponse().equals("");
     }
@@ -348,7 +348,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
      * @return the constructed request to server.
      */
     @Override
-    public String getCreateCommentRequest(final int id) {
+    public String getCommentRequest(final int id) {
         return getCustomRequest("/index.php?page=comment&id=" + id + "&s=save");
     }
 
@@ -410,7 +410,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
-                    .openConnection(getCreatePostRequest());
+                    .openConnection(getPostRequest());
 
             //send data
             constructor.send(connection.getConnection().getOutputStream());
@@ -447,7 +447,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
      * @return the constructed request to server.
      */
     @Override
-    public String getCreatePostRequest() {
+    public String getPostRequest() {
         return getCustomRequest("/index.php?page=post&s=add");
     }
 }

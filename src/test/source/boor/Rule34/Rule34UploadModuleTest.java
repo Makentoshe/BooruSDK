@@ -3,7 +3,6 @@ package test.source.boor.Rule34;
 import engine.BooruEngineException;
 import org.junit.Test;
 import source.boor.Rule34;
-import source.boor.Safebooru;
 import source.еnum.Rating;
 
 import java.io.File;
@@ -20,7 +19,7 @@ public class Rule34UploadModuleTest {
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://rule34.xxx/index.php?page=post&s=add", boor.getCreatePostRequest());
+        assertEquals("https://rule34.xxx/index.php?page=post&s=add", boor.getPostRequest());
     }
 
     @Test

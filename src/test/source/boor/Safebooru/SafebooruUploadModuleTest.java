@@ -19,7 +19,7 @@ public class SafebooruUploadModuleTest {
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://safebooru.org/index.php?page=post&s=add", boor.getCreatePostRequest());
+        assertEquals("https://safebooru.org/index.php?page=post&s=add", boor.getPostRequest());
     }
 
     @Test

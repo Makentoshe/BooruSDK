@@ -313,7 +313,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .setBody(cbody)
-                .openConnection(getCreateCommentRequest(post_id));
+                .openConnection(getCommentRequest(post_id));
 
         return connection.getResponse().equals("") && connection.getResponseCode() == 302;
     }
@@ -325,7 +325,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
      * @return the constructed request to server.
      */
     @Override
-    public String getCreateCommentRequest(final int id) {
+    public String getCommentRequest(final int id) {
         return getCustomRequest("/index.php?page=comment&id=" + id + "&s=save ");
     }
 
@@ -383,7 +383,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
-                    .openConnection(getCreatePostRequest());
+                    .openConnection(getPostRequest());
             //send data to stream
             constructor.send(connection.getConnection().getOutputStream());
         } catch (IOException e) {
@@ -418,7 +418,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
      * @return the constructed request to server.
      */
     @Override
-    public String getCreatePostRequest() {
+    public String getPostRequest() {
         return getCustomRequest("/index.php?page=post&s=add");
     }
 }

@@ -19,7 +19,7 @@ public class GelbooruUploadModuleTest {
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://gelbooru.com/index.php?page=post&s=add", boor.getCreatePostRequest());
+        assertEquals("https://gelbooru.com/index.php?page=post&s=add", boor.getPostRequest());
     }
 
     @Test

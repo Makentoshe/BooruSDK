@@ -416,7 +416,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .setBody(cbody.toString())
-                .openConnection(getCreateCommentRequest(post_id));
+                .openConnection(getCommentRequest(post_id));
 
         //try to get Set-Cookie header
         //if failed(NPE) - catch and throw BEE
@@ -451,7 +451,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
      * @return the constructed request to server.
      */
     @Override
-    public String getCreateCommentRequest(int id) {
+    public String getCommentRequest(int id) {
         return getCustomRequest("/comment/create");
     }
 
@@ -530,7 +530,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
-                    .openConnection(getCreatePostRequest());
+                    .openConnection(getPostRequest());
 
             //send data
             constructor.send(connection.getConnection().getOutputStream());
@@ -564,7 +564,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
      * @return the constructed request to server.
      */
     @Override
-    public String getCreatePostRequest() {
+    public String getPostRequest() {
         return getCustomRequest("/post/create.json");
     }
 }

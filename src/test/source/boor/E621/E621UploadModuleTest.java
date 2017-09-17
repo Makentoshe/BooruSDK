@@ -20,7 +20,7 @@ public class E621UploadModuleTest extends TestHelper{
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://e621.net/post/create", boor.getCreatePostRequest());
+        assertEquals("https://e621.net/post/create", boor.getPostRequest());
     }
 
     @Test

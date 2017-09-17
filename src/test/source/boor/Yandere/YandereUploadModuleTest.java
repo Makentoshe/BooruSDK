@@ -20,7 +20,7 @@ public class YandereUploadModuleTest {
 
     @Test
     public void getCreatePostRequest_Test() throws Exception {
-        assertEquals("https://yande.re/post/create.json", boor.getCreatePostRequest());
+        assertEquals("https://yande.re/post/create.json", boor.getPostRequest());
     }
 
     @Test

@@ -395,7 +395,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
-                    .openConnection(getCreatePostRequest());
+                    .openConnection(getPostRequest());
 
             //send data
             constructor.send(connection.getConnection().getOutputStream());
@@ -427,7 +427,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
      * @return the constructed request to server.
      */
     @Override
-    public String getCreatePostRequest() {
+    public String getPostRequest() {
         return getCustomRequest("/post/create.json");
     }
 }

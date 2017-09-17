@@ -396,7 +396,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(getCookieFromLoginData())
                 .setBody(cbody)
-                .openConnection(getCreateCommentRequest(post_id));
+                .openConnection(getCommentRequest(post_id));
 
         //try to get Set-Cookie header
         //if failed(NPE) - catch and throw BEE
@@ -431,7 +431,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
      * @return the constructed request to server.
      */
     @Override
-    public String getCreateCommentRequest(int id) {
+    public String getCommentRequest(int id) {
         return getCustomRequest("/comment/create");
     }
 
@@ -509,7 +509,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
-                    .openConnection(getCreatePostRequest());
+                    .openConnection(getPostRequest());
 
             //send data
             constructor.send(connection.getConnection().getOutputStream());
@@ -542,7 +542,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
      * @return the constructed request to server.
      */
     @Override
-    public String getCreatePostRequest() {
+    public String getPostRequest() {
         return getCustomRequest("/post/create");
     }
 }

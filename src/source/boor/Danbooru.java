@@ -57,13 +57,13 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     }
 
     /**
-     * Create request for getting some posts by tags.
+     * Get address for getting some posts by tags.
      *
      * @param limit  how many items must be in page.
      * @param tags   the tags to search for.
      * @param page   page index(from zero).
      * @param format format result.
-     * @return constructed request to this server.
+     * @return the constructed request address to server.
      */
     @Override
     public String getPackByTagsRequest(int limit, String tags, int page, Format format) {
@@ -72,11 +72,11 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     }
 
     /**
-     * Get request for getting comments by post id.
+     * Get address for getting comments by post id.
      *
      * @param post_id post, for which comment will be searching.
      * @param format  result format (can be {@code Format.JSON} or {@code Format.XML}).
-     * @return the constructed request to server.
+     * @return the constructed request address to server.
      */
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
@@ -233,7 +233,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     /**
      * Get address for sending {@code Method.POST} request for authentication to server.
      *
-     * @return the constructed request to server.
+     * @return the constructed request address to server.
      */
     @Override
     public String getAuthenticateRequest() {
@@ -253,26 +253,32 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     }
 
     /**
-     * @param post_id    post id.
+     * Create comment to post.
+     * <p>
+     * At first user data will be check and trying to get "authenticity_token".
+     * If it not defied the new <code>HttpsConnection</code> will be created and token will be define.
+     * But if something go wrong and token still not defined - method will throw {@code BooruEngineException}.
+     * <p>
+     * The next step is create post body. There are not all possible parameters, but the required minimum.
+     * <p>
+     * In the finish the created post data will be send to server and get response from it.
+     *
+     * @param post_id    post id, for which comment will be created.
      * @param body       comment body.
-     * @param postAsAnon use {@code true} for anonymously posting.
-     * @param bumpPost   use {@code true} for bump up post.
-     * @return true if post sending is successful, but there are some limits in server.
-     * @throws BooruEngineException  when something go wrong.
-     *                               Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
+     * @param postAsAnon using for anonymously posting. Useless.
+     * @param bumpPost   using for bump up post.
+     * @return {@code true} if success.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} - when user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} - when something go wrong with connection.
      */
     @Override
     public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
-        //check userdata
-        if (!loginData.containsKey("authenticity_token")) {
-            throw new BooruEngineException(new IllegalStateException("\"authenticity_token\" not defined"));
-        }
-        if (getCookieFromLoginData() == null) {
-            throw new BooruEngineException(new IllegalStateException("User data not defined"));
-        }
+        //check user data
+        String token = checkUserData();
         //create post body
-        String cbody = "utf8=%E2%9C%93&authenticity_token=" + loginData.get("authenticity_token") +
+        String cbody = "utf8=%E2%9C%93&authenticity_token=" + token +
                 "&comment%5Bpost_id%5D=" + post_id +
                 "&comment%5Bbody%5D=" + body +
                 "&commit=Submit" + (bumpPost ? "&comment%5Bdo_not_bump_post%5D=0" : "&comment%5Bdo_not_bump_post%5D=1");
@@ -282,7 +288,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(getCookieFromLoginData())
                 .setBody(cbody)
-                .openConnection(getCreateCommentRequest(post_id));
+                .openConnection(getCommentRequest(post_id));
         //remove used token
         loginData.remove("authenticity_token");
         //check data
@@ -291,12 +297,13 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     }
 
     /**
-     * Get address for creating <code>Method.POST</code> request for creating post.
+     * Get address for creating <code>Method.POST</code> request for creating comment.
      *
-     * @return the constructed request to server.
+     * @param id post id, for which comment will be created.
+     * @return the constructed request address to server.
      */
     @Override
-    public String getCreateCommentRequest(int id) {
+    public String getCommentRequest(int id) {
         return getCustomRequest("/comments");
     }
 
@@ -311,16 +318,16 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
      * <p>
      * In the finish the created post data will be send to server and get response from it.
      *
-     * @param post      - file which will be upload. It must be image of gif-animation.
+     * @param post      file which will be upload. It must be image of gif-animation.
      *                  Also it can be video file with .webm extension.
-     * @param tags      - tags are describe file content. They separates by spaces,
+     * @param tags      tags are describe file content. They separates by spaces,
      *                  so, spaces in title must be replace by underscores.
-     * @param title     - post title. <strong>Useless in this method.</strong>
-     * @param source    - source from file was get. It must be URL like "https://sas.com/test.jpg" or something else.
+     * @param title     post title. <strong>Useless in this method.</strong>
+     * @param source    source from file was get. It must be URL like "https://sas.com/test.jpg" or something else.
      *                  <strong>Not required in this method.</strong>
-     * @param rating    - post rating. As usual it can be {@code Rating.SAFE}, {@code Rating.QUESTIONABLE} or
+     * @param rating    post rating. As usual it can be {@code Rating.SAFE}, {@code Rating.QUESTIONABLE} or
      *                  {@code Rating.EXPLICIT}.
-     * @param parent_id - also known as Post Relationships, are a means of linking together groups of related posts.
+     * @param parent_id also known as Post Relationships, are a means of linking together groups of related posts.
      *                  One post (normally the "best" version) is chosen to be the parent,
      *                  while the other posts are made its children. <strong>Not required in this method.</strong>
      * @return response of POST-request.
@@ -333,23 +340,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     @Override
     public String createPost(File post, String tags, String title, String source, Rating rating, String parent_id) throws BooruEngineException {
         //check userdata
-        String token;
-        try {
-            token = loginData.get("authenticity_token").replaceAll("%2B", "+");
-        } catch (NullPointerException npe1) {
-            setToken(new HttpsConnection()
-                    .setRequestMethod(Method.GET)
-                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                    .openConnection(getCustomRequest("")));
-            try {
-                token = loginData.get("authenticity_token").replaceAll("%2B", "+");
-            } catch (NullPointerException npe2) {
-                throw new BooruEngineException("\"authenticity_token\" not defined.");
-            }
-        }
-        if (getCookieFromLoginData() == null) {
-            throw new BooruEngineException(new IllegalStateException("User data is not defined."));
-        }
+        String token = checkUserData();
 
         //write all data with stream to server
         HttpsConnection connection;
@@ -377,7 +368,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
-                    .openConnection(getCreatePostRequest());
+                    .openConnection(getPostRequest());
 
             //send data
             constructor.send(connection.getConnection().getOutputStream());
@@ -395,7 +386,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
      * @return the constructed request address to server.
      */
     @Override
-    public String getCreatePostRequest() {
+    public String getPostRequest() {
         return getCustomRequest("/uploads.json");
     }
 
@@ -419,6 +410,28 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
 
         loginData.put("authenticity_token", data);
         return data;
+    }
+
+    //return token
+    protected String checkUserData() throws BooruEngineException {
+        //check cookie
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data is not defined."));
+        }
+        //check authenticity token
+        try {
+            return loginData.get("authenticity_token").replaceAll("%2B", "+");
+        } catch (NullPointerException npe1) {
+            setToken(new HttpsConnection()
+                    .setRequestMethod(Method.GET)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                    .openConnection(getCustomRequest("")));
+            try {
+                return loginData.get("authenticity_token").replaceAll("%2B", "+");
+            } catch (NullPointerException npe2) {
+                throw new BooruEngineException("\"authenticity_token\" not defined.");
+            }
+        }
     }
 
 }

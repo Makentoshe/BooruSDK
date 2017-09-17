@@ -10,25 +10,22 @@ import engine.BooruEngineException;
 public interface CommentCreatorModule {
 
     /**
-     * Create comment for post.
-     * <p>
-     * Note: <strong>Be careful: Not all *boors support "postAsAnon" or "bumpPost" param.</strong>
+     * Create comment for post. Note: <strong>Be careful: Not all *boors support "postAsAnon" or "bumpPost" params.</strong>
      *
-     * @param id post id.
+     * @param id post id, for which comment will be created.
      * @param body comment body.
-     * @param postAsAnon use {@code true} for anonymously posting.
-     * @param bumpPost use {@code true} for bump up post.
+     * @param postAsAnon using for anonymously posting.
+     * @param bumpPost using for bump up post.
      * @return {@code true} if success.
-     * @throws BooruEngineException if something go wrong.
-     * Use <tt>getCause</tt> to see more details.
+     * @throws BooruEngineException if something go wrong. Use <code>GetCause</code> to see more details.
      */
     boolean commentPost(final int id, final String body, final boolean postAsAnon, final boolean bumpPost) throws BooruEngineException;
 
     /**
-     * Create request for creating comment.
+     * Get address for creating <code>Method.POST</code> request for creating comment.
      *
-     * @param id post id.
-     * @return constructed request to server.
+     * @param id post id, for which comment will be created.
+     * @return the constructed request address to server.
      */
-    String getCreateCommentRequest(final int id);
+    String getCommentRequest(final int id);
 }

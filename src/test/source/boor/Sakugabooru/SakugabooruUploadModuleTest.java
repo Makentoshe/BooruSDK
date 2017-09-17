@@ -4,7 +4,6 @@ import engine.BooruEngineException;
 import module.UploadModule;
 import org.junit.Test;
 import source.boor.Sakugabooru;
-import source.boor.Yandere;
 import source.еnum.Rating;
 
 import java.io.File;
@@ -21,7 +20,7 @@ public class SakugabooruUploadModuleTest {
 
     @Test
     public void getCreatePostRequest_Test() throws Exception {
-        assertEquals("https://sakugabooru.com/post/create", boor.getCreatePostRequest());
+        assertEquals("https://sakugabooru.com/post/create", boor.getPostRequest());
     }
 
     @Test

@@ -303,7 +303,7 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .setBody(cbody)
-                .openConnection(getCreateCommentRequest(post_id));
+                .openConnection(getCommentRequest(post_id));
 
         return connection.getResponse().equals("") && connection.getResponseCode() == 302;
     }
@@ -315,7 +315,7 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
      * @return the constructed request to server.
      */
     @Override
-    public String getCreateCommentRequest(final int post_id) {
+    public String getCommentRequest(final int post_id) {
         return getCustomRequest("/index.php?page=comment&post_id=" + post_id + "&s=save");
     }
 
@@ -371,7 +371,7 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
-                    .openConnection(getCreatePostRequest());
+                    .openConnection(getPostRequest());
 
                     constructor.send(connection.getConnection().getOutputStream());
         } catch (IOException e) {
@@ -407,7 +407,7 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
      * @return the constructed request to server.
      */
     @Override
-    public String getCreatePostRequest() {
+    public String getPostRequest() {
         return getCustomRequest("/index.php?page=post&s=add");
     }
 }

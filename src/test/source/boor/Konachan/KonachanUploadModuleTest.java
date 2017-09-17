@@ -20,7 +20,7 @@ public class KonachanUploadModuleTest {
 
     @Test
     public void getCreatePostRequest_Test() throws Exception {
-        assertEquals("https://konachan.com/post/create.json", boor.getCreatePostRequest());
+        assertEquals("https://konachan.com/post/create.json", boor.getPostRequest());
     }
 
     @Test

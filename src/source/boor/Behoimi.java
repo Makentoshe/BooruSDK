@@ -174,13 +174,13 @@ public class Behoimi extends AbstractBoorAdvanced implements LoginModule, Remote
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(getLoginData().toString().replaceAll(", ", "; "))
                 .setBody(cbody)
-                .openConnection(getCreateCommentRequest(id));
+                .openConnection(getCommentRequest(id));
 
         return true;
     }
 
     @Override
-    public String getCreateCommentRequest(int id) {
+    public String getCommentRequest(int id) {
         return getCustomRequest("/comment/create");
     }
 
