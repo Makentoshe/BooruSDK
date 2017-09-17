@@ -45,7 +45,6 @@ public class KonachanRemotePostConstructorTest {
 
     @Test
     public void getSource() throws Exception {
-        //TODO fix
         assertEquals("https://www.pixiv.net/member_illust.php?mode=medium&illust_id=63950855" + "", post.getSource());
     }
 

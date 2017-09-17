@@ -1,7 +1,7 @@
 package engine.connector;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
-import engine.BooruEngineException;
+import engine.BooruEngineConnectionException;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
@@ -74,7 +74,7 @@ public class HttpsConnection {
         return this;
     }
 
-    private void setHeaders(final HttpURLConnection connection, final Map<String, String> headers) throws BooruEngineException {
+    private void setHeaders(final HttpURLConnection connection, final Map<String, String> headers) throws BooruEngineConnectionException {
         try {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 connection.setRequestProperty(entry.getKey(), entry.getValue());
@@ -82,19 +82,19 @@ public class HttpsConnection {
             connection.setRequestMethod(this.mRequestMethod.toString());
             connection.setInstanceFollowRedirects(false);
         }catch (ProtocolException e){
-            throw new BooruEngineException(e);
+            throw new BooruEngineConnectionException(e);
         }
     }
 
-    public HttpsConnection openConnection(final String url) throws BooruEngineException {
+    public HttpsConnection openConnection(final String url) throws BooruEngineConnectionException {
         try {
             return openConnection(new URL(url));
         } catch (MalformedURLException e) {
-            throw new BooruEngineException(e);
+            throw new BooruEngineConnectionException(e);
         }
     }
 
-    public HttpsConnection openConnection(final URL url) throws BooruEngineException {
+    public HttpsConnection openConnection(final URL url) throws BooruEngineConnectionException {
         switch (this.mRequestMethod) {
             case GET: {
                 GET(url);
@@ -105,13 +105,13 @@ public class HttpsConnection {
                 break;
             }
             default: {
-                throw new BooruEngineException(new UnsupportedOperationException("Method " + this.mRequestMethod + "is not supported."));
+                throw new BooruEngineConnectionException(new UnsupportedOperationException("Method " + this.mRequestMethod + "is not supported."));
             }
         }
         return this;
     }
 
-    private void sendPost(final String data) throws BooruEngineException{
+    private void sendPost(final String data) throws BooruEngineConnectionException{
         try{
             if (data != null) {
                 mConnection.setRequestProperty("Content-Length", String.valueOf(data.length()));
@@ -123,17 +123,17 @@ public class HttpsConnection {
             }
         } catch (IOException e) {
             this.mErrStream = this.mConnection.getErrorStream();
-            throw new BooruEngineException(e);
+            throw new BooruEngineConnectionException(e);
         }
     }
 
-    private void GET(final URL url) throws BooruEngineException {
+    private void GET(final URL url) throws BooruEngineConnectionException {
         chooseProtocol(url);
 
         setHeaders(mConnection, this.mHeaders);
     }
 
-    private void POST(final URL url) throws BooruEngineException {
+    private void POST(final URL url) throws BooruEngineConnectionException {
         chooseProtocol(url);
 
         setHeaders(mConnection, this.mHeaders);
@@ -144,7 +144,7 @@ public class HttpsConnection {
         }
     }
 
-    public String getResponse() throws BooruEngineException {
+    public String getResponse() throws BooruEngineConnectionException {
         try {
             if (this.mResponse == null){
                 StringBuilder response = new StringBuilder();
@@ -157,22 +157,22 @@ public class HttpsConnection {
             return this.mResponse;
         } catch (IOException e){
             mErrStream = mConnection.getErrorStream();
-            throw new BooruEngineException(e);
+            throw new BooruEngineConnectionException(e);
 
         }
     }
 
-    public int getResponseCode() throws BooruEngineException {
+    public int getResponseCode() throws BooruEngineConnectionException {
         try {
             if (this.mResponseCode == -1) this.mResponseCode = mConnection.getResponseCode();
             return this.mResponseCode;
         }catch (IOException e){
             mErrStream = mConnection.getErrorStream();
-            throw new BooruEngineException(e);
+            throw new BooruEngineConnectionException(e);
         }
     }
 
-    public String getResponseMessage() throws BooruEngineException {
+    public String getResponseMessage() throws BooruEngineConnectionException {
         try {
             if (this.mResponseMessage == null) {
                 this.mResponseMessage = mConnection.getResponseMessage();
@@ -180,11 +180,11 @@ public class HttpsConnection {
             return this.mResponseMessage;
         }catch (IOException e){
             mErrStream = mConnection.getErrorStream();
-            throw new BooruEngineException(e);
+            throw new BooruEngineConnectionException(e);
         }
     }
 
-    public Map<String, List<String>> getHeaders() throws BooruEngineException {
+    public Map<String, List<String>> getHeaders() throws BooruEngineConnectionException {
         if (this.mResponseHeaders == null){
             this.mResponseHeaders = mConnection.getHeaderFields();
         }
@@ -248,7 +248,7 @@ public class HttpsConnection {
         }
     }
 
-    private void chooseProtocol(final URL url) throws BooruEngineException{
+    private void chooseProtocol(final URL url) throws BooruEngineConnectionException{
         //choose protocol
         try {
             if (url.getProtocol().equals("https")) this.mConnection = (HttpsURLConnection) url.openConnection();
@@ -256,7 +256,7 @@ public class HttpsConnection {
             log.log(Level.INFO, "Using protocol: " + url.getProtocol());
         }catch (IOException ioe1) {
             mErrStream = mConnection.getErrorStream();
-            throw new BooruEngineException(ioe1);
+            throw new BooruEngineConnectionException(ioe1);
         }
     }
 

@@ -3,6 +3,7 @@ package source.boor;
 import engine.BooruEngineException;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
+import module.CommentCreatorModule;
 import module.LoginModule;
 import module.RemotePostModule;
 import module.VotingModule;
@@ -23,7 +24,7 @@ import java.util.regex.Pattern;
  * Singleton.
  * Storage data about Danbooru API and method for getting request
  */
-public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, LoginModule {
+public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, LoginModule, CommentCreatorModule {
 
     private final HashMap<String, String> loginData = new HashMap<>();
     private static final Danbooru instance = new Danbooru();
@@ -159,7 +160,6 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
         return post;
     }
 
-
     @Override
     public void logIn(String login, String password) throws BooruEngineException {
         if (!loginData.containsKey("_danbooru_session") || !loginData.containsKey("authenticity_token")) {
@@ -195,6 +195,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
                 .setBody(postData)
                 .setCookies(cookie)
                 .openConnection(getAuthenticateRequest());
+
         try {
             for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
                 String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
@@ -271,4 +272,51 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
         return data;
     }
 
+    /**
+     * @param post_id    post id.
+     * @param body       comment body.
+     * @param postAsAnon use {@code true} for anonymously posting.
+     * @param bumpPost   use {@code true} for bump up post.
+     * @return true if post sending is successful, but there are some limits in server.
+     * @throws BooruEngineException  when something go wrong.
+     *                               Use <code>getCause</code> to see more details.
+     * @throws IllegalStateException will be thrown when the user data not defined.
+     */
+    @Override
+    public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        //check userdata
+        if (!loginData.containsKey("authenticity_token")) {
+            throw new BooruEngineException(new IllegalStateException("\"authenticity_token\" not defined"));
+        }
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined"));
+        }
+        //create post body
+        String cbody = "utf8=%E2%9C%93&authenticity_token=" + loginData.get("authenticity_token") +
+                "&comment%5Bpost_id%5D=" + post_id +
+                "&comment%5Bbody%5D=" + body +
+                "&commit=Submit" + (bumpPost ? "&comment%5Bdo_not_bump_post%5D=0" : "&comment%5Bdo_not_bump_post%5D=1");
+        //send post
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .setCookies(getCookieFromLoginData())
+                .setBody(cbody)
+                .openConnection(getCreateCommentRequest(post_id));
+        //remove used token
+        loginData.remove("authenticity_token");
+        //check data
+        boolean code = connection.getResponseCode() == 302;
+        return code && connection.getResponse().contains(getCustomRequest("/posts/" + post_id));
+    }
+
+    /**
+     * Get address for creating <code>Method.POST</code> request for creating post.
+     *
+     * @return the constructed request to server.
+     */
+    @Override
+    public String getCreateCommentRequest(int id) {
+        return getCustomRequest("/comments");
+    }
 }
