@@ -1,15 +1,20 @@
 package source.boor;
 
 import engine.BooruEngineException;
+import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import module.CommentCreatorModule;
 import module.LoginModule;
 import module.RemotePostModule;
+import module.UploadModule;
 import source.Post;
 import source.еnum.Format;
+import source.еnum.Rating;
 
 import javax.naming.AuthenticationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +27,7 @@ import java.util.regex.Pattern;
  * Singleton.
  * Storage data about Danbooru API and method for getting request
  */
-public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, LoginModule, CommentCreatorModule {
+public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, LoginModule, CommentCreatorModule, UploadModule {
 
     private final HashMap<String, String> loginData = new HashMap<>();
     private static final Danbooru instance = new Danbooru();
@@ -215,7 +220,6 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
         this.loginData.clear();
     }
 
-
     /**
      * Get access to login data. All data storage in <code>Hashmap&lt;String, String&gt;</code>.
      *
@@ -246,28 +250,6 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     public String getCookieFromLoginData() {
         if (getLoginData().size() == 0) return null;
         return getLoginData().toString().replaceAll(", ", "; ").replaceAll("\\{", "").replaceAll("\\}", "");
-    }
-
-    protected void setCookie(final HttpsConnection connection) {
-        connection
-                .getHeader("Set-Cookie")
-                .stream()
-                .filter(s -> s.contains("_danbooru_session"))
-                .forEach(s -> {
-                    String[] split = s.split("=");
-                    loginData.put(split[0], split[1].split("; ")[0]);
-                });
-    }
-
-    protected String setToken(final HttpsConnection connection) throws BooruEngineException {
-        String s = connection.getResponse();
-        String data = s.split("\"csrf-token\" content=\"")[1]
-                .split("\" />")[0]
-                .replace("<meta content=", "")
-                .replaceAll(Pattern.quote("+"), "%2B");
-
-        loginData.put("authenticity_token", data);
-        return data;
     }
 
     /**
@@ -317,4 +299,126 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     public String getCreateCommentRequest(int id) {
         return getCustomRequest("/comments");
     }
+
+    /**
+     * Create upload on Danbooru.
+     * <p>
+     * At first user data will be check and trying to get "authenticity_token".
+     * If it not defied the new <code>HttpsConnection</code> will be created and token will be define.
+     * But if something go wrong and token still not defined - method will throw {@code BooruEngineException}.
+     * <p>
+     * The next step is create post body. There are not all possible parameters, but the required minimum.
+     * <p>
+     * In the finish the created post data will be send to server and get response from it.
+     *
+     * @param post      - file which will be upload. It must be image of gif-animation.
+     *                  Also it can be video file with .webm extension.
+     * @param tags      - tags are describe file content. They separates by spaces,
+     *                  so, spaces in title must be replace by underscores.
+     * @param title     - post title. <strong>Useless in this method.</strong>
+     * @param source    - source from file was get. It must be URL like "https://sas.com/test.jpg" or something else.
+     *                  <strong>Not required in this method.</strong>
+     * @param rating    - post rating. As usual it can be {@code Rating.SAFE}, {@code Rating.QUESTIONABLE} or
+     *                  {@code Rating.EXPLICIT}.
+     * @param parent_id - also known as Post Relationships, are a means of linking together groups of related posts.
+     *                  One post (normally the "best" version) is chosen to be the parent,
+     *                  while the other posts are made its children. <strong>Not required in this method.</strong>
+     * @return response of POST-request.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} - when user data is not defined.
+     *                              <p>{@code IOException} - when something go wrong with creating post data of sending data to server.
+     *                              <p>{@code BooruEngineConnectionException} - when something go wrong with connection.
+     */
+    @Override
+    public String createPost(File post, String tags, String title, String source, Rating rating, String parent_id) throws BooruEngineException {
+        //check userdata
+        String token;
+        try {
+            token = loginData.get("authenticity_token").replaceAll("%2B", "+");
+        } catch (NullPointerException npe1) {
+            setToken(new HttpsConnection()
+                    .setRequestMethod(Method.GET)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                    .openConnection(getCustomRequest("")));
+            try {
+                token = loginData.get("authenticity_token").replaceAll("%2B", "+");
+            } catch (NullPointerException npe2) {
+                throw new BooruEngineException("\"authenticity_token\" not defined.");
+            }
+        }
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data is not defined."));
+        }
+
+        //write all data with stream to server
+        HttpsConnection connection;
+        try {
+            //create constructor
+            MultipartConstructor constructor = new MultipartConstructor()
+                    .createDataBlock("utf8", "вњ“")
+                    .createDataBlock("authenticity_token", token)
+                    .createDataBlock("url", "") //what is it?
+                    .createDataBlock("ref", "") //what is it?
+                    .createDataBlock("normalized_url", "")//what is it?
+                    .createDataBlock("upload[referer_url]", "")//what is it? mb get data from url
+                    .createFileBlock("upload[file]", post)
+                    .createDataBlock("upload[source]", source)
+                    .createDataBlock("upload[rating]", rating.toString().toLowerCase().substring(0, 1))
+                    .createDataBlock("upload[parent_id]", parent_id)
+                    .createDataBlock("upload[artist_commentary_title]", "")
+                    .createDataBlock("upload[artist_commentary_desc]", "")
+                    .createDataBlock("upload[include_artist_commentary]", "0")
+                    .createDataBlock("upload[tag_string]", tags);
+
+            //Create connection
+            connection = new HttpsConnection()
+                    .setRequestMethod(Method.POST)
+                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                    .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
+                    .setCookies(getCookieFromLoginData())
+                    .openConnection(getCreatePostRequest());
+
+            //send data
+            constructor.send(connection.getConnection().getOutputStream());
+        } catch (IOException e) {
+            throw new BooruEngineException(e);
+        }
+        //remove used token
+        loginData.remove("authenticity_token");
+        return connection.getResponse();
+    }
+
+    /**
+     * Get address for creating <code>Method.POST</code> request for creating post.
+     *
+     * @return the constructed request address to server.
+     */
+    @Override
+    public String getCreatePostRequest() {
+        return getCustomRequest("/uploads.json");
+    }
+
+    protected void setCookie(final HttpsConnection connection) {
+        connection
+                .getHeader("Set-Cookie")
+                .stream()
+                .filter(s -> s.contains("_danbooru_session"))
+                .forEach(s -> {
+                    String[] split = s.split("=");
+                    loginData.put(split[0], split[1].split("; ")[0]);
+                });
+    }
+
+    protected String setToken(final HttpsConnection connection) throws BooruEngineException {
+        String s = connection.getResponse();
+        String data = s.split("\"csrf-token\" content=\"")[1]
+                .split("\" />")[0]
+                .replace("<meta content=", "")
+                .replaceAll(Pattern.quote("+"), "%2B");
+
+        loginData.put("authenticity_token", data);
+        return data;
+    }
+
 }
