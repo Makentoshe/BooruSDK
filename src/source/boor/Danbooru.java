@@ -24,8 +24,12 @@ import java.util.regex.Pattern;
 //cookies are static
 
 /**
- * Singleton.
- * Storage data about Danbooru API and method for getting request
+ * Singleton which describe Danbooru. This class can help user to login, vote posts, create posts, comment posts, etc.
+ * Default {@code format} is {@code Format.JSON}. Default {@code api} is {@code API.Advanced}.
+ * <p>
+ * Implements <code>LoginModule</code>,<code>VotingPostModule</code>,
+ * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
+ * <code>UploadModule</code>.
  */
 public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, LoginModule, CommentCreatorModule, UploadModule {
 
@@ -63,7 +67,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
      * @param tags   the tags to search for.
      * @param page   page index(from zero).
      * @param format format result.
-     * @return the constructed request address to server.
+     * @return the constructed request to server.
      */
     @Override
     public String getPackByTagsRequest(int limit, String tags, int page, Format format) {
@@ -76,7 +80,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
      *
      * @param post_id post, for which comment will be searching.
      * @param format  result format (can be {@code Format.JSON} or {@code Format.XML}).
-     * @return the constructed request address to server.
+     * @return the constructed request to server.
      */
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
@@ -163,6 +167,18 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
         return post;
     }
 
+    /**
+     * Create connection to server and get user data - login cookies.
+     *
+     * @param login    user login.
+     * @param password user pass.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     *                              <p>{@code AuthenticationException} will be thrown when the authentication failed
+     *                              and response did not contain a login cookies.
+     */
     @Override
     public void logIn(String login, String password) throws BooruEngineException {
         if (!loginData.containsKey("_danbooru_session") || !loginData.containsKey("authenticity_token")) {
@@ -179,11 +195,11 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
 
         //if already have not cookie - throw an exception
         if (!loginData.containsKey("_danbooru_session")) {
-            throw new BooruEngineException("Can't find \"_danbooru_session\" cookie in login data.", new IllegalStateException());
+            throw new BooruEngineException("Can't find \"_danbooru_session\" cookie.", new IllegalStateException());
         }
         //if already have not token - throw an exception
         if (!loginData.containsKey("authenticity_token")) {
-            throw new BooruEngineException("Can't find \"authenticity_token\" in login data.", new IllegalStateException());
+            throw new BooruEngineException("Can't find \"authenticity_token\".", new IllegalStateException());
         }
 
         //create new connection for login
@@ -198,7 +214,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
                 .setBody(postData)
                 .setCookies(cookie)
                 .openConnection(getAuthenticateRequest());
-
+        //process response
         try {
             for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
                 String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
@@ -233,7 +249,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     /**
      * Get address for sending {@code Method.POST} request for authentication to server.
      *
-     * @return the constructed request address to server.
+     * @return the constructed request to server.
      */
     @Override
     public String getAuthenticateRequest() {
@@ -253,25 +269,20 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     }
 
     /**
-     * Create comment to post.
+     * Create comment for post with id <code>post_id</code>.
+     * Params <code>postAsAnon</code> is useless because is not supporting.
      * <p>
-     * At first user data will be check and trying to get "authenticity_token".
-     * If it not defied the new <code>HttpsConnection</code> will be created and token will be define.
-     * But if something go wrong and token still not defined - method will throw {@code BooruEngineException}.
-     * <p>
-     * The next step is create post body. There are not all possible parameters, but the required minimum.
-     * <p>
-     * In the finish the created post data will be send to server and get response from it.
+     * Method creating connection and send POST-request.
      *
      * @param post_id    post id, for which comment will be created.
      * @param body       comment body.
-     * @param postAsAnon using for anonymously posting. Useless.
+     * @param postAsAnon using for anonymously posting.
      * @param bumpPost   using for bump up post.
      * @return {@code true} if success.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
-     *                              <p>{@code IllegalStateException} - when user data is not defined.
-     *                              <p>{@code BooruEngineConnectionException} - when something go wrong with connection.
+     *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
     public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
@@ -300,7 +311,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
      * Get address for creating <code>Method.POST</code> request for creating comment.
      *
      * @param id post id, for which comment will be created.
-     * @return the constructed request address to server.
+     * @return the constructed request to server.
      */
     @Override
     public String getCommentRequest(int id) {
@@ -309,14 +320,6 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
 
     /**
      * Create upload on Danbooru.
-     * <p>
-     * At first user data will be check and trying to get "authenticity_token".
-     * If it not defied the new <code>HttpsConnection</code> will be created and token will be define.
-     * But if something go wrong and token still not defined - method will throw {@code BooruEngineException}.
-     * <p>
-     * The next step is create post body. There are not all possible parameters, but the required minimum.
-     * <p>
-     * In the finish the created post data will be send to server and get response from it.
      *
      * @param post      file which will be upload. It must be image of gif-animation.
      *                  Also it can be video file with .webm extension.
@@ -333,9 +336,10 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
      * @return response of POST-request.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
-     *                              <p>{@code IllegalStateException} - when user data is not defined.
-     *                              <p>{@code IOException} - when something go wrong with creating post data of sending data to server.
-     *                              <p>{@code BooruEngineConnectionException} - when something go wrong with connection.
+     *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
+     *                              <p>{@code IOException} will be thrown when something go wrong with creating post data
+     *                              or sending data to server.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
     public String createPost(File post, String tags, String title, String source, Rating rating, String parent_id) throws BooruEngineException {
@@ -383,7 +387,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     /**
      * Get address for creating <code>Method.POST</code> request for creating post.
      *
-     * @return the constructed request address to server.
+     * @return the constructed request to server.
      */
     @Override
     public String getPostRequest() {

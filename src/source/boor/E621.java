@@ -25,10 +25,11 @@ import java.util.regex.Pattern;
     Login is OK
     Commenting is ...
     Post Voting is OK
- */
+*/
+
 /**
  * Singleton which describe E621. This class can help user to login, vote posts, create posts, comment posts, etc.
- * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
+ * Default {@code format} is {@code Format.JSON}. Default {@code api} is {@code API.Advanced}.
  * <p>
  * Implements <code>LoginModule</code>,<code>VotingPostModule</code>,
  * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
@@ -168,14 +169,16 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
     }
 
     /**
-     * Authenticate user by login and pass.
+     * Create connection to server and get user data - login cookies.
      *
-     * @param login    user login
-     * @param password user pass
-     * @throws BooruEngineException    will be contain <code>AuthenticationException</code>.
-     * @throws AuthenticationException will be thrown when authentication was failed.
-     * @throws IllegalStateException   will be thrown when something go wrong
-     *                                 with getting cookie and token before login request.
+     * @param login    user login.
+     * @param password user pass.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} - when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} - when something go wrong with connection.
+     *                              <p>{@code AuthenticationException} - when the authentication failed
+     *                              and response did not contain a login cookies.
      */
     @Override
     public void logIn(final String login, final String password) throws BooruEngineException {
@@ -197,11 +200,11 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
 
         //if already have not cookie - throw an exception
         if (!loginData.containsKey("e621")) {
-            throw new BooruEngineException("Can't find \"e621\" cookie in login data.");
+            throw new BooruEngineException("Can't find \"e621\" cookie.", new IllegalStateException());
         }
         //if already have not token - throw an exception
         if (!loginData.containsKey("authenticity_token")) {
-            throw new BooruEngineException("Can't find \"authenticity_token\" in login data.");
+            throw new BooruEngineException("Can't find \"authenticity_token\".", new IllegalStateException());
         }
 
         //create new connection for login
@@ -258,42 +261,20 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
         return getCustomRequest("/user/authenticate");
     }
 
-    protected void setCookie(final HttpsConnection connection) {
-        connection
-                .getHeader("Set-Cookie")
-                .stream()
-                .filter(s -> s.contains("e621"))
-                .forEach(s -> {
-                    String[] split = s.split("=");
-                    loginData.put(split[0], split[1].split("; ")[0]);
-                });
-    }
-
-    protected void setToken(final HttpsConnection connection) throws BooruEngineException {
-        String s = connection.getResponse();
-        String data = s.split("<input name=\"authenticity_token\" type=\"hidden\" value=\"")[1]
-                .split("\"></div>")[0]
-                .replaceAll(Pattern.quote("+"), "%2B");
-        loginData.put("authenticity_token", data);
-    }
-
     /**
-     * Voting post.
+     * Method for voting post with id <code>post_id</code>. Scores can be: "1" for up vote and "-1" for down vote.
+     * If action will be another string the <code>IllegalArgumentException</code> will be thrown.
      * <p>
-     * If user data not defined the method will be throw <code>IllegalStateException</code>.
-     * <p>
-     * Scores can be:
-     * <p>
-     * 1 - up vote.
-     * <p>
-     * -1 - down vote.
+     * Method creating connection and send POST-request.
      *
      * @param post_id post id.
      * @param score   scores to post.
      * @return true if success.
-     * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException    will be thrown when the user data not defined.
-     * @throws IllegalArgumentException will be thrown when {@param score} not contain expected value.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     *                              <p>{@code IllegalArgumentException} will be thrown when {@param score} not contain expected value.
      */
     @Override
     public boolean votePost(final int post_id, final String score) throws BooruEngineException {
@@ -342,18 +323,18 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
     }
 
     /**
-     * Create comment for post with id: post_id.
-     * <p>
-     * Note: Be careful: Not all *boors support "postAsAnon" or "bumpPost" param.
+     * Create comment for post with id <code>post_id</code>. Params <code>postAsAnon</code> and
+     * <code>bumpPost</code> is useless because they are not supporting.
      *
      * @param post_id    post id.
      * @param body       comment body.
-     * @param postAsAnon use {@code true} for anonymously posting - not support on this boor.
-     * @param bumpPost   use {@code true} for bump up post - not support on this boor.
+     * @param postAsAnon for anonymously posting.
+     * @param bumpPost   for bump up post.
      * @return true if success.
-     * @throws BooruEngineException  when something go wrong.
-     *                               Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
     public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
@@ -362,13 +343,11 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
-
         //create post body
         cbody.append("authenticity_token=").append(loginData.get("authenticity_token"))
                 .append("&comment%5Bpost_id%5D=").append(post_id)
                 .append("&origin_controller=post&origin_action=show")
                 .append("&comment%5Bbody%5D=").append(body);
-
         //send body to server
         String response = new HttpsConnection()
                 .setRequestMethod(Method.POST)
@@ -377,8 +356,6 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
                 .setBody(cbody.toString())
                 .openConnection(getCommentRequest(post_id))
                 .getResponse();
-
-        System.out.println(response);
         return true;
     }
 
@@ -393,21 +370,26 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
     }
 
     /**
-     * Creating post.
-     * The <code>description</code>, the <code>parent_id</code> and the <code>source</code> params can be null,
-     * but they will be replaced "".
+     * Create post on E621.
      *
-     * @param post        image file.
-     * @param tags        tags with " " separator.
+     * @param post        file which will be upload. It must be image of gif-animation.
+     *                    Also it can be video file with .webm extension.
+     * @param tags        tags are describe file content. They separates by spaces,
+     *                    so, spaces in title must be replace by underscores.
      * @param description post description.
-     * @param source      post source.
-     * @param rating      post rating.
-     * @param parent_id   parent id.
-     * @return response of post request.
-     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
-     * @throws IOException           will be thrown when something go wrong on sending post step or
-     *                               when image file corrupt.
+     * @param source      source from file was get. It must be URL like "https://sas.com/test.jpg" or something else.
+     *                    <strong>Not required in this method.</strong>
+     * @param rating      post rating. As usual it can be {@code Rating.SAFE}, {@code Rating.QUESTIONABLE} or
+     *                    {@code Rating.EXPLICIT}.
+     * @param parent_id   also known as Post Relationships, are a means of linking together groups of related posts.
+     *                    One post (normally the "best" version) is chosen to be the parent,
+     *                    while the other posts are made its children. <strong>Not required in this method.</strong>
+     * @return response of POST-request.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
+     *                              <p>{@code IOException} will be thrown when something go wrong with creating post data of sending data to server.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
     public String createPost(File post, String tags, String description, String source, Rating rating, String parent_id) throws BooruEngineException {
@@ -460,5 +442,24 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
     @Override
     public String getPostRequest() {
         return getCustomRequest("/post/create");
+    }
+
+    protected void setCookie(final HttpsConnection connection) {
+        connection
+                .getHeader("Set-Cookie")
+                .stream()
+                .filter(s -> s.contains("e621"))
+                .forEach(s -> {
+                    String[] split = s.split("=");
+                    loginData.put(split[0], split[1].split("; ")[0]);
+                });
+    }
+
+    protected void setToken(final HttpsConnection connection) throws BooruEngineException {
+        String s = connection.getResponse();
+        String data = s.split("<input name=\"authenticity_token\" type=\"hidden\" value=\"")[1]
+                .split("\"></div>")[0]
+                .replaceAll(Pattern.quote("+"), "%2B");
+        loginData.put("authenticity_token", data);
     }
 }

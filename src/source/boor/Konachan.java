@@ -168,14 +168,16 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
     }
 
     /**
-     * Authenticate user by login and pass.
+     * Create connection to server and get user data - login cookies.
      *
-     * @param login    user login
-     * @param password user pass
-     * @throws BooruEngineException    will be contain <code>AuthenticationException</code>.
-     * @throws AuthenticationException will be thrown when authentication was failed.
-     * @throws IllegalStateException   will be thrown when something go wrong
-     *                                 with getting cookie and token before login request.
+     * @param login    user login.
+     * @param password user pass.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     *                              <p>{@code AuthenticationException} will be thrown when the authentication failed
+     *                              and response did not contain a login cookies.
      */
     @Override
     public void logIn(final String login, final String password) throws BooruEngineException {
@@ -248,46 +250,21 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
         return this.loginData;
     }
 
-    protected void setCookie(final HttpsConnection connection) {
-        connection
-                .getHeader("Set-Cookie")
-                .stream()
-                .filter(s -> s.contains("konachan.com"))
-                .forEach(s -> {
-                    String[] split = s.split("=");
-                    loginData.put(split[0], split[1].split("; ")[0]);
-                });
-    }
-
-    protected void setToken(final HttpsConnection connection) throws BooruEngineException {
-        String s = connection.getResponse();
-        String data = s.split("name=\"csrf-param\" />")[1]
-                .split(" name=\"csrf-token\" />")[0]
-                .replaceAll("\"", "")
-                .replace("<meta content=", "")
-                .replaceAll(Pattern.quote("+"), "%2B");
-        loginData.put("authenticity_token", data);
-    }
-
     /**
-     * Voting post.
+     * Method for voting post with id <code>post_id</code>. Scores can be: "1" for up vote and "2" for up vote too,
+     * "3" for vote up and add to favorites, and "0" for remove vote.
+     * If <code>score</code> will be another string the <code>IllegalArgumentException</code> will be thrown.
      * <p>
-     * Scores can be:
-     * <p>
-     * 0 - remove vote.
-     * <p>
-     * 1 or 2 - vote.
-     * <p>
-     * 3 - vote and add to favorites.
-     * <p>
+     * Method creating connection and send POST-request.
      *
      * @param post_id post id.
      * @param score   scores to post.
      * @return true if success.
-     * @throws BooruEngineException          when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException         will be thrown when the user data not defined.
-     * @throws UnsupportedOperationException will be thrown when action is not supporting.
-     * @throws IllegalArgumentException      will be thrown when score param not contain expected value.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     *                              <p>{@code IllegalArgumentException} will be thrown when {@param score} not contain expected value.
      */
     @Override
     public boolean votePost(final int post_id, final String score) throws BooruEngineException {
@@ -296,13 +273,12 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined."));
         }
-
         try {
             int s = Integer.parseInt(score);
-
             if (s > 3 || s < 0) {
                 throw new BooruEngineException("Score can't be more then the 3 and less than the 0", new IllegalArgumentException(score));
             }
+
             token = loginData.get("authenticity_token").replaceAll("%2B", "+");
 
             token = new HttpsConnection()
@@ -347,20 +323,27 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
     }
 
     /**
-     * Creating post.
-     * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced "".
+     * Create upload on Konachan.
      *
-     * @param post      image file.
-     * @param tags      tags with " " separator.
-     * @param title     post title. Not using.
-     * @param source    post source. Not required.
-     * @param rating    post rating.
-     * @param parent_id parent id.
-     * @return true if success (Indicates complete). Otherwise will be thrown an exception.
-     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
-     * @throws IOException           will be thrown when something go wrong on sending post step or
-     *                               when image file corrupt.
+     * @param post      file which will be upload. It must be image of gif-animation.
+     *                  Also it can be video file with .webm extension.
+     * @param tags      tags are describe file content. They separates by spaces,
+     *                  so, spaces in title must be replace by underscores.
+     * @param title     post title. <strong>Useless in this method.</strong>
+     * @param source    source from file was get. It must be URL like "https://sas.com/test.jpg" or something else.
+     *                  <strong>Not required in this method.</strong>
+     * @param rating    post rating. As usual it can be {@code Rating.SAFE}, {@code Rating.QUESTIONABLE} or
+     *                  {@code Rating.EXPLICIT}.
+     * @param parent_id also known as Post Relationships, are a means of linking together groups of related posts.
+     *                  One post (normally the "best" version) is chosen to be the parent,
+     *                  while the other posts are made its children. <strong>Not required in this method.</strong>
+     * @return response of POST-request.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
+     *                              <p>{@code IOException} will be thrown when something go wrong with creating post data
+     *                              or sending data to server.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
     public String createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id
@@ -402,7 +385,6 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
         } catch (IOException e) {
             throw new BooruEngineException(e);
         }
-
         return connection.getResponse();
         //get response
 //        try {
@@ -430,4 +412,26 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
     public String getPostRequest() {
         return getCustomRequest("/post/create.json");
     }
+
+    protected void setCookie(final HttpsConnection connection) {
+        connection
+                .getHeader("Set-Cookie")
+                .stream()
+                .filter(s -> s.contains("konachan.com"))
+                .forEach(s -> {
+                    String[] split = s.split("=");
+                    loginData.put(split[0], split[1].split("; ")[0]);
+                });
+    }
+
+    protected void setToken(final HttpsConnection connection) throws BooruEngineException {
+        String s = connection.getResponse();
+        String data = s.split("name=\"csrf-param\" />")[1]
+                .split(" name=\"csrf-token\" />")[0]
+                .replaceAll("\"", "")
+                .replace("<meta content=", "")
+                .replaceAll(Pattern.quote("+"), "%2B");
+        loginData.put("authenticity_token", data);
+    }
+
 }

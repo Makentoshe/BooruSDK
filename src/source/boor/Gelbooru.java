@@ -163,8 +163,11 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
      *
      * @param login    user login
      * @param password user pass
-     * @throws BooruEngineException    will be contain <code>AuthenticationException</code>.
-     * @throws AuthenticationException will be thrown when authentication was failed.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code BooruEngineConnectionException} - when something go wrong with connection.
+     *                              <p>{@code AuthenticationException} - when the authentication failed
+     *                              and response did not contain a login cookies.
      */
     public void logIn(final String login, final String password) throws BooruEngineException {
         //create post body
@@ -217,7 +220,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
 
 
     /**
-     * Create request for getting a list of Posts.
+     * Get address for getting a list of Posts.
      *
      * @param limit  how many posts must be in page.
      * @param tags   the tags to search for.
@@ -244,35 +247,34 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
     }
 
     /**
-     * Voting post.
+     * Method for voting post with id <code>post_id</code>. Use action can be only "up" for vote up post.
+     * If action will be have another value, the <code>IllegalArgumentException</code> will be thrown.
      * <p>
-     * If user data not defined the method will be throw <code>IllegalStateException</code>.
-     * <p>
-     * Use action can be only "up".
+     * Method creating connection and send POST-request.
      *
      * @param post_id post id.
      * @param action  any action.
      * @return true if success.
-     * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException    will be thrown when the user data not defined.
-     * @throws IllegalArgumentException will be thrown when {@param action} not contain expected value.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     *                              <p>{@code IllegalArgumentException} will be thrown when {@param action} not contain expected value.
      */
     @Override
     public boolean votePost(final int post_id, final String action) throws BooruEngineException {
-        if (!action.equals("up"))
+        if (!action.equals("up")) {
             throw new BooruEngineException("Action can be only \"up\".", new IllegalArgumentException(action));
-
+        }
         //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
-
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(getCookieFromLoginData())
                 .openConnection(getVotePostRequest(post_id) + "&id=" + post_id + "&type=" + action);
-
         return !connection.getResponse().equals("");
     }
 
@@ -287,17 +289,20 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
     }
 
     /**
-     * Create comment for post with id: post_id.
+     * Create comment for post with id <code>post_id</code>. Params <code>postAsAnon</code> and
+     * <code>bumpPost</code> is useless because they are not supporting.
      * <p>
-     * Note: Be careful: Not all *boors support "postAsAnon" or "bumpPost" param.
+     * Method creating connection and send POST-request.
      *
-     * @param post_id    post id.
+     * @param post_id    post id, for which comment will be created.
      * @param body       comment body.
-     * @param postAsAnon use {@code true} for anonymously posting.
-     * @param bumpPost   use {@code true} for bump up post.
-     * @return true if success.
-     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
+     * @param postAsAnon using for anonymously posting. Useless.
+     * @param bumpPost   using for bump up post.
+     * @return {@code true} if success.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
     public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
@@ -305,7 +310,6 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
-
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
@@ -315,7 +319,6 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
         String token = connection.getResponse()
                 .split("\"/>\t\t<input type=\"hidden\" name=\"csrf-token\" value=\"")[1]
                 .split("\"/>\t\t</td>")[0];
-
         //get PHPSESSID
         for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
             String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
@@ -364,19 +367,28 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
     }
 
     /**
-     * Creating post.
-     * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced " ".
+     * Create post on Gelbooru.
      *
-     * @param post      image file.
-     * @param tags      tags with " " separator.
-     * @param title     post title. Not required
-     * @param source    post source. Not required
-     * @param rating    post rating.
-     * @param parent_id parent id. Not using.
-     * @return true if success (Indicates complete). Otherwise will be thrown an exception.
-     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
-     * @throws IOException           will be thrown when something go wrong on sending post step or when image file corrupt.
+     * @param post      file which will be upload. It must be image of gif-animation.
+     *                  Also it can be video file with .webm extension.
+     * @param tags      tags are describe file content. They separates by spaces,
+     *                  so, spaces in title must be replace by underscores.
+     * @param title     post title. <strong>Not required in this method.</strong>
+     * @param source    source from file was get. It must be URL like "https://sas.com/test.jpg" or something else.
+     *                  <strong>Not required in this method.</strong>
+     * @param rating    post rating. As usual it can be {@code Rating.SAFE}, {@code Rating.QUESTIONABLE} or
+     *                  {@code Rating.EXPLICIT}.
+     * @param parent_id also known as Post Relationships, are a means of linking together groups of related posts.
+     *                  One post (normally the "best" version) is chosen to be the parent,
+     *                  while the other posts are made its children. <strong>Not required in this method.</strong>
+     * @return response of POST-request.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
+     *                              <p>{@code IOException} will be thrown when something go wrong with creating
+     *                              post data of sending data to server.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong
+     *                              with connection.
      */
     @Override
     public String createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {
@@ -384,7 +396,6 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
-
         //get PHPSESSID
         HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.GET)
@@ -392,7 +403,6 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
                 .setCookies(getCookieFromLoginData())
                 .openConnection("https://gelbooru.com/index.php?page=post&s=view&id=1");
         getLoginData().put("PHPSESSID", connection.getHeader("Set-Cookie").get(0).split("=")[1].split("; ")[0]);
-
         //and write all data with stream to server
         try {
             //create constructor
@@ -403,7 +413,6 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
                     .createDataBlock("tags", tags)
                     .createDataBlock("rating", "" + rating.toString().toLowerCase().charAt(0))
                     .createDataBlock("submit", "Upload");
-
             //Create connection
             connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
@@ -411,13 +420,11 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
                     .setHeader("Content-Type", "multipart/form-data; boundary=" + constructor.getBoundary())
                     .setCookies(getCookieFromLoginData())
                     .openConnection(getPostRequest());
-
             //send data
             constructor.send(connection.getConnection().getOutputStream());
         } catch (IOException e) {
             throw new BooruEngineException(e);
         }
-
         return connection.getResponse();
 //
 //        String errMessage = connection

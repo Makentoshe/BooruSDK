@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
     Commenting is OK
     Post Voting is OK
 */
+
 /**
  * Singleton which describe Yandere. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
@@ -169,14 +170,16 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
     }
 
     /**
-     * Authenticate user by login and pass.
+     * Create connection to server and get user data - login cookies.
      *
-     * @param login    user login
-     * @param password user pass
-     * @throws BooruEngineException    will be contain <code>AuthenticationException</code>.
-     * @throws AuthenticationException will be thrown when authentication was failed.
-     * @throws IllegalStateException   will be thrown when something go wrong
-     *                                 with getting cookie and token before login request.
+     * @param login    user login.
+     * @param password user pass.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     *                              <p>{@code AuthenticationException} will be thrown when the authentication failed
+     *                              and response did not contain a login cookies.
      */
     @Override
     public void logIn(final String login, final String password) throws BooruEngineException {
@@ -257,53 +260,26 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
         return getCustomRequest("/user/authenticate");
     }
 
-    protected void setCookie(final HttpsConnection connection) {
-        connection
-                .getHeader("Set-Cookie")
-                .stream()
-                .filter(s -> s.contains("yande.re"))
-                .forEach(s -> {
-                    String[] split = s.split("=");
-                    loginData.put(split[0], split[1].split("; ")[0]);
-                });
-    }
-
-    protected String setToken(final HttpsConnection connection) throws BooruEngineException {
-        String s = connection.getResponse();
-        String data = s.split("\"csrf-token\" content=\"")[1]
-                .split("\" />")[0]
-                .replace("<meta content=", "")
-                .replaceAll(Pattern.quote("+"), "%2B");
-
-        loginData.put("authenticity_token", data);
-        return data;
-    }
-
     /**
-     * Voting post.
+     * Method for voting post with id <code>post_id</code>. Scores can be: "1" for up vote and "2" for up vote too,
+     * "3" for vote up and add to favorites, and "0" for remove vote.
+     * If <code>score</code> will be another string the <code>IllegalArgumentException</code> will be thrown.
      * <p>
-     * Scores can be:
-     * <p>
-     * 0 - remove vote.
-     * <p>
-     * 1 or 2 - vote.
-     * <p>
-     * 3 - vote and add to favorites.
-     * <p>
+     * Method creating connection and send POST-request.
      *
      * @param post_id post id.
      * @param score   scores to post.
      * @return true if success.
-     * @throws BooruEngineException          when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException         will be thrown when the user data not defined.
-     * @throws UnsupportedOperationException will be thrown when action is not supporting.
-     * @throws IllegalArgumentException      will be thrown when score param not contain expected value.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     *                              <p>{@code IllegalArgumentException} will be thrown when {@param score} not contain expected value.
      */
     @Override
     public boolean votePost(int post_id, String score) throws BooruEngineException {
         String token;
         HttpsConnection connection;
-
         //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined."));
@@ -317,27 +293,21 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
                         new IllegalArgumentException(score)
                 );
             }
-
             //set necessary data
             connection = new HttpsConnection()
                     .setRequestMethod(Method.GET)
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .openConnection(getCustomRequest("/user/login"));
             //set cookie
-            if (!loginData.containsKey("yande.re")) {
-                setCookie(connection);
-            }
+            if (!loginData.containsKey("yande.re")) setCookie(connection);
             //set token
-            if (!loginData.containsKey("authenticity_token")) {
-                setToken(connection);
-            }
+            if (!loginData.containsKey("authenticity_token")) setToken(connection);
 
             try {
                 token = loginData.get("authenticity_token").replaceAll("%2B", "+");
             } catch (NullPointerException e) {
                 throw new BooruEngineException(new IllegalStateException("User data not defined."));
             }
-
             //create connection
             connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
@@ -346,7 +316,6 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
                     .setHeader("X-CSRF-Token", token)
                     .setBody("id=" + post_id + "&score=" + score)
                     .openConnection(getVotePostRequest(post_id));
-
             token = connection.getResponse();
 
         } catch (NumberFormatException e) {
@@ -371,20 +340,20 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
     }
 
     /**
-     * Create comment for post with id: post_id.
+     * Create comment for post with id <code>post_id</code>. Params <code>postAsAnon</code> and
+     * <code>bumpPost</code> is useless because they are not supporting.
      * <p>
-     * Note: Be careful: Not all *boors support "postAsAnon" or "bumpPost" param.
+     * Method creating connection and send POST-request.
      *
-     * @param post_id    post id.
+     * @param post_id    post id, for which comment will be created.
      * @param body       comment body.
-     * @param postAsAnon use {@code true} for anonymously posting.
-     * @param bumpPost   use {@code true} for bump up post.
-     * @return true if success.
-     * @throws BooruEngineException  when something go wrong.
-     *                               Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
-     * @throws NoSuchElementException will be thrown when the Set-Cookie header was not got.
-     * @throws RuntimeException will be thrown when the Set-Cookie header was got, but comment was not created
+     * @param postAsAnon using for anonymously posting.
+     * @param bumpPost   using for bump up post.
+     * @return {@code true} if success.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
     public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
@@ -468,20 +437,27 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
     }
 
     /**
-     * Creating post.
-     * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced "".
+     * Create upload on Yandere.
      *
-     * @param post      image file.
-     * @param tags      tags with " " separator.
-     * @param title     post title. Not using.
-     * @param source    post source. Not required.
-     * @param rating    post rating.
-     * @param parent_id parent id.
-     * @return response of post request.
-     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
-     * @throws IOException           will be thrown when something go wrong on sending post step or
-     *                               when image file corrupt.
+     * @param post      file which will be upload. It must be image of gif-animation.
+     *                  Also it can be video file with .webm extension.
+     * @param tags      tags are describe file content. They separates by spaces,
+     *                  so, spaces in title must be replace by underscores.
+     * @param title     post title. <strong>Useless in this method.</strong>
+     * @param source    source from file was get. It must be URL like "https://sas.com/test.jpg" or something else.
+     *                  <strong>Not required in this method.</strong>
+     * @param rating    post rating. As usual it can be {@code Rating.SAFE}, {@code Rating.QUESTIONABLE} or
+     *                  {@code Rating.EXPLICIT}.
+     * @param parent_id also known as Post Relationships, are a means of linking together groups of related posts.
+     *                  One post (normally the "best" version) is chosen to be the parent,
+     *                  while the other posts are made its children. <strong>Not required in this method.</strong>
+     * @return response of POST-request.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
+     *                              <p>{@code IOException} will be thrown when something go wrong with creating post data
+     *                              or sending data to server.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
     public String createPost(final @NotNull File post, final @NotNull String tags, final String title,
@@ -567,4 +543,27 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
     public String getPostRequest() {
         return getCustomRequest("/post/create.json");
     }
+
+    protected void setCookie(final HttpsConnection connection) {
+        connection
+                .getHeader("Set-Cookie")
+                .stream()
+                .filter(s -> s.contains("yande.re"))
+                .forEach(s -> {
+                    String[] split = s.split("=");
+                    loginData.put(split[0], split[1].split("; ")[0]);
+                });
+    }
+
+    protected String setToken(final HttpsConnection connection) throws BooruEngineException {
+        String s = connection.getResponse();
+        String data = s.split("\"csrf-token\" content=\"")[1]
+                .split("\" />")[0]
+                .replace("<meta content=", "")
+                .replaceAll(Pattern.quote("+"), "%2B");
+
+        loginData.put("authenticity_token", data);
+        return data;
+    }
+
 }

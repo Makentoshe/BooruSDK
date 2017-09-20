@@ -79,7 +79,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
     }
 
     /**
-     * Create request for getting a list of Posts.
+     * Get address for getting a list of Posts.
      *
      * @param limit  how many posts must be in page.
      * @param tags   the tags to search for.
@@ -193,12 +193,16 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
     }
 
     /**
-     * Authenticate user by login and pass.
+     * Create connection to server and get user data - login cookies.
      *
-     * @param login    user login
-     * @param password user pass
-     * @throws BooruEngineException    will be contain <code>AuthenticationException</code>.
-     * @throws AuthenticationException will be thrown when authentication was failed.
+     * @param login    user login.
+     * @param password user pass.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     *                              <p>{@code AuthenticationException} will be thrown when the authentication failed
+     *                              and response did not contain a login cookies.
      */
     @Override
     public void logIn(@NotNull final String login, @NotNull final String password) throws BooruEngineException {
@@ -242,25 +246,26 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
     }
 
     /**
-     * Voting post.
+     * Method for voting post with id <code>post_id</code>. Use action can be "up" for vote up post
+     * or "down" for vote down.
+     * If action will be have another value, the <code>IllegalArgumentException</code> will be thrown.
      * <p>
-     * If user data not defined the method will be throw <code>IllegalStateException</code>.
-     * <p>
-     * Use action can be "up" or "down".
+     * Method creating connection and send POST-request.
      *
      * @param post_id post id.
      * @param action  any action.
      * @return true if success.
-     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
-     * @exception UnsupportedOperationException will be thrown when action is not supporting.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     *                              <p>{@code IllegalArgumentException} will be thrown when {@param action} not contain expected value.
      */
     @Override
     public boolean votePost(final int post_id, @NotNull final String action) throws BooruEngineException {
         if (!action.equals("up") && !action.equals("down")) {
             throw new BooruEngineException("Action can be \"up\" or \"down\".", new IllegalArgumentException(action));
         }
-
         //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
@@ -286,15 +291,19 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
     }
 
     /**
-     * Create comment for post with id: post_id.
+     * Create comment for post with id <code>post_id</code>. Param <code>bumpPost</code> is useless because is not supporting.
+     * <p>
+     * Method creating connection and send POST-request.
      *
-     * @param post_id    post id.
+     * @param post_id    post id, for which comment will be created.
      * @param body       comment body.
-     * @param postAsAnon use {@code true} for anonymously posting.
-     * @param bumpPost   not support.
-     * @return true if success.
-     * @throws BooruEngineException  when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException will be thrown when the user data not defined.
+     * @param postAsAnon using for anonymously posting.
+     * @param bumpPost   using for bump up post.
+     * @return {@code true} if success.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
     public boolean commentPost(int post_id, @NotNull String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
@@ -341,30 +350,34 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
     }
 
     /**
-     * Creating post.
-     * The <code>title</code> and the <code>source</code> params can be null, but they will be replaced " ".
+     * Create post on Rule34.
      *
-     * @param post      image file.
-     * @param tags      tags with " " separator.
-     * @param title     post title. Not required
-     * @param source    post source. Not required
-     * @param rating    post rating.
-     * @param parent_id parent id. Not using.
-     * @return true if success (Indicates complete). Otherwise will be thrown an exception.
-     * @throws BooruEngineException     when something go wrong. Use <code>getCause</code> to see more details.
-     * @throws IllegalStateException    will be thrown when the user data not defined.
-     * @throws IllegalArgumentException will be thrown when the required data was not included,
-     *                                  not image was specified, or a required field did not exist.
-     *                                  As usual when tags not defined or defined bad.
-     * @throws IOException              will be thrown when something go wrong on sending post step or
-     *                                  when image file corrupt.
+     * @param post      file which will be upload. It must be image of gif-animation.
+     *                  Also it can be video file with .webm extension.
+     * @param tags      tags are describe file content. They separates by spaces,
+     *                  so, spaces in title must be replace by underscores.
+     * @param title     post title. <strong>Not required in this method.</strong>
+     * @param source    source from file was get. It must be URL like "https://sas.com/test.jpg" or something else.
+     *                  <strong>Not required in this method.</strong>
+     * @param rating    post rating. As usual it can be {@code Rating.SAFE}, {@code Rating.QUESTIONABLE} or
+     *                  {@code Rating.EXPLICIT}.
+     * @param parent_id also known as Post Relationships, are a means of linking together groups of related posts.
+     *                  One post (normally the "best" version) is chosen to be the parent,
+     *                  while the other posts are made its children. <strong>Not required in this method.</strong>
+     * @return response of POST-request.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
+     *                              <p>{@code IOException} will be thrown when something go wrong with creating post data
+     *                              of sending data to server.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong
+     *                              with connection.
      */
     @Override
     public String createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {        //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
-
         //Create connection
         HttpsConnection connection;
         //and write all data with stream to server
@@ -389,27 +402,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
         } catch (IOException e) {
             throw new BooruEngineException(e);
         }
-
         return connection.getResponse();
-
-//        String errMessage = connection
-//                .getResponse()
-//                .split("You have mail</a></div><div id=\"content\" class=\"content\">")[1]
-//                .split("<br /><form method=\"post\" action=\"index")[0];
-//
-//        //get result
-//        boolean code = connection.getResponseCode() == 200;
-//        boolean message = errMessage.equals("Image added.");
-//
-//        if (code && message) return true;
-//        else {
-//            if (errMessage.contains("Filetype not allowed.")) {
-//                throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
-//            }
-//            if (errMessage.contains("Generic error.")) {
-//                throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
-//            } else throw new BooruEngineException(errMessage);
-//        }
     }
 
     /**

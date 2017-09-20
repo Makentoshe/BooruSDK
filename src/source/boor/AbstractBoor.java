@@ -17,7 +17,7 @@ public abstract class AbstractBoor {
     protected Api api;
 
     /**
-     * Get the default result format of the current boor.
+     * Get the result format of the current boor.
      *
      * @return result format. It can be {@code Format.JSON} or {@code Format.XML} or {@code Format.UNDEFINED}.
      */
@@ -26,7 +26,7 @@ public abstract class AbstractBoor {
     }
 
     /**
-     * Get the default API of the current boor.
+     * Get the API of the current boor.
      *
      * @return API format. It can be {@code Api.Basic} or {@code Api.Advanced} or {@code Api.UNDEFINED}.
      */
@@ -35,14 +35,14 @@ public abstract class AbstractBoor {
     }
 
     /**
-     * Set the default result format of the current boor.
+     * Set the result format of the current boor.
      */
     public void setFormat(Format format){
         this.format = format;
     }
 
     /**
-     * Set the default API of the current boor.
+     * Set the API of the current boor.
      */
     public void setApi(Api api){
         this.api = api;
