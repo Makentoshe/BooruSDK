@@ -353,7 +353,7 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
      * @param parent_id also known as Post Relationships, are a means of linking together groups of related posts.
      *                  One post (normally the "best" version) is chosen to be the parent,
      *                  while the other posts are made its children. <strong>Not required in this method.</strong>
-     * @return response of POST-request.
+     * @return connection with all data about request.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
@@ -361,12 +361,11 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public String createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {
+    public HttpsConnection createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {
         //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
-
         //Create connection
         HttpsConnection connection;
         //and write all data with stream to server
@@ -378,7 +377,6 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
                     .createDataBlock("tags", tags)
                     .createDataBlock("rating", "" + rating.toString().toLowerCase().charAt(0))
                     .createDataBlock("submit", "Upload");
-
             //Create connection
             connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
@@ -392,27 +390,7 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
             throw new BooruEngineException(e);
         }
 
-        return connection.getResponse();
-//
-//        String errMessage = connection
-//                .getResponse()
-//                .split("You have mail</a></div><div id=\"content\" class=\"content\">")[1]
-//                .split("<br /><form method=\"post\" action=\"index")[0];
-//
-//        //get result
-//        boolean code = connection.getResponseCode() == 200;
-//        boolean message = errMessage.equals("Image added.");
-//
-//
-//        if (code && message) return true;
-//        else {
-//            if (errMessage.contains("Filetype not allowed.")) {
-//                throw new BooruEngineException(new IOException("Filetype not allowed. The image could not be added because it already exists or it is corrupted."));
-//            }
-//            if (errMessage.contains("Generic error.")) {
-//                throw new BooruEngineException(new IllegalArgumentException("The required data was not included, not image was specified, or a required field did not exist."));
-//            } else throw new BooruEngineException(errMessage);
-//        }
+        return connection;
     }
 
     /**

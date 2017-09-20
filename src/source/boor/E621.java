@@ -384,7 +384,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
      * @param parent_id   also known as Post Relationships, are a means of linking together groups of related posts.
      *                    One post (normally the "best" version) is chosen to be the parent,
      *                    while the other posts are made its children. <strong>Not required in this method.</strong>
-     * @return response of POST-request.
+     * @return connection with all data about request.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
@@ -392,7 +392,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public String createPost(File post, String tags, String description, String source, Rating rating, String parent_id) throws BooruEngineException {
+    public HttpsConnection createPost(File post, String tags, String description, String source, Rating rating, String parent_id) throws BooruEngineException {
         HttpsConnection connection;
         String token;
         //check userdata
@@ -431,7 +431,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
             throw new BooruEngineException(e);
         }
         //get response
-        return connection.getResponse();
+        return connection;
     }
 
     /**

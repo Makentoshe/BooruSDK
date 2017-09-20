@@ -364,7 +364,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
      * @param parent_id also known as Post Relationships, are a means of linking together groups of related posts.
      *                  One post (normally the "best" version) is chosen to be the parent,
      *                  while the other posts are made its children. <strong>Not required in this method.</strong>
-     * @return response of POST-request.
+     * @return connection with all data about request.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
@@ -374,7 +374,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
      *                              with connection.
      */
     @Override
-    public String createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {        //check userdata
+    public HttpsConnection createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id) throws BooruEngineException {        //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
         }
@@ -402,7 +402,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
         } catch (IOException e) {
             throw new BooruEngineException(e);
         }
-        return connection.getResponse();
+        return connection;
     }
 
     /**

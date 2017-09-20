@@ -333,7 +333,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
      * @param parent_id also known as Post Relationships, are a means of linking together groups of related posts.
      *                  One post (normally the "best" version) is chosen to be the parent,
      *                  while the other posts are made its children. <strong>Not required in this method.</strong>
-     * @return response of POST-request.
+     * @return connection with all data about request.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
@@ -342,7 +342,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public String createPost(File post, String tags, String title, String source, Rating rating, String parent_id) throws BooruEngineException {
+    public HttpsConnection createPost(File post, String tags, String title, String source, Rating rating, String parent_id) throws BooruEngineException {
         //check userdata
         String token = checkUserData();
 
@@ -381,7 +381,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
         }
         //remove used token
         loginData.remove("authenticity_token");
-        return connection.getResponse();
+        return connection;
     }
 
     /**

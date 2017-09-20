@@ -337,7 +337,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
      * @param parent_id also known as Post Relationships, are a means of linking together groups of related posts.
      *                  One post (normally the "best" version) is chosen to be the parent,
      *                  while the other posts are made its children. <strong>Not required in this method.</strong>
-     * @return response of POST-request.
+     * @return connection with all data about request.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
@@ -346,7 +346,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public String createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id
+    public HttpsConnection createPost(final @NotNull File post, final @NotNull String tags, final String title, final String source, final @NotNull Rating rating, final String parent_id
     ) throws BooruEngineException {
         //check userdata
         String token;
@@ -385,22 +385,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
         } catch (IOException e) {
             throw new BooruEngineException(e);
         }
-        return connection.getResponse();
-        //get response
-//        try {
-//            JsonParser parser = new JsonParser();
-//            parser.startParse(connection.getResponse());
-//            List<HashMap<String, String>> jsonResult = parser.getResult();
-//            //if success - true
-//            if (jsonResult.get(0).get("success").equals("true")) return true;
-//                //else throw exception with reason
-//            else {
-//                throw new BooruEngineException(jsonResult.get(0).get("reason"), new IOException());
-//            }
-//            //when something go wrong - catch any exception and throw in BEE
-//        } catch (Exception e) {
-//            throw new BooruEngineException(connection.getResponseMessage(), e);
-//        }
+        return connection;
     }
 
     /**

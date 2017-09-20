@@ -432,7 +432,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
      * @param parent_id also known as Post Relationships, are a means of linking together groups of related posts.
      *                  One post (normally the "best" version) is chosen to be the parent,
      *                  while the other posts are made its children. <strong>Not required in this method.</strong>
-     * @return response of POST-request.
+     * @return connection with all data about request.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
@@ -441,7 +441,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public String createPost(final @NotNull File post, final @NotNull String tags, final String title,
+    public HttpsConnection createPost(final @NotNull File post, final @NotNull String tags, final String title,
                              final String source, final @NotNull Rating rating, final String parent_id)
             throws BooruEngineException {
         String token;
@@ -489,7 +489,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
         }
         //example response
         //will be return {"post_id":409015,"location":"https://yande.re/post/show/409015","success":true}
-        return connection.getResponse();
+        return connection;
     }
 
     /**

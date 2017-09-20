@@ -460,7 +460,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public String createPost(final @NotNull File post, final @NotNull String tags, final String title,
+    public HttpsConnection createPost(final @NotNull File post, final @NotNull String tags, final String title,
                              final String source, final @NotNull Rating rating, final String parent_id)
             throws BooruEngineException {
         //check userdata
@@ -515,23 +515,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
         }
         //get response
         //will be return {"post_id":409015,"location":"https://yande.re/post/show/409015","success":true}
-
-        return connection.getResponse();
-
-//        try {
-//            JsonParser parser = new JsonParser();
-//            parser.startParse(connection.getResponse());
-//            List<HashMap<String, String>> jsonResult = parser.getResult();
-//            //if success - true
-//            if (jsonResult.get(0).get("success").equals("true")) return true;
-//                //else throw exception with reason
-//            else {
-//                throw new BooruEngineException(jsonResult.get(0).get("reason"), new IOException());
-//            }
-//            //when something go wrong - catch any exception and throw in BEE
-//        } catch (Exception e) {
-//            throw new BooruEngineException(connection.getResponseMessage(), e);
-//        }
+        return connection;
     }
 
     /**

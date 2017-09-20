@@ -2,6 +2,7 @@ package module;
 
 import com.sun.istack.internal.NotNull;
 import engine.BooruEngineException;
+import engine.connector.HttpsConnection;
 import source.еnum.Rating;
 
 import java.io.File;
@@ -27,18 +28,18 @@ public interface UploadModule {
      * @param parent_id also known as Post Relationships, are a means of linking together groups of related posts.
      *                  One post (normally the "best" version) is chosen to be the parent,
      *                  while the other posts are made its children.
-     * @return response from POST-request.
+     * @return connection with all data about request.
      * @throws BooruEngineException when something go wrong. Use <code>GetCause</code> to see more details.
      */
-    String createPost(
+    HttpsConnection createPost(
             @NotNull final File post,
             @NotNull final String tags,
             final String title,
             final String source,
             @NotNull final Rating rating,
             final String parent_id
-
-    ) throws BooruEngineException;
+    )
+            throws BooruEngineException;
 
     /**
      * Get address for creating <code>Method.POST</code> request for creating post.
