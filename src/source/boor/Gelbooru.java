@@ -159,17 +159,22 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
     }
 
     /**
-     * Authenticate user by login and pass.
+     * Create connection to server and get user data - login cookies.
+     * All necessary data will be stored while method is work,
+     * so there is no reason try to store data from <code>HttpsConnection</code>.
      *
-     * @param login    user login
-     * @param password user pass
+     * @param login    user login.
+     * @param password user pass.
+     * @return connection with all data about request.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
-     *                              <p>{@code BooruEngineConnectionException} - when something go wrong with connection.
-     *                              <p>{@code AuthenticationException} - when the authentication failed
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     *                              <p>{@code AuthenticationException} will be thrown when the authentication failed
      *                              and response did not contain a login cookies.
      */
-    public void logIn(final String login, final String password) throws BooruEngineException {
+    @Override
+    public HttpsConnection logIn(String login, String password) throws BooruEngineException {
         //create post body
         String postData = "user=" + login + "&pass=" + password + "&submit=Log+in";
         HttpsConnection connection = new HttpsConnection()
@@ -188,6 +193,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
             //throw exception
             throw new BooruEngineException(new AuthenticationException("Authentication failed."));
         }
+        return connection;
     }
 
     /**

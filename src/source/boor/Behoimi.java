@@ -128,8 +128,23 @@ public class Behoimi extends AbstractBoorAdvanced implements LoginModule, Remote
         return post;
     }
 
+    /**
+     * Create connection to server and get user data - login cookies.
+     * All necessary data will be stored while method is work,
+     * so there is no reason try to store data from <code>HttpsConnection</code>.
+     *
+     * @param login    user login.
+     * @param password user pass.
+     * @return connection with all data about request.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     *                              <p>{@code AuthenticationException} will be thrown when the authentication failed
+     *                              and response did not contain a login cookies.
+     */
     @Override
-    public void logIn(String login, String password) throws BooruEngineException {
+    public HttpsConnection logIn(String login, String password) throws BooruEngineException {
         String postData = "url=&user%5Bname%5D="+login+"&user%5Bpassword%5D="+password+"&commit=Login";
 
         HttpsConnection connection = new HttpsConnection()
@@ -140,7 +155,9 @@ public class Behoimi extends AbstractBoorAdvanced implements LoginModule, Remote
 
         for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++){
             String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
-            if (data.length == 2) this.loginData.put(data[0], data[1]);        }
+            if (data.length == 2) this.loginData.put(data[0], data[1]);
+        }
+            return connection;
     }
 
     @Override

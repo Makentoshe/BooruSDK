@@ -194,9 +194,12 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
 
     /**
      * Create connection to server and get user data - login cookies.
+     * All necessary data will be stored while method is work,
+     * so there is no reason try to store data from <code>HttpsConnection</code>.
      *
      * @param login    user login.
      * @param password user pass.
+     * @return connection with all data about request.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
@@ -205,7 +208,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
      *                              and response did not contain a login cookies.
      */
     @Override
-    public void logIn(@NotNull final String login, @NotNull final String password) throws BooruEngineException {
+    public HttpsConnection logIn(String login, String password) throws BooruEngineException {
         String postData = "user=" + login + "&pass=" + password + "&submit=Log+in";
 
         HttpsConnection connection = new HttpsConnection()
@@ -225,6 +228,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
             //throw exception
             throw new BooruEngineException(new AuthenticationException("Authentication failed."));
         }
+        return connection;
     }
 
     /**

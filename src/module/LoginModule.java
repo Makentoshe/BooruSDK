@@ -2,6 +2,7 @@ package module;
 
 import com.sun.istack.internal.Nullable;
 import engine.BooruEngineException;
+import engine.connector.HttpsConnection;
 
 /**
  * Interface with the basic methods for storing and creating a user data, with which a *boor will work.
@@ -10,15 +11,17 @@ import engine.BooruEngineException;
  */
 public interface LoginModule {
 //TODO: use URLEncoder.encode(data, String.valueOf(Charset.defaultCharset()))
+
     /**
      * Login a user.
      *
      * @param login user login
      * @param password user pass
+     * @return connection with all data about request.
      * @throws BooruEngineException - when something go wrong.
      * Use <tt>getCause</tt> to see details.
      */
-    void logIn(final String login, final String password) throws BooruEngineException;
+    HttpsConnection logIn(final String login, final String password) throws BooruEngineException;
 
     /**
      * Logoff a user. Remove all user data.
