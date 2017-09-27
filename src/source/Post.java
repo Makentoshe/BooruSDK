@@ -44,7 +44,6 @@ import java.util.*;
  *
  * @see Comment
  */
-//TODO: yandere and sakugabooru is not support searching comments by post_id. Try to find something else...
 public class Post {
 
     private Map<String, String> original;

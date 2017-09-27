@@ -288,7 +288,7 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public boolean commentPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+    public boolean createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
         //check user data
         String token = checkUserData();
         //create post body

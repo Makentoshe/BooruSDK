@@ -19,11 +19,6 @@ public class BoorsAvailabilityTest {
     }
 
     @Test
-    public void behoimi_Test() throws Exception {
-        assertEquals(200, getResponseCodeFromRequest(Behoimi.get().getCustomRequest("")));
-    }
-
-    @Test
     public void danbooru_Test() throws Exception {
         assertEquals(200, getResponseCodeFromRequest(Danbooru.get().getCustomRequest("")));
     }

@@ -19,7 +19,7 @@ public interface CommentCreatorModule {
      * @return {@code true} if success.
      * @throws BooruEngineException if something go wrong. Use <code>GetCause</code> to see more details.
      */
-    boolean commentPost(final int id, final String body, final boolean postAsAnon, final boolean bumpPost) throws BooruEngineException;
+    boolean createCommentToPost(final int id, final String body, final boolean postAsAnon, final boolean bumpPost) throws BooruEngineException;
 
     /**
      * Get address for creating <code>Method.POST</code> request for creating comment.

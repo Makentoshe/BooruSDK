@@ -15,7 +15,6 @@ import java.util.Scanner;
 
 
 public class TestHelper {
-//TODO: do something with uploading tests
 
     private static File getDataFile() {
         return new File(new File("").getAbsolutePath() + "\\src\\Data");

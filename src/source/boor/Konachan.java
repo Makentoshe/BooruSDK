@@ -5,10 +5,7 @@ import engine.BooruEngineException;
 import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import module.LoginModule;
-import module.RemotePostModule;
-import module.UploadModule;
-import module.VotingPostModule;
+import module.*;
 import source.Post;
 import source.еnum.Format;
 import source.еnum.Rating;
@@ -25,7 +22,7 @@ import java.util.regex.Pattern;
     csrf-token is static
 
     Login is OK
-    Commenting is ... TODO: make CommentCreatorModule implementation(do it after ~2 weeks).
+    Commenting is OK
     Post Voting is OK
  */
 
@@ -38,7 +35,7 @@ import java.util.regex.Pattern;
  * <code>UploadModule</code>.
  */
 public class Konachan extends AbstractBoorAdvanced implements LoginModule, VotingPostModule,
-        RemotePostModule, UploadModule {
+        RemotePostModule, UploadModule, CommentCreatorModule {
 
     private static final Konachan instance = new Konachan();
 
@@ -184,21 +181,19 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
      */
     @Override
     public HttpsConnection logIn(String login, String password) throws BooruEngineException {
-        if (!loginData.containsKey("konachan.com") || !loginData.containsKey("authenticity_token")) {
-            //get connection
-            HttpsConnection connection = new HttpsConnection()
-                    .setRequestMethod(Method.GET)
-                    .setUserAgent(HttpsConnection.getDefaultUserAgent())
-                    .openConnection(getCustomRequest("/user/login"));
+        //get connection
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .openConnection(getCustomRequest("/user/login"));
 
-            //set cookie
-            if (!loginData.containsKey("konachan.com")) {
-                setCookie(connection);
-            }
-            //set token
-            if (!loginData.containsKey("authenticity_token")) {
-                setToken(connection);
-            }
+        //set cookie
+        if (!loginData.containsKey("konachan.com")) {
+            setCookie(connection);
+        }
+        //set token
+        if (!loginData.containsKey("authenticity_token")) {
+            setToken(connection);
         }
 
         //if already have not cookie - throw an exception
@@ -216,7 +211,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
         String cookie = "konachan.com=" + loginData.get("konachan.com");
 
         //create connection
-        HttpsConnection connection = new HttpsConnection()
+        connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setBody(postData)
@@ -423,4 +418,68 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
         loginData.put("authenticity_token", data);
     }
 
+    /**
+     * Create comment for post with id <code>post_id</code>. Params <code>postAsAnon</code> and
+     * <code>bumpPost</code> is useless because they are not supporting.
+     * <p>
+     * Method creating connection and send POST-request.
+     *
+     * @param post_id    post id, for which comment will be created.
+     * @param body       comment body.
+     * @param postAsAnon using for anonymously posting.
+     * @param bumpPost   using for bump up post.
+     * @return {@code true} if success.
+     * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
+     *                              Note that exception can be contain one of:
+     *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
+     *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
+     */
+    @Override
+    public boolean createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+        //check userdata
+        if (getCookieFromLoginData() == null) {
+            throw new BooruEngineException(new IllegalStateException("User data not defined"));
+        }
+
+        String cbody = "authenticity_token=" + loginData.get("authenticity_token") +
+                "&comment%5Bpost_id%5D=" + post_id +
+                "&comment%5Bbody%5D=" + body.replaceAll(" ", "+") +
+                "&commit=Post";
+
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .setCookies(getCookieFromLoginData())
+                .setBody(cbody)
+                .openConnection(getCommentRequest(post_id));
+
+        //try to get Set-Cookie header
+        //if failed(NPE) - catch and throw BEE
+        boolean out = false;
+        try {
+            for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
+                String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+                //if notice=Comment+created - OK
+                //else throw RE
+                if (data[0].equals("notice")) {
+                    if (data[1].equals("Comment+created")) {
+                        out = true;
+                    } else {
+                        throw new BooruEngineException(new RuntimeException(data[1].replaceAll(Pattern.quote("+"), " ")));
+                    }
+                }
+            }
+        } catch (NullPointerException e) {
+            throw new BooruEngineException(
+                    "Something go wrong and server can't process it.",
+                    new NoSuchElementException("Set-Cookie")
+            );
+        }
+        return out;
+    }
+
+    @Override
+    public String getCommentRequest(int id) {
+        return getCustomRequest("/comment/create");
+    }
 }
