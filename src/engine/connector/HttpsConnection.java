@@ -12,6 +12,30 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Class is support for HTTP and HTTPS specific features and chooses which protocol to use.
+ * <p>
+ * Each HttpConnection instance is used to make a single request
+ * but the underlying network connection to the HTTP server may be
+ * transparently shared by other instances.
+ *
+ * <p>As default the automatic redirection is disabled
+ * for getting data from request with 302 code or something else.
+ * Class allows to abstract from the <code>HttpURLConnection</code> and <code>HttpsURLConnection</code> classes
+ * and work with requests data and responses. But if there is a need to work with the base class
+ * in a specific entity of this class, there is a <code>getConnection()</code> method
+ * for getting <code>HttpUrlConnection</code> or <code>HttpsUrlConnection</code>.
+ *
+ * <p>This is a very simple to usage. It first all data must be setted
+ * with the set methods - headers, body, request method and else.
+ * Then the connection will be create with <code>openConnection</code> methods.
+ * After this class will be create connections and send all data.
+ * In the end, when the request is complete the response data will be available,
+ * but trying to send some data again - the exception will be threw.
+ *
+ * @see     java.net.HttpURLConnection
+ * @see     javax.net.ssl.HttpsURLConnection
+ */
 public class HttpsConnection {
 
     private static String sDefaultUserAgent = "(mkliverout@gmail.com)BooruEngineLib/1.0";
@@ -30,51 +54,94 @@ public class HttpsConnection {
 
     private static final Logger log = Logger.getLogger(HttpsConnection.class.getName());
 
+    /**
+     * Default constructor with offed logging.
+     */
     public HttpsConnection() {
         log.setFilter(record -> false);
     }
 
+
+    /**
+     * Constructor with choice.
+     *
+     * @param isLogging - switching logging.
+     */
     public HttpsConnection(final boolean isLogging) {
         log.setFilter(record -> isLogging);
     }
 
+    /**
+     * Set request method for connection.
+     *
+     * @param requestMethod request method.
+     * @return self.
+     */
     public HttpsConnection setRequestMethod(final Method requestMethod) {
         log.log(Level.INFO, "Set Request Method: " + requestMethod);
         this.mRequestMethod = requestMethod;
         return this;
     }
 
+    /**
+     * Create header for connection
+     *
+     * @param key header name.
+     * @param value header data.
+     * @return self.
+     */
     public HttpsConnection setHeader(final String key, final String value) {
         log.log(Level.INFO, "Set Header: " + key + ": " + value);
         this.mHeaders.put(key, value);
         return this;
     }
 
+    /**
+     * Set user-agent for connection.
+     *
+     * @param userAgent user agent.
+     * @return self.
+     */
     public HttpsConnection setUserAgent(final String userAgent) {
         setHeader("User-Agent", userAgent);
         return this;
     }
 
+    /**
+     * Create body for connection. Used, when request method is POST and ignored otherwise.
+     *
+     * @param body connection body.
+     * @return self.
+     */
     public HttpsConnection setBody(final String body){
         this.mBody = body;
         return this;
     }
 
+    /**
+     * Set cookies for connection.
+     *     Example:
+     *     cookie1=data1; cookie2=data2
+     *
+     * @param cookies cookie data.
+     * @return self.
+     */
     public HttpsConnection setCookies(final String cookies) {
         setHeader("Cookie", cookies);
         return this;
     }
 
+    /**
+     * Add cookie for created cookies.
+     *
+     * @param cookie cookie data.
+     * @return self.
+     */
     public HttpsConnection addCookie(final String cookie) {
         return setHeader("Cookie", this.mHeaders.get("Cookie") + "; ");
     }
 
-    public HttpsConnection setAuthorization(final String login, final String pass) {
-        setHeader("Authorization", "Basic " + Base64.encode((login + ':' + pass).getBytes()));
-        return this;
-    }
-
-    private void setHeaders(final HttpURLConnection connection, final Map<String, String> headers) throws BooruEngineConnectionException {
+    private HttpsConnection setHeaders(final HttpURLConnection connection, final Map<String, String> headers) throws BooruEngineConnectionException {
         try {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 connection.setRequestProperty(entry.getKey(), entry.getValue());
@@ -84,8 +151,16 @@ public class HttpsConnection {
         }catch (ProtocolException e){
             throw new BooruEngineConnectionException(e);
         }
+        return this;
     }
 
+    /**
+     * Create connection to server with url address.
+     *
+     * @param url url.
+     * @return self.
+     * @throws BooruEngineConnectionException when something go wrong. Use <code>getCause</code> to see more details.
+     */
     public HttpsConnection openConnection(final String url) throws BooruEngineConnectionException {
         try {
             return openConnection(new URL(url));
@@ -94,6 +169,13 @@ public class HttpsConnection {
         }
     }
 
+    /**
+     * Create connection to server with url address.
+     *
+     * @param url url.
+     * @return self.
+     * @throws BooruEngineConnectionException when something go wrong. Use <code>getCause</code> to see more details.
+     */
     public HttpsConnection openConnection(final URL url) throws BooruEngineConnectionException {
         switch (this.mRequestMethod) {
             case GET: {
@@ -144,6 +226,12 @@ public class HttpsConnection {
         }
     }
 
+    /**
+     * Get the server response.
+     *
+     * @return response.
+     * @throws BooruEngineConnectionException  when something go wrong. Use <code>getCause</code> to see more details.
+     */
     public String getResponse() throws BooruEngineConnectionException {
         try {
             if (this.mResponse == null){
@@ -162,6 +250,12 @@ public class HttpsConnection {
         }
     }
 
+    /**
+     * Get response code.
+     *
+     * @return response code.
+     * @throws BooruEngineConnectionException when something go wrong. Use <code>getCause</code> to see more details.
+     */
     public int getResponseCode() throws BooruEngineConnectionException {
         try {
             if (this.mResponseCode == -1) this.mResponseCode = mConnection.getResponseCode();
@@ -172,6 +266,12 @@ public class HttpsConnection {
         }
     }
 
+    /**
+     * Get response message.
+     *
+     * @return response message.
+     * @throws BooruEngineConnectionException when something go wrong. Use <code>getCause</code> to see more details.
+     */
     public String getResponseMessage() throws BooruEngineConnectionException {
         try {
             if (this.mResponseMessage == null) {
@@ -184,13 +284,23 @@ public class HttpsConnection {
         }
     }
 
-    public Map<String, List<String>> getHeaders() throws BooruEngineConnectionException {
+    /**
+     * Get headers, which will be in hashmap.
+     *
+     * @return headers.
+     */
+    public Map<String, List<String>> getHeaders(){
         if (this.mResponseHeaders == null){
             this.mResponseHeaders = mConnection.getHeaderFields();
         }
         return this.mResponseHeaders;
     }
 
+    /**
+     * Get header. The value will be in list of strings.
+     *
+     * @return header.
+     */
     public List<String> getHeader(String key) {
         if (this.mResponseHeaders == null){
             this.mResponseHeaders = mConnection.getHeaderFields();
@@ -265,18 +375,46 @@ public class HttpsConnection {
         return this.mRequestMethod + "\n" + this.mHeaders + "\n" + this.mBody;
     }
 
+    /**
+     * Returns the error stream if the connection failed
+     * but the server sent useful data nonetheless.
+     *
+     * <p>This method will not cause a connection to be initiated. If
+     * the connection was not connected, or if the server did not have
+     * an error while connecting or if the server had an error but
+     * no error data was sent, this method will return null.
+     *
+     * @return an error stream if any, null if there have been no
+     * errors, the connection is not connected or the server sent no
+     * useful data.
+     */
     public InputStream getErrorStrean(){
         return this.mErrStream;
     }
 
+    /**
+     * Return a default <code>URLConnection</code> for performing specific actions with connection.
+     *
+     * @return default java connection.
+     */
     public URLConnection getConnection(){
         return this.mConnection;
     }
 
+    /**
+     * Change the default user agent by custom.
+     * The new user agent will be user in ALL realisations of this class.
+     * @param newUserAgent - new user agent.
+     */
     public static void setDefaultUserAgent(final String newUserAgent){
         sDefaultUserAgent = newUserAgent;
     }
 
+    /**
+     * Get default user agent.
+     *
+     * @return default user agent.
+     */
     public static String getDefaultUserAgent(){
         return sDefaultUserAgent;
     }
