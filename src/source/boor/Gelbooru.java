@@ -260,7 +260,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
      *
      * @param post_id post id.
      * @param action  any action.
-     * @return true if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
@@ -268,7 +268,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
      *                              <p>{@code IllegalArgumentException} will be thrown when {@param action} not contain expected value.
      */
     @Override
-    public boolean votePost(final int post_id, final String action) throws BooruEngineException {
+    public HttpsConnection votePost(final int post_id, final String action) throws BooruEngineException {
         if (!action.equals("up")) {
             throw new BooruEngineException("Action can be only \"up\".", new IllegalArgumentException(action));
         }
@@ -281,7 +281,8 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(getCookieFromLoginData())
                 .openConnection(getVotePostRequest(post_id) + "&id=" + post_id + "&type=" + action);
-        return !connection.getResponse().equals("");
+
+        return connection;
     }
 
     /**

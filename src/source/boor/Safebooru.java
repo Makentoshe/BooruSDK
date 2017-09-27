@@ -258,7 +258,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
      *
      * @param post_id post id.
      * @param action  any action.
-     * @return true if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
@@ -266,7 +266,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
      *                              <p>{@code IllegalArgumentException} will be thrown when {@param action} not contain expected value.
      */
     @Override
-    public boolean votePost(final int post_id, @NotNull final String action) throws BooruEngineException {
+    public HttpsConnection votePost(final int post_id, @NotNull final String action) throws BooruEngineException {
         if (!action.equals("up") && !action.equals("down")) {
             throw new BooruEngineException("Action can be \"up\" or \"down\".", new IllegalArgumentException(action));
         }
@@ -281,7 +281,7 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .openConnection(getVotePostRequest(post_id) + "&id=" + post_id + "&type=" + action);
 
-        return !connection.getResponse().equals("");
+        return connection;
     }
 
     /**

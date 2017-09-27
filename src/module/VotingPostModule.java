@@ -1,6 +1,7 @@
 package module;
 
 import engine.BooruEngineException;
+import engine.connector.HttpsConnection;
 
 /**
  * Interface with the method for a voting posts on any *boor.
@@ -13,10 +14,10 @@ public interface VotingPostModule {
      *
      * @param id post id.
      * @param action any action - it can be score quantity(from 0 to 3) or action "up"/"down".
-     * @return true if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <tt>getCause</tt> to see more details.
      */
-    boolean votePost(final int id, final String action) throws BooruEngineException;
+    HttpsConnection votePost(final int id, final String action) throws BooruEngineException;
 
     /**
      * Get request for voting post.

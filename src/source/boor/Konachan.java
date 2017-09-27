@@ -258,7 +258,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
      *
      * @param post_id post id.
      * @param score   scores to post.
-     * @return true if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
@@ -266,8 +266,9 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
      *                              <p>{@code IllegalArgumentException} will be thrown when {@param score} not contain expected value.
      */
     @Override
-    public boolean votePost(final int post_id, final String score) throws BooruEngineException {
+    public HttpsConnection votePost(final int post_id, final String score) throws BooruEngineException {
         //check userdata
+        HttpsConnection connection;
         String token;
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined."));
@@ -280,24 +281,21 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
 
             token = loginData.get("authenticity_token").replaceAll("%2B", "+");
 
-            token = new HttpsConnection()
+            connection = new HttpsConnection()
                     .setRequestMethod(Method.POST)
                     .setUserAgent(HttpsConnection.getDefaultUserAgent())
                     .setCookies(getCookieFromLoginData())
                     .setHeader("X-CSRF-Token", token)
                     .setBody("id=" + post_id + "&score=" + score)
-                    .openConnection(getVotePostRequest(post_id))
-                    .getResponse();
+                    .openConnection(getVotePostRequest(post_id));
 
         } catch (NumberFormatException e) {
             throw new BooruEngineException(new IllegalArgumentException(score));
         } catch (NullPointerException e) {
             throw new BooruEngineException("User data not defined.", new IllegalStateException());
-        } catch (BooruEngineException e) {
-            throw new BooruEngineException(e.getCause().getMessage());
         }
 
-        return token.split("\"success\":")[1].contains("true");
+        return connection;
     }
 
     /**

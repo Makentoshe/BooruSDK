@@ -273,7 +273,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
      *
      * @param post_id post id.
      * @param score   scores to post.
-     * @return true if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
@@ -281,7 +281,7 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
      *                              <p>{@code IllegalArgumentException} will be thrown when {@param score} not contain expected value.
      */
     @Override
-    public boolean votePost(int post_id, String score) throws BooruEngineException {
+    public HttpsConnection votePost(int post_id, String score) throws BooruEngineException {
         String token;
         HttpsConnection connection;
         //check userdata
@@ -320,17 +320,14 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
                     .setHeader("X-CSRF-Token", token)
                     .setBody("id=" + post_id + "&score=" + score)
                     .openConnection(getVotePostRequest(post_id));
-            token = connection.getResponse();
 
         } catch (NumberFormatException e) {
             throw new BooruEngineException(new IllegalArgumentException(score));
         } catch (NullPointerException e) {
             throw new BooruEngineException("User data not defined.", new IllegalStateException());
-        } catch (BooruEngineException e) {
-            throw new BooruEngineException(e.getCause().getMessage());
         }
 
-        return token.split("\"success\":")[1].contains("true");
+        return connection;
     }
 
     /**

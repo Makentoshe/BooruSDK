@@ -263,7 +263,7 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
      *                              <p>{@code IllegalArgumentException} will be thrown when {@param action} not contain expected value.
      */
     @Override
-    public boolean votePost(final int post_id, final String action) throws BooruEngineException {
+    public HttpsConnection votePost(final int post_id, final String action) throws BooruEngineException {
         if (!action.equals("up")) throw new BooruEngineException("Action can be only \"up\".", new IllegalArgumentException(action));
         //check userdata
         if (getCookieFromLoginData() == null) {
@@ -276,7 +276,7 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
                 .setCookies(loginData.toString().replaceAll(", ", "; "))
                 .openConnection(getVotePostRequest(post_id) + "&id=" + post_id + "&type=" + action);
 
-        return !connection.getResponse().equals("");
+        return connection;
     }
 
     /**

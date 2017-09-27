@@ -276,7 +276,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
      *
      * @param post_id post id.
      * @param score   scores to post.
-     * @return true if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
@@ -284,7 +284,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
      *                              <p>{@code IllegalArgumentException} will be thrown when {@param score} not contain expected value.
      */
     @Override
-    public boolean votePost(int post_id, String score) throws BooruEngineException {
+    public HttpsConnection votePost(int post_id, String score) throws BooruEngineException {
         //check userdata
         String token;
         if (getCookieFromLoginData() == null) {
@@ -317,7 +317,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
                 .setBody("id=" + post_id + "&score=" + score)
                 .openConnection(getVotePostRequest(post_id));
 
-        return connection.getResponse().split("\"success\":")[1].contains("true");
+        return connection;
     }
 
     /**

@@ -273,7 +273,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
      *
      * @param post_id post id.
      * @param score   scores to post.
-     * @return true if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
@@ -281,7 +281,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
      *                              <p>{@code IllegalArgumentException} will be thrown when {@param score} not contain expected value.
      */
     @Override
-    public boolean votePost(final int post_id, final String score) throws BooruEngineException {
+    public HttpsConnection votePost(final int post_id, final String score) throws BooruEngineException {
         //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined."));
@@ -299,7 +299,7 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
                 .setBody(body)
                 .openConnection(getVotePostRequest(post_id));
 
-        return connection.getResponse().split("\"success\":")[1].contains("true");
+        return connection;
     }
 
     /**
