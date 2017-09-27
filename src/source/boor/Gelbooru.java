@@ -304,14 +304,14 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
      * @param body       comment body.
      * @param postAsAnon using for anonymously posting. Useless.
      * @param bumpPost   using for bump up post.
-     * @return {@code true} if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public boolean createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+    public HttpsConnection createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
         //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
@@ -347,7 +347,7 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
                 .setCookies(getCookieFromLoginData())
                 .openConnection(getCommentRequest(post_id));
 
-        return connection.getResponse().equals("");
+        return connection;
     }
 
     /**

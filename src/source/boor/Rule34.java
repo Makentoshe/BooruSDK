@@ -255,7 +255,7 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
      *
      * @param post_id post id.
      * @param action  any action.
-     * @return true if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
@@ -305,7 +305,7 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public boolean createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+    public HttpsConnection createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
         String cbody =
                 "comment=" + body.replaceAll(" ", "+") +
                         "&post_anonymous=" + (postAsAnon ? "on" : "off") +
@@ -318,7 +318,7 @@ public class Rule34 extends AbstractBoor implements LoginModule, VotingPostModul
                 .setBody(cbody)
                 .openConnection(getCommentRequest(post_id));
 
-        return connection.getResponse().equals("") && connection.getResponseCode() == 302;
+        return connection;
     }
 
     /**

@@ -281,14 +281,14 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
      * @param body       comment body.
      * @param postAsAnon using for anonymously posting.
      * @param bumpPost   using for bump up post.
-     * @return {@code true} if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public boolean createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+    public HttpsConnection createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
         //check user data
         String token = checkUserData();
         //create post body
@@ -305,9 +305,8 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
                 .openConnection(getCommentRequest(post_id));
         //remove used token
         loginData.remove("authenticity_token");
-        //check data
-        boolean code = connection.getResponseCode() == 302;
-        return code && connection.getResponse().contains(getCustomRequest("/posts/" + post_id));
+
+        return connection;
     }
 
     /**

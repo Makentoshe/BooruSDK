@@ -334,14 +334,14 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
      * @param body       comment body.
      * @param postAsAnon for anonymously posting.
      * @param bumpPost   for bump up post.
-     * @return true if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when the user data is not defined.
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public boolean createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+    public HttpsConnection createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
         StringBuilder cbody = new StringBuilder();
         //check userdata
         if (getCookieFromLoginData() == null) {
@@ -352,15 +352,16 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
                 .append("&comment%5Bpost_id%5D=").append(post_id)
                 .append("&origin_controller=post&origin_action=show")
                 .append("&comment%5Bbody%5D=").append(body);
+
         //send body to server
-        String response = new HttpsConnection()
+        HttpsConnection connection = new HttpsConnection()
                 .setRequestMethod(Method.POST)
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .setCookies(getCookieFromLoginData())
                 .setBody(cbody.toString())
-                .openConnection(getCommentRequest(post_id))
-                .getResponse();
-        return true;
+                .openConnection(getCommentRequest(post_id));
+
+        return connection;
     }
 
     /**

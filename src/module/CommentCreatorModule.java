@@ -1,6 +1,7 @@
 package module;
 
 import engine.BooruEngineException;
+import engine.connector.HttpsConnection;
 
 /**
  * Interface with the basic methods for commenting *boor posts.
@@ -16,10 +17,10 @@ public interface CommentCreatorModule {
      * @param body comment body.
      * @param postAsAnon using for anonymously posting.
      * @param bumpPost using for bump up post.
-     * @return {@code true} if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException if something go wrong. Use <code>GetCause</code> to see more details.
      */
-    boolean createCommentToPost(final int id, final String body, final boolean postAsAnon, final boolean bumpPost) throws BooruEngineException;
+    HttpsConnection createCommentToPost(final int id, final String body, final boolean postAsAnon, final boolean bumpPost) throws BooruEngineException;
 
     /**
      * Get address for creating <code>Method.POST</code> request for creating comment.

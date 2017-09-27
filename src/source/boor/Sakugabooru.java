@@ -340,14 +340,14 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
      * @param body       comment body.
      * @param postAsAnon using for anonymously posting.
      * @param bumpPost   using for bump up post.
-     * @return {@code true} if success.
+     * @return connection with post-request response.
      * @throws BooruEngineException when something go wrong. Use <code>getCause</code> to see more details.
      *                              Note that exception can be contain one of:
      *                              <p>{@code IllegalStateException} will be thrown when user data is not defined.
      *                              <p>{@code BooruEngineConnectionException} will be thrown when something go wrong with connection.
      */
     @Override
-    public boolean createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
+    public HttpsConnection createCommentToPost(int post_id, String body, boolean postAsAnon, boolean bumpPost) throws BooruEngineException {
         //check userdata
         if (getCookieFromLoginData() == null) {
             throw new BooruEngineException(new IllegalStateException("User data not defined"));
@@ -371,31 +371,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
                 .setBody(cbody)
                 .openConnection(getCommentRequest(post_id));
 
-        //try to get Set-Cookie header
-        //if failed(NPE) - catch and throw BEE
-        boolean out = false;
-        try {
-            for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
-                String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
-                //if notice=Comment+created - OK
-                //else throw RE
-                if (data[0].equals("notice")) {
-                    if (data[1].equals("Comment+created")) {
-                        out = true;
-                    } else {
-                        throw new BooruEngineException(new RuntimeException(data[1].replaceAll(Pattern.quote("+"), " ")));
-                    }
-                }
-                //and of course put cookie in data
-                if (data[0].equals("sakugabooru")) loginData.put(data[0], data[1]);
-            }
-        } catch (NullPointerException e) {
-            throw new BooruEngineException(
-                    "Something go wrong and server can't process it.",
-                    new NoSuchElementException("Set-Cookie")
-            );
-        }
-        return out;
+        return connection;
     }
 
     /**
@@ -421,6 +397,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
     }
 
     //TODO: test method
+
     /**
      * Create upload on Sakugabooru.
      *
@@ -446,7 +423,7 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
      */
     @Override
     public HttpsConnection createPost(final @NotNull File post, final @NotNull String tags, final String title,
-                             final String source, final @NotNull Rating rating, final String parent_id)
+                                      final String source, final @NotNull Rating rating, final String parent_id)
             throws BooruEngineException {
         String token;
         if (getCookieFromLoginData() == null) {
