@@ -1,0 +1,287 @@
+## Adding your own *boor.
+There are some stages of boor including - simple(fast) or deep.
+
+The differences between them is clear. In simple including just implement
+some methods and the basic understanding of api.
+
+But the deep include is a hard - how all boor and his pieces are works - understanding is necessary.
+How to create POST-requests, which address they must be send, etc.
+
+### Simple
+
+Now, let's add new boor. I choose [TBIB](https://tbib.org/index.php?page=help&topic=dapi).
+It has Basic API, so, we can extend `AbstractBoorBasic` or `AbstractBoor`.
+Let's extend `AbstractBoor`.
+
+At first create new class-singleton and adding required methods
+```
+public class BigBooru extends AbstractBoor {
+
+    private static BigBooru instance = null;
+
+    public static BigBooru get(){
+        if (instance == null) instance = new BigBooru();
+        return instance;
+    }
+
+    @Override
+    public Format getFormat() {
+        return null;
+    }
+
+    @Override
+    public Api getApi() {
+        return null;
+    }
+
+    @Override
+    public String getCustomRequest(String request) {
+        return null;
+    }
+
+    @Override
+    public String getPostByIdRequest(int id, Format format) {
+        return null;
+    }
+
+    @Override
+    public String getPackByTagsRequest(int limit, String tags, int page, Format format) {
+        return null;
+    }
+
+    @Override
+    public String getCommentsByPostIdRequest(int post_id, Format format) {
+        return null;
+    }
+
+    @Override
+    public Post newPostInstance(HashMap<String, String> attributes) {
+        return null;
+    }
+}
+```
+At first we must add 2 fields - Api and Format and implement some methods.
+```
+public class BigBooru extends AbstractBoor {
+    // /~
+    //final because API is basic and we can't get result in JSON format
+    private final Format format = Format.XML;
+
+    private final Api api = Api.BASICS;
+
+    @Override
+    public Format getFormat() { return format; }
+
+    @Override
+    public Api getApi() { return api; }
+
+    // /~
+}
+```
+Now add API access and some more methods
+```
+    @Override
+    public String getCustomRequest(String request) {
+        return "https://tbib.org/index.php?page=dapi&q=index&s=";
+    }
+
+    @Override
+    public String getPostByIdRequest(int id, Format ignore) {
+        return getCustomRequest("s=post&id=" + id);
+    }
+
+    @Override
+    public String getPackByTagsRequest(int limit, String tags, int page, Format ignore) {
+        return getCustomRequest("post&limit=" + limit + "&tags=" + tags + "&pid=" + page);
+    }
+
+    @Override
+    public String getCommentsByPostIdRequest(int post_id, Format format) {
+        return getCustomRequest("comment&post_id=" + post_id);
+    }
+```
+And in the finish implement `newPostInstance` method - we must know post structure.
+```
+        @Override
+        public Post newPostInstance(HashMap<String, String> attributes) {
+            Post post = new Post(instance);
+            //create Entry
+            Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
+            //for each attribute
+            for (Map.Entry<String, String> pair : entrySet) {
+                switch (pair.getKey()){
+                    case "id":{
+                        post.setId(Integer.parseInt(pair.getValue()));
+                        break;
+                    }
+                    case "md5":{
+                        post.setMd5(pair.getValue());
+                        break;
+                    }
+                    case "rating":{
+                        post.setRating(pair.getValue());
+                        break;
+                    }
+                    case "score":{
+                        post.setScore(Integer.parseInt(pair.getValue()));
+                        break;
+                    }
+                    case "preview_url":{
+                        post.setPreview_url("https:" + pair.getValue());
+                        break;
+                    }
+                    case "tags":{
+                        post.setTags(pair.getValue());
+                        break;
+                    }
+                    case "sample_url":{
+                        post.setSample_url("https:" + pair.getValue());
+                        break;
+                    }
+                    case "file_url":{
+                        post.setFile_url("https:" + pair.getValue());
+                        break;
+                    }
+                    case "source":{
+                        post.setSource(pair.getValue());
+                        break;
+                    }
+                    case "creator_id": {
+                        post.setCreator_id(Integer.parseInt(pair.getValue()));
+                        break;
+                    }
+                    case "has_comments": {
+                        if ("true".equals(pair.getValue())) {
+                            post.setHas_comments(true);
+                        } else {
+                            post.setHas_comments(false);
+                        }
+                        break;
+                    }
+                    case "created_at":{
+                        post.setCreate_time(pair.getValue());
+                        break;
+                    }
+                }
+            }
+            //after all check comments flag
+            if (post.isHas_comments()){
+                //and if true - setup comments url.
+                post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
+            }
+            return post;
+        }
+```
+
+### Deep
+
+Let's try to include [Konachan](https://konachan.com/) boor. At first let know how it works,
+so include the traffic debugger and create some different requests.
+We can see, that the cookies and other data are static - than means that the necessary authentication data
+will not be change after each request.
+So, let's try to create login.
+
+At first we include ```LoginModule``` to boor
+```
+public class Konachan implements LoginModule
+```
+and implement all methods:
+
+    ..* logIn
+    ..* logOff
+    ..* getLoginData
+    ..* getAuthenticateRequest
+    ..* getCookieFromLoginData
+
+Let's start with ```login```. We know that the method must send our login and password.
+And we know how it work - at first we must get token and cookies,
+then create body for POST-request, finally create POST-request and send data.
+We also must store login data in memory. So create ```HashMap<String, String>``` field in class.
+``` Java
+    public HttpsConnection logIn(String login, String password) throws BooruEngineException {
+        //create connection for getting cookies and token
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .openConnection(getCustomRequest("/user/login"));
+
+        //set cookie
+        if (!loginData.containsKey("konachan.com")) {
+            //method is getting cookies from header and store into hashmap.
+            setCookie(connection);
+        }
+        //set token
+        if (!loginData.containsKey("authenticity_token")) {
+            //method is getting token from page body and store into hashmap too.
+            setToken(connection);
+        }
+
+        //if already have not cookie - throw an exception
+        if (!loginData.containsKey("konachan.com")) {
+            throw new BooruEngineException("Can't find \"konachan.com\" cookie in login data.", new IllegalStateException());
+        }
+        //if already have not token - throw an exception
+        if (!loginData.containsKey("authenticity_token")) {
+            throw new BooruEngineException("Can't find \"authenticity_token\" in login data.", new IllegalStateException());
+        }
+
+        //create body for sending.
+        String postData = "authenticity_token=" + loginData.get("authenticity_token") + "&user%5Bname%5D=" + login +
+                "&user%5Bpassword%5D=" + password + "&commit=Login";
+                //get cookie (we also can use getCookieFromLoginData method)
+        String cookie = "konachan.com=" + loginData.get("konachan.com");
+
+        //create connection
+        connection = new HttpsConnection()
+                .setRequestMethod(Method.POST)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .setBody(postData)
+                .setCookies(cookie)
+                .openConnection(getAuthenticateRequest());
+
+        //now get connection response and parse data.
+        //all data must be in cookie header.
+        try {
+            for (int i = 0; i < connection.getHeader("Set-Cookie").size(); i++) {
+                String[] data = connection.getHeader("Set-Cookie").get(i).split("; ")[0].split("=");
+                if (data.length == 2) this.loginData.put(data[0], data[1]);
+            }
+            //if unsuccessful
+        } catch (NullPointerException e) {
+            //throw exception
+            throw new BooruEngineException(new AuthenticationException("Authentication failed."));
+        }
+        //return connection for getting access to data outside the method.
+    }
+```
+
+Now we have access to our login data. Let's create get method.
+```
+public Map<String, String> getLoginData() {
+        return this.loginData;
+    }
+```
+
+This method is very simple. If we store data in Hashmap - just return pointer.
+Method can return ```Object``` as default, so we can include any way to store data.
+
+Now implement logoff method.
+
+```
+ public void logOff() {
+        getLoginData().clear();
+    }
+```
+We just remove all data in hashmap.
+
+Finally, implement request-method, which we used in ```login``` method.
+
+```
+public String getAuthenticateRequest() {
+        return getCustomRequest("/user/authenticate");
+    }
+```
+
+This method just get address for sending POST-request.
+
+For the same pattern, the other modules in *boor.

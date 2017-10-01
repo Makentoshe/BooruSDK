@@ -236,7 +236,7 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
      */
     @Override
     public void logOff() {
-        this.loginData.clear();
+        getLoginData().clear();
     }
 
     /**

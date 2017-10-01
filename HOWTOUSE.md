@@ -14,6 +14,13 @@ Danbooru.get().getPostByIdRequest(2800847);
 ```
 Result will be next: https://danbooru.donmai.us/posts/2800847.json.
 
+NOTE: All boors have 2 method types: request-method and action-method.
+As default in start boor will be have only request-method. 
+This method return server address for creating requests and the method
+name will be end with "Request".
+Action-methods can be implements with modules - they are make actions 
+to server: create posts, voting posts, etc.
+
 ### *boor Structure
 Each included *boor in BEL has some basic methods. 
 2 of them - ```getApi()``` and ```getFormat()```.
@@ -42,19 +49,25 @@ String request = Safebooru.get().getPostByIdRequest(2285559);
 ```
 After this let's create connection to the *boor
 ```
-HttpConnection connection = new HttpConnection(false);
+HttpsConnection connection = new HttpsConnection(false)
+                            .setRequestMethod(Method.GET)
+                            .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                            .openConnection(request);
 ```
 And get response data from server
 ```
-String response = connection.getRequest(request);
+String response = connection.getResponse();
 ```
 Now the ```response``` will be contain XML or JSON document
 
 Full code:
 ```
 String request = Safebooru.get().getPostByIdRequest(2285559);
-HttpConnection connection = new HttpConnection(false);
-String response = connection.getRequest(request);
+HttpsConnection connection = new HttpsConnection(false)
+                            .setRequestMethod(Method.GET)
+                            .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                            .openConnection(request);
+String response = connection.getResponse();
 ```
 ### Parse Data
 After getting result from server we must somehow process the data.
@@ -73,7 +86,7 @@ When the parse end - get the result by method.
 List<HashMap<String, String>> result = parser.getResult();
 ```
 As result we receive the ```List<HashMap<String, String>>``` - 
-this is the list of items(```Post```, ```Comment```), where the ```HashMap``` is a single item.
+this is the list of items(```Post``` or ```Comment```), where the ```HashMap``` is a single item.
 Item(```HashMap```) has next structure - ```<Attribute_name, Attrubute_value>```.
 
 We can simplify this code. Look at it
@@ -113,173 +126,11 @@ Comment comment = new Comment(hashmap);
 Comment is not needed boor instance.
 
 You can create remote Post constructor in boor, implements 
-`newPostInstance(HashMap)`. This method can create Post 
-more flexibly.
+`RemotePostModule` which contain `newPostInstance(HashMap)`. 
+This method can create Post more flexibly.
 
 If `Post` or `Comment` functionality is not satisfies your needs - 
 you can extends them.
 
 ### Adding your own *boor.
-Now, let's add new boor. I choose [TBIB](https://tbib.org/index.php?page=help&topic=dapi).
-It has Basic API, so, we can extend `AbstractBoorBasic` or `AbstractBoor`.
-Let's extend `AbstractBoor`.
-
-At first create new class-singleton and adding required methods
-```
-public class BigBooru extends AbstractBoor {
-
-    private static BigBooru instance = null;
-        
-    public static BigBooru get(){
-        if (instance == null) instance = new BigBooru();
-        return instance;
-    }
-
-    @Override
-    public Format getFormat() {
-        return null;
-    }
-
-    @Override
-    public Api getApi() {
-        return null;
-    }
-
-    @Override
-    public String getCustomRequest(String request) {
-        return null;
-    }
-
-    @Override
-    public String getPostByIdRequest(int id, Format format) {
-        return null;
-    }
-
-    @Override
-    public String getPackByTagsRequest(int limit, String tags, int page, Format format) {
-        return null;
-    }
-
-    @Override
-    public String getCommentsByPostIdRequest(int post_id, Format format) {
-        return null;
-    }
-
-    @Override
-    public Post newPostInstance(HashMap<String, String> attributes) {
-        return null;
-    }
-}
-```
-At first we must add 2 fields - Api and Format and implement some methods.
-```
-public class BigBooru extends AbstractBoor {
-    // /~
-    //final because API is basic and we can't get result in JSON format
-    private final Format format = Format.XML; 
-    
-    private final Api api = Api.BASICS;
-    
-    @Override
-    public Format getFormat() { return format; }
-
-    @Override
-    public Api getApi() { return api; }    
-    
-    // /~
-}
-```
-Now add API access and some more methods
-```
-    @Override
-    public String getCustomRequest(String request) {
-        return "https://tbib.org/index.php?page=dapi&q=index&s=";
-    }
-
-    @Override
-    public String getPostByIdRequest(int id, Format ignore) {
-        return getCustomRequest("s=post&id=" + id);
-    }
-
-    @Override
-    public String getPackByTagsRequest(int limit, String tags, int page, Format ignore) {
-        return getCustomRequest("post&limit=" + limit + "&tags=" + tags + "&pid=" + page);
-    }
-
-    @Override
-    public String getCommentsByPostIdRequest(int post_id, Format format) {
-        return getCustomRequest("comment&post_id=" + post_id);
-    }
-```
-And in the finish implement `newPostInstance` method - we must know post structure.
-```
-        @Override
-        public Post newPostInstance(HashMap<String, String> attributes) {
-            Post post = new Post(instance);
-            //create Entry
-            Set<Map.Entry<String, String>> entrySet = attributes.entrySet();
-            //for each attribute
-            for (Map.Entry<String, String> pair : entrySet) {
-                switch (pair.getKey()){
-                    case "id":{
-                        post.setId(Integer.parseInt(pair.getValue()));
-                        break;
-                    }
-                    case "md5":{
-                        post.setMd5(pair.getValue());
-                        break;
-                    }
-                    case "rating":{
-                        post.setRating(pair.getValue());
-                        break;
-                    }
-                    case "score":{
-                        post.setScore(Integer.parseInt(pair.getValue()));
-                        break;
-                    }
-                    case "preview_url":{
-                        post.setPreview_url("https:" + pair.getValue());
-                        break;
-                    }
-                    case "tags":{
-                        post.setTags(pair.getValue());
-                        break;
-                    }
-                    case "sample_url":{
-                        post.setSample_url("https:" + pair.getValue());
-                        break;
-                    }
-                    case "file_url":{
-                        post.setFile_url("https:" + pair.getValue());
-                        break;
-                    }
-                    case "source":{
-                        post.setSource(pair.getValue());
-                        break;
-                    }
-                    case "creator_id": {
-                        post.setCreator_id(Integer.parseInt(pair.getValue()));
-                        break;
-                    }
-                    case "has_comments": {
-                        if ("true".equals(pair.getValue())) {
-                            post.setHas_comments(true);
-                        } else {
-                            post.setHas_comments(false);
-                        }
-                        break;
-                    }
-                    case "created_at":{
-                        post.setCreate_time(pair.getValue());
-                        break;
-                    }
-                }
-            }
-            //after all check comments flag
-            if (post.isHas_comments()){
-                //and if true - setup comments url.
-                post.setComments_url(instance.getCommentsByPostIdRequest(post.getId()));
-            }
-            return post;
-        }
-```
+Visit [this](ADDINGOWNBOOR.md) to see more details.

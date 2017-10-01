@@ -12,7 +12,7 @@ But with high integrity level for new boors.
 * [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [JUnit4](https://github.com/junit-team/junit4) - You can add it with the IDE help
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/)
-* [GSON](https://github.com/google/gson)
+* [GSON](https://github.com/google/gson) - You can add it with the IDE help
 
 ### IntelliJ IDEA
 Start IDEA and choose File - New - Project from Existing Sources.
