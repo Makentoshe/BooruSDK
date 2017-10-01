@@ -23,9 +23,8 @@ public class DanbooruTest {
 
     @Test
     public void getCustomRequest_Test() throws Exception {
-        String request = Danbooru.get().getCustomRequest("request");
+        String request = Danbooru.get().getCustomRequest("/request");
         String expected = "https://danbooru.donmai.us/request";
         assertEquals(expected, request);
     }
-
 }

@@ -6,7 +6,7 @@ import source.Post;
 import source.boor.Rule34;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,7 +21,7 @@ public class Rule34RemotePostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = Rule34.get().newPostInstance(PostTest.getDataFromBoorBasic(Rule34.get(), 2421106));
+        post = Rule34.get().newPostInstance(TestHelper.getPostFromBoor(Rule34.get(), 2421106));
     }
 
     @Test
@@ -76,18 +76,17 @@ public class Rule34RemotePostConstructorTest {
 
     @Test
     public void getComment() throws Exception {
-        assertFalse("Has comments", post.isHas_comments());
+        assertTrue("Has comments", post.isHas_comments());
     }
 
     @Test
     public void getHasComments() throws Exception {
-        assertEquals("Comment url", null, post.getComments_url());
+        assertEquals("Comment url", "https://rule34.xxx/index.php?page=dapi&q=index&s=comment&post_id=2421106", post.getComments_url());
     }
 
     @Test
     public void getCreateTime() throws Exception {
         assertEquals("Create Time", "Thu Jun 29 22:12:03 +0200 2017", post.getCreate_time());
     }
-
 
 }

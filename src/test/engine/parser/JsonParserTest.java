@@ -1,9 +1,11 @@
 package test.engine.parser;
 
-import engine.HttpConnection;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import engine.parser.JsonParser;
 import org.junit.Test;
-import source.boor.Danbooru;
+import source.boor.Konachan;
+import source.boor.Yandere;
 
 import java.util.*;
 
@@ -46,9 +48,12 @@ public class JsonParserTest {
     @Test
     public void parseJsonArray_Test() throws Exception{
         //create connection
-        HttpConnection connection = new HttpConnection(false);
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent("BooruEngineLib(mkliverout@gmail.com)/1.0")
+                .openConnection(Konachan.get().getPackByTagsRequest(5, "hatsune_miku", 0));
         //get data from server
-        String responseData = connection.getRequest(Danbooru.get().getPackByTagsRequest(5, "hatsune_miku", 0));
+        String responseData = connection.getResponse();
         //create parser
         JsonParser parser = new JsonParser();
         //start parse data
@@ -62,9 +67,12 @@ public class JsonParserTest {
     @Test
     public void parseJsonElement_Test() throws Exception{
         //create connection
-        HttpConnection connection = new HttpConnection(false);
+        HttpsConnection connection = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent("BooruEngineLib(mkliverout@gmail.com)/1.0")
+                .openConnection(Yandere.get().getPostByIdRequest(405591));
         //get data from server
-        String responseData = connection.getRequest(Danbooru.get().getPostByIdRequest(2790300));
+        String responseData = connection.getResponse();
         //create parser
         JsonParser parser = new JsonParser();
         //start parse data

@@ -6,7 +6,7 @@ import source.Post;
 import source.boor.Rule34;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.*;
 
@@ -18,7 +18,7 @@ public class Rule34PostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = new Post(PostTest.getDataFromBoorBasic(Rule34.get(), 2421106), Rule34.get());
+        post = new Post(TestHelper.getPostFromBoor(Rule34.get(), 2421106), Rule34.get());
     }
 
     @Test
@@ -73,12 +73,12 @@ public class Rule34PostConstructorTest {
 
     @Test
     public void getComment() throws Exception {
-        assertFalse("Has comments", post.isHas_comments());
+        assertTrue("Has comments", post.isHas_comments());
     }
 
     @Test
     public void getHasComments() throws Exception {
-        assertEquals("Comment url", null, post.getComments_url());
+        assertEquals("Comment url", "https://rule34.xxx/index.php?page=dapi&q=index&s=comment&post_id=2421106", post.getComments_url());
     }
 
     @Test

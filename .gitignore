@@ -23,10 +23,13 @@ hs_err_pid*
 
 
 # IDE Files
-.idea/*
+.idea
 
 out/
 
 /src/Main.java
-/test/TestData.java
+
+#File with the user confidential data for tests
+/src/Data
+
 

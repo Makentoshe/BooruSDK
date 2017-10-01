@@ -3,11 +3,10 @@ package test.source.boor.Safebooru;
 import org.junit.Before;
 import org.junit.Test;
 import source.Post;
-import source.boor.Rule34;
 import source.boor.Safebooru;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,7 +20,7 @@ public class SafebooruRemotePostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null)  return;
-        post = Safebooru.get().newPostInstance(PostTest.getDataFromBoorBasic(Safebooru.get(), 2278871));
+        post = Safebooru.get().newPostInstance(TestHelper.getPostFromBoor(Safebooru.get(), 2278871));
     }
 
     @Test

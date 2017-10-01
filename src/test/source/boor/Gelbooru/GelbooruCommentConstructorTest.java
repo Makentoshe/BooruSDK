@@ -6,7 +6,7 @@ import org.junit.Test;
 import source.Comment;
 import source.Post;
 import source.boor.Gelbooru;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,7 +16,7 @@ public class GelbooruCommentConstructorTest {
 
     public GelbooruCommentConstructorTest() throws Exception{
         if (comment != null)  return;
-        Post post = new Post(PostTest.getDataFromBoorBasic(Gelbooru.get(), 3535254), Gelbooru.get());
+        Post post = new Post(TestHelper.getPostFromBoor(Gelbooru.get(), 3535254), Gelbooru.get());
         System.out.println(post.getComments_url());
         XmlParser parser = new XmlParser();
         parser.startParse(post.getComments_url());

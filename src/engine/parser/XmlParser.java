@@ -58,8 +58,9 @@ public class XmlParser extends DefaultHandler {
      *
      * @param url - url to data.
      * @throws BooruEngineException - when parsing is going wrong.
+     * Use <tt>getCause</tt> to see more details.
      */
-    public void startParse(String url) throws BooruEngineException {
+    public XmlParser startParse(String url) throws BooruEngineException {
         if (reusable && result.size() > 0) result.clear();
 
         SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -68,6 +69,7 @@ public class XmlParser extends DefaultHandler {
         } catch (ParserConfigurationException | IOException | SAXException e) {
             throw new BooruEngineException(e);
         }
+        return this;
     }
 
     /**
@@ -77,6 +79,7 @@ public class XmlParser extends DefaultHandler {
      *
      * @param stream - data stream.
      * @throws BooruEngineException - when parsing is going wrong.
+     * Use <tt>getCause</tt> to see more details.
      */
     public void startParse(InputStream stream) throws BooruEngineException {
         if (reusable) result.clear();

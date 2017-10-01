@@ -28,7 +28,7 @@ public class E621Test {
 
     @Test
     public void getCustomRequest_Test() throws Exception {
-        String request = E621.get().getCustomRequest("request");
+        String request = E621.get().getCustomRequest("/request");
         String expected = "https://e621.net/request";
         assertEquals(expected, request);
     }
@@ -46,5 +46,4 @@ public class E621Test {
         String expected = "https://e621.net/post/index.json?tags=hatsune_miku&limit=10&page=0";
         assertEquals(expected, request);
     }
-
 }

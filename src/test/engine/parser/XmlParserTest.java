@@ -1,6 +1,7 @@
 package test.engine.parser;
 
-import engine.HttpConnection;
+import engine.connector.HttpsConnection;
+import engine.connector.Method;
 import engine.parser.XmlParser;
 import org.junit.Test;
 import source.boor.Gelbooru;
@@ -25,7 +26,12 @@ public class XmlParserTest {
     public void startParse_Stream_Test() throws Exception {
         XmlParser parser = new XmlParser(false);
 
-        String xml = new HttpConnection(false).getRequest(Gelbooru.get().getPackByTagsRequest(2, "hatsune_miku", 0));
+        String xml = new HttpsConnection()
+                .setRequestMethod(Method.GET)
+                .setUserAgent(HttpsConnection.getDefaultUserAgent())
+                .openConnection(Gelbooru.get().getPackByTagsRequest(2, "hatsune_miku", 0))
+                .getResponse();
+
         InputStream stream = new ByteArrayInputStream(xml.getBytes());
         parser.startParse(stream);
 

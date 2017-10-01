@@ -6,7 +6,7 @@ import source.Post;
 import source.boor.Safebooru;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.*;
 
@@ -18,7 +18,7 @@ public class SafebooruPostConstructorTest {
     @Before
     public void setUp() throws Exception {
         if (post != null)  return;
-        post = new Post(PostTest.getDataFromBoorBasic(Safebooru.get(), 2278871), Safebooru.get());
+        post = new Post(TestHelper.getPostFromBoor(Safebooru.get(), 2278871), Safebooru.get());
     }
 
     @Test

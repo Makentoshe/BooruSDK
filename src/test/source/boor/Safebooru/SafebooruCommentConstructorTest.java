@@ -5,9 +5,8 @@ import engine.parser.XmlParser;
 import org.junit.Test;
 import source.Comment;
 import source.Post;
-import source.boor.Rule34;
 import source.boor.Safebooru;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,7 +16,7 @@ public class SafebooruCommentConstructorTest {
 
     public SafebooruCommentConstructorTest() throws Exception{
         if (comment != null)  return;
-        Post post = new Post(PostTest.getDataFromBoorBasic(Safebooru.get(), 2244511), Safebooru.get());
+        Post post = new Post(TestHelper.getPostFromBoor(Safebooru.get(), 2244511), Safebooru.get());
         XmlParser parser = new XmlParser();
         parser.startParse(post.getComments_url());
         comment = new Comment(parser.getResult().get(0));

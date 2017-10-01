@@ -9,8 +9,8 @@ public class AbstractBoorBasicTest {
 
     @Test
     public void getCustomRequest() throws Exception {
-        String request = Gelbooru.get().getCustomRequest("___request");
-        String expected = "https://gelbooru.com/index.php?page=dapi&q=index&s=___request";
+        String request = Gelbooru.get().getCustomRequest("/___request");
+        String expected = "https://gelbooru.com/___request";
         assertEquals(expected, request);
     }
 

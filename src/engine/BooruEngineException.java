@@ -1,7 +1,8 @@
 package engine;
 
 /**
- * Created by Makentoshe on 10.07.2017.
+ * Default exception for BEL. It will be contain another exception or message, if error can't be classified.
+ * Use <code>getCause</code>. to see more about main exception.
  */
 public class BooruEngineException extends Exception {
 

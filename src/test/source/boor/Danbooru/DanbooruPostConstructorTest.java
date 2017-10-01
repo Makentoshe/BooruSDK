@@ -5,7 +5,7 @@ import source.Post;
 import source.boor.Danbooru;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,9 +15,9 @@ public class DanbooruPostConstructorTest {
 
     private static Post post;
 
-    public DanbooruPostConstructorTest() throws Exception{
-        if (post != null)return;
-        post = new Post(PostTest.getDataFromBoorAdvanced(Danbooru.get(), 2794154), Danbooru.get());
+    public DanbooruPostConstructorTest() throws Exception {
+        if (post != null) return;
+        post = new Post(TestHelper.getDataFromBoorAdvanced(Danbooru.get(), 2794154), Danbooru.get());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class DanbooruPostConstructorTest {
 
     @Test
     public void getFile() throws Exception {
-        assertEquals("File ","https://danbooru.donmai.us/data/sample/__flandre_scarlet_patchouli_knowledge_remilia_scarlet_and_wakasagihime_touhou_drawn_by_makako_yume_bouei_shoujo_tai__sample-caf360797479bc7ba19eff236c51f533.jpg", post.getFile_url());
+        assertEquals("File ", "https://danbooru.donmai.us/data/sample/__flandre_scarlet_patchouli_knowledge_remilia_scarlet_and_wakasagihime_touhou_drawn_by_makako_yume_bouei_shoujo_tai__sample-caf360797479bc7ba19eff236c51f533.jpg", post.getFile_url());
     }
 
     @Test

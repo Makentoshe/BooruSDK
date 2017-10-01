@@ -28,7 +28,7 @@ public class YandereTest {
 
     @Test
     public void getCustomRequest_Test() throws Exception {
-        String request = Yandere.get().getCustomRequest("request");
+        String request = Yandere.get().getCustomRequest("/request");
         String expected = "https://yande.re/request";
         assertEquals(expected, request);
     }

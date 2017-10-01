@@ -44,7 +44,7 @@ public class JsonParser {
      *
      * @param dataToParse string, which describe json array.
      */
-    public void startParse(String dataToParse) {
+    public JsonParser startParse(String dataToParse) {
         if (reusable) result.clear();
         //create gson parser
         com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
@@ -62,6 +62,7 @@ public class JsonParser {
             //and parse as array
             parseArray(array);
         }
+        return this;
     }
 
     /**

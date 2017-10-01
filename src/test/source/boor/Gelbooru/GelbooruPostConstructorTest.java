@@ -1,12 +1,11 @@
 package test.source.boor.Gelbooru;
 
-import org.junit.Before;
 import org.junit.Test;
 import source.Post;
 import source.boor.Gelbooru;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -19,7 +18,7 @@ public class GelbooruPostConstructorTest {
 
     public GelbooruPostConstructorTest() throws Exception {
         if (post != null) return;
-        post = new Post(PostTest.getDataFromBoorBasic(Gelbooru.get(), 3785972), Gelbooru.get());
+        post = new Post(TestHelper.getPostFromBoor(Gelbooru.get(), 3785972), Gelbooru.get());
     }
 
     @Test

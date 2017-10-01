@@ -6,7 +6,7 @@ import source.Post;
 import source.boor.Sakugabooru;
 import source.еnum.Boor;
 import source.еnum.Rating;
-import test.source.PostTest;
+import test.source.TestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -19,7 +19,7 @@ public class SakugabooruRemotePostConstructor {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = Sakugabooru.get().newPostInstance(PostTest.getDataFromBoorAdvanced(Sakugabooru.get(), 36635));
+        post = Sakugabooru.get().newPostInstance(TestHelper.getDataFromBoorAdvanced(Sakugabooru.get(), 36635));
     }
 
     @Test
