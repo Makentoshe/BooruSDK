@@ -20,7 +20,7 @@ public class TestHelper {
         return new File(new File("").getAbsolutePath() + "\\src\\Data");
     }
 
-    public static HashMap<String, String> getDataFromBoorAdvanced(AbstractBoorAdvanced boor, int id) throws Exception {
+    public static HashMap<String, String> getDataFromBoorAdvanced(AbstractBoor boor, int id) throws Exception {
         String request1 = boor.getPostByIdRequest(id);
 
         HttpsConnection connection = new HttpsConnection()

@@ -7,6 +7,7 @@ import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import module.*;
 import source.Post;
+import source.еnum.Api;
 import source.еnum.Format;
 import source.еnum.Rating;
 
@@ -34,7 +35,7 @@ import java.util.regex.Pattern;
  * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
-public class Konachan extends AbstractBoorAdvanced implements LoginModule, VotingPostModule,
+public class Konachan extends AbstractBoor implements LoginModule, VotingPostModule,
         RemotePostModule, UploadModule, CommentCreatorModule {
 
     private static final Konachan instance = new Konachan();
@@ -42,7 +43,8 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
     private final Map<String, String> loginData = new HashMap<>();
 
     private Konachan() {
-        super();
+        format = Format.JSON;
+        api = Api.ADVANCED;
     }
 
     /**
@@ -75,6 +77,12 @@ public class Konachan extends AbstractBoorAdvanced implements LoginModule, Votin
     @Override
     public String getPostByIdRequest(int id, Format format) {
         return getCustomRequest("/post." + format.toString().toLowerCase() + "?tags=id:" + id);
+    }
+
+    @Override
+    public String getPackByTagsRequest(int limit, String tags, int page, Format format){
+        return getCustomRequest("/post/index."+format.toString().toLowerCase()+
+                "?tags="+tags+"&limit=" + limit + "&page=" + page);
     }
 
     /**

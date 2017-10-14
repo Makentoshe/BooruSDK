@@ -38,7 +38,7 @@ import java.util.logging.Logger;
  */
 public class HttpsConnection {
 
-    private static String sDefaultUserAgent = "(mkliverout@gmail.com)BooruEngineLib/1.0";
+    private static String sDefaultUserAgent = "BooruEngineLib/1.0";
 
     private final Map<String, String> mHeaders = new HashMap<>(); //request headers
     private Method mRequestMethod;
