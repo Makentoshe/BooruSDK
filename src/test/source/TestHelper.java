@@ -28,7 +28,6 @@ public class TestHelper {
                 .setUserAgent(HttpsConnection.getDefaultUserAgent())
                 .openConnection(request1);
 
-
         JsonParser parser = new JsonParser();
 
         parser.startParse(connection.getResponse());

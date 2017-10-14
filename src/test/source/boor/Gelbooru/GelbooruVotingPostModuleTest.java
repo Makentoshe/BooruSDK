@@ -41,7 +41,7 @@ public class GelbooruVotingPostModuleTest {
     @Test
     public void votePostSuccess_Test() throws Exception {
         boor.logIn(TestHelper.getLogin(), TestHelper.getPass());
-        assertTrue(boor.votePost(3851398, "up"));
+        assertTrue(boor.votePost(3851398, "up").getResponseCode()==200);
     }
 
 }

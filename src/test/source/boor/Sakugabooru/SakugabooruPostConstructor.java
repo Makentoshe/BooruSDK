@@ -17,7 +17,8 @@ public class SakugabooruPostConstructor {
     @Before
     public void setUp() throws Exception {
         if (post != null) return;
-        post = new Post(TestHelper.getDataFromBoorAdvanced(Sakugabooru.get(), 36635), Sakugabooru.get());
+        post = new Post(TestHelper.getDataFromBoorAdvanced(Sakugabooru.get(), 1), Sakugabooru.get());
+        System.out.println(post);
     }
 
     @Test
@@ -27,12 +28,12 @@ public class SakugabooruPostConstructor {
 
     @Test
     public void getId() throws Exception {
-        assertEquals("Id ", 36635, post.getId());
+        assertEquals("Id ", 1, post.getId());
     }
 
     @Test
     public void getMd5() throws Exception {
-        assertEquals("Md5 ", "a86bb01d16934d71eeb0bf34cae5d58a", post.getMd5());
+        assertEquals("Md5 ", "b8ced04deaa3b05076acf64d0fceac93", post.getMd5());
     }
 
     @Test
@@ -42,32 +43,32 @@ public class SakugabooruPostConstructor {
 
     @Test
     public void getSource() throws Exception {
-        assertEquals("OP", post.getSource());
+        assertEquals("", post.getSource());
     }
 
     @Test
     public void getPreview() throws Exception {
-        assertEquals("https://sakugabooru.com/data/preview/a86bb01d16934d71eeb0bf34cae5d58a.jpg", post.getPreview_url());
+        assertEquals("https://sakugabooru.com/data/preview/b8ced04deaa3b05076acf64d0fceac93.jpg", post.getPreview_url());
     }
 
     @Test
     public void getTags() throws Exception {
-        assertTrue(post.getTags().contains("animated"));
+        assertTrue(post.getTags().contains("test"));
     }
 
     @Test
     public void getSample() throws Exception {
-        assertEquals("https://sakugabooru.com/data/a86bb01d16934d71eeb0bf34cae5d58a.mp4", post.getSample_url());
+        assertEquals("https://sakugabooru.com/data/b8ced04deaa3b05076acf64d0fceac93.gif", post.getSample_url());
     }
 
     @Test
     public void getFile() throws Exception {
-        assertEquals("https://sakugabooru.com/data/a86bb01d16934d71eeb0bf34cae5d58a.mp4", post.getFile_url());
+        assertEquals("https://sakugabooru.com/data/b8ced04deaa3b05076acf64d0fceac93.gif", post.getFile_url());
     }
 
     @Test
     public void getCreatorId() throws Exception {
-        assertEquals("Creator_id ", 508, post.getCreator_id());
+        assertEquals("Creator_id ", 1, post.getCreator_id());
     }
 
     @Test
@@ -82,6 +83,6 @@ public class SakugabooruPostConstructor {
 
     @Test
     public void getCreateTime() throws Exception {
-        assertEquals("Create Time", "1500566775", post.getCreate_time());
+        assertEquals("Create Time", "1376667827", post.getCreate_time());
     }
 }

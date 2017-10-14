@@ -43,7 +43,7 @@ public class Rule34VotingPostModuleTest {
     @Test
     public void votePostUpSuccess_Test() throws Exception {
         boor.logIn(TestHelper.getLogin(), TestHelper.getPass());
-        assertTrue(boor.votePost(2489243, "up"));
+        assertTrue(boor.votePost(2489243, "up").getResponseCode()==200);
     }
 
 }

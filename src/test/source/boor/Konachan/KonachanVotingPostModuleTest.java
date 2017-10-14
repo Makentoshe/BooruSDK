@@ -48,7 +48,7 @@ public class KonachanVotingPostModuleTest {
     @Test
     public void votePostUpSuccess_Test() throws Exception {
         loginBoor.logIn(TestHelper.getLogin(), TestHelper.getPass());
-        assertTrue(voteBoor.votePost(248044, "3"));
+        assertTrue(voteBoor.votePost(248044, "3").getResponseCode()==200);
     }
 
 }

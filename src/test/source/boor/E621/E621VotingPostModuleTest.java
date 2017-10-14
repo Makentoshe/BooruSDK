@@ -44,7 +44,7 @@ public class E621VotingPostModuleTest extends TestHelper{
     @Test
     public void votePostSuccess_Test() throws Exception {
         boor.logIn(getLogin(), getPass());
-        assertTrue(boor.votePost(post_id, "1"));
+        assertTrue(boor.votePost(post_id, "1").getResponseCode()==200);
     }
 
 }
