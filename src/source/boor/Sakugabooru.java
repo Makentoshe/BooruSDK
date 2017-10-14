@@ -7,6 +7,7 @@ import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import module.*;
 import source.Post;
+import source.еnum.Api;
 import source.еnum.Format;
 import source.еnum.Rating;
 
@@ -39,7 +40,7 @@ import java.util.regex.Pattern;
  * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
-public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, RemotePostModule,
+public class Sakugabooru extends AbstractBoor implements LoginModule, RemotePostModule,
         VotingPostModule, CommentCreatorModule, UploadModule {
 
     private final static Sakugabooru instance = new Sakugabooru();
@@ -56,7 +57,8 @@ public class Sakugabooru extends AbstractBoorAdvanced implements LoginModule, Re
     }
 
     private Sakugabooru() {
-        super();
+        format = Format.JSON;
+        api = Api.ADVANCED;
     }
 
     public void setFormat(Format format) {

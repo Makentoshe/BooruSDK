@@ -7,6 +7,7 @@ import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import module.*;
 import source.Post;
+import source.еnum.Api;
 import source.еnum.Format;
 import source.еnum.Rating;
 
@@ -35,7 +36,7 @@ import java.util.regex.Pattern;
  * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
-public class Yandere extends AbstractBoorAdvanced implements LoginModule, RemotePostModule,
+public class Yandere extends AbstractBoor implements LoginModule, RemotePostModule,
         VotingPostModule, CommentCreatorModule, UploadModule {
 
     private static final Yandere instance = new Yandere();
@@ -52,7 +53,8 @@ public class Yandere extends AbstractBoorAdvanced implements LoginModule, Remote
     }
 
     private Yandere() {
-        super();
+        format = Format.JSON;
+        api = Api.ADVANCED;
     }
 
     /**

@@ -9,6 +9,7 @@ import module.LoginModule;
 import module.RemotePostModule;
 import module.UploadModule;
 import source.Post;
+import source.еnum.Api;
 import source.еnum.Format;
 import source.еnum.Rating;
 
@@ -31,7 +32,7 @@ import java.util.regex.Pattern;
  * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
-public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, LoginModule, CommentCreatorModule, UploadModule {
+public class Danbooru extends AbstractBoor implements RemotePostModule, LoginModule, CommentCreatorModule, UploadModule {
 
     private final HashMap<String, String> loginData = new HashMap<>();
     private static final Danbooru instance = new Danbooru();
@@ -46,7 +47,8 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     }
 
     private Danbooru() {
-        super();
+        format = Format.JSON;
+        api = Api.ADVANCED;
     }
 
     /**
@@ -58,6 +60,11 @@ public class Danbooru extends AbstractBoorAdvanced implements RemotePostModule, 
     @Override
     public String getCustomRequest(String request) {
         return "https://danbooru.donmai.us" + request;
+    }
+
+    @Override
+    public String getPostByIdRequest(int id, Format format) {
+        return getCustomRequest("/posts/" + String.valueOf(id) + "." + format.toString().toLowerCase());
     }
 
     /**

@@ -6,6 +6,7 @@ import engine.connector.HttpsConnection;
 import engine.connector.Method;
 import module.*;
 import source.Post;
+import source.еnum.Api;
 import source.еnum.Format;
 import source.еnum.Rating;
 
@@ -35,7 +36,7 @@ import java.util.regex.Pattern;
  * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
  * <code>UploadModule</code>.
  */
-public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePostModule, VotingPostModule,
+public class E621 extends AbstractBoor implements LoginModule, RemotePostModule, VotingPostModule,
         CommentCreatorModule, UploadModule {
 
     private static final E621 instance = new E621();
@@ -52,7 +53,8 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
     }
 
     protected E621() {
-        super();
+        format = Format.JSON;
+        api = Api.ADVANCED;
     }
 
     /**
@@ -76,6 +78,12 @@ public class E621 extends AbstractBoorAdvanced implements LoginModule, RemotePos
     @Override
     public String getPostByIdRequest(int id, Format format) {
         return getCustomRequest("/post/show." + format.toString().toLowerCase() + "?id=" + id);
+    }
+
+    @Override
+    public String getPackByTagsRequest(int limit, String tags, int page, Format format){
+        return getCustomRequest("/post/index."+format.toString().toLowerCase()+
+                "?tags="+tags+"&limit=" + limit + "&page=" + page);
     }
 
     /**
