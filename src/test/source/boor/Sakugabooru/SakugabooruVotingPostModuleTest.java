@@ -22,7 +22,7 @@ public class SakugabooruVotingPostModuleTest extends TestHelper{
 
     @Test
     public void getVotePostRequest_Test() throws Exception {
-        assertEquals("https://sakugabooru.com/post/vote.json", ((VotingPostModule)boor).getVotePostRequest(0));
+        assertEquals("https://sakugabooru.com/post/vote.json", ((VotingPostModule)boor).getVotePostRequest(post_id));
     }
 
     @Test
@@ -48,7 +48,7 @@ public class SakugabooruVotingPostModuleTest extends TestHelper{
     @Test
     public void votePostUpSuccess_Test() throws Exception {
         ((LoginModule)boor).logIn(getLogin(), getPass());
-        assertTrue(((VotingPostModule)boor).votePost(post_id, "1"));
+        assertTrue(((VotingPostModule)boor).votePost(post_id, "1").getResponseCode()==200);
     }
 
 }

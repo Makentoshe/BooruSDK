@@ -43,13 +43,13 @@ public class SafebooruVotingPostModuleTest {
     @Test
     public void votePostUpSuccess_Test() throws Exception {
         boor.logIn(TestHelper.getLogin(), TestHelper.getPass());
-        assertTrue(boor.votePost(2318234, "up"));
+        assertTrue(boor.votePost(2318234, "up").getResponseCode()==200);
     }
 
     @Test
     public void votePostDownSuccess_Test() throws Exception {
         boor.logIn(TestHelper.getLogin(), TestHelper.getPass());
-        assertTrue(boor.votePost(2318234, "down"));
+        assertTrue(boor.votePost(2318234, "down").getResponseCode()==200);
     }
 
 }

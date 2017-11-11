@@ -49,7 +49,7 @@ public class YandereVotingPostModuleTest {
     @Test
     public void votePostUpSuccess_Test() throws Exception {
         loginBoor.logIn(TestHelper.getLogin(), TestHelper.getPass());
-        assertTrue(voteBoor.votePost(post_id, "3"));
+        assertTrue(voteBoor.votePost(post_id, "3").getResponseCode()==200);
     }
 
 }
