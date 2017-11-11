@@ -4,6 +4,7 @@ import source.boor.AbstractBoor;
 import source.еnum.Rating;
 import source.еnum.Boor;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -44,7 +45,7 @@ import java.util.*;
  *
  * @see Comment
  */
-public class Post {
+public class Post implements Serializable {
 
     private Map<String, String> original;
 

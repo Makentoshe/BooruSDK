@@ -26,7 +26,7 @@ import java.util.Random;
  * <p>Data Block
  * <p>All the blocks will eventually merge into one output stream, which will be sent data to the server.
  */
-public class MultipartConstructor {
+public class MultipartConstructor implements Serializable {
 
     private List<InputStream> mData = new ArrayList<>();
 
@@ -108,7 +108,7 @@ public class MultipartConstructor {
     }
 }
 
-class Multipart {
+class Multipart implements Serializable {
 
     private final static String LINE_FEED = "\r\n";
 
