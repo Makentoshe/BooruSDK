@@ -3,6 +3,8 @@ package source.boor;
 import source.еnum.Api;
 import source.еnum.Format;
 
+import java.io.Serializable;
+
 /**
  * The main class for all boor's realisation.
  * To implement boor, you need only to extend this class
@@ -10,7 +12,7 @@ import source.еnum.Format;
  * <tt>getPostByIdRequest</tt>, <tt>getPackByTagsRequest</tt> and
  * <tt>newPostInstance</tt>.
  */
-public abstract class AbstractBoor {
+public abstract class AbstractBoor implements Serializable {
 
     protected Format format;
 

@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  * @see     java.net.HttpURLConnection
  * @see     javax.net.ssl.HttpsURLConnection
  */
-public class HttpsConnection {
+public class HttpsConnection implements Serializable {
 
     private static String sDefaultUserAgent = "BooruEngineLib/1.0";
 

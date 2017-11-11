@@ -1,5 +1,6 @@
 package source;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,7 @@ import java.util.Set;
  *
  * @see Post
  */
-public class Comment {
+public class Comment implements Serializable {
     private int id = Integer.MIN_VALUE;
 
     private String created_at = null;
