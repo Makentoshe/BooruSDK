@@ -8,6 +8,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import engine.APIException;
 import engine.BooruEngineException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -97,6 +98,21 @@ public class XmlParser extends DefaultHandler {
      */
     @Override
     public void startElement(String uri, String localName, String elementName, Attributes attributes) throws SAXException {
+        if ("response".equals(elementName)){
+            boolean _throw = false;
+            String reason = "";
+            for (int i = 0; i < attributes.getLength(); i++){
+                if ("success".equals(attributes.getQName(i))){
+                    _throw = true;
+                }
+                if ("reason".equals(attributes.getQName(i))){
+                    reason = attributes.getValue(i);
+                }
+            }
+            if (_throw){
+                throw new RuntimeException(new APIException(reason));
+            }
+        }
         if ("posts".equals(elementName) || "comments".equals(elementName)) return;
         //parsing posts with simple structure
         if (("post".equals(elementName) || "comment".equals(elementName)) && attributes.getLength() > 1){
