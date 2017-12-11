@@ -79,6 +79,19 @@ public class Post implements Serializable {
 
     private String create_time = null;
 
+    private int height = Integer.MIN_VALUE;
+
+    private int width = Integer.MIN_VALUE;
+
+    private int sample_height = Integer.MIN_VALUE;
+
+    private int sample_width = Integer.MIN_VALUE;
+
+    private int preview_height = Integer.MIN_VALUE;
+
+    private int preview_width = Integer.MIN_VALUE;
+
+
     /**
      * Default constructor for basic post entity.
      * <p>Unstable.
@@ -207,6 +220,32 @@ public class Post implements Serializable {
                 case "updated-at":
                 case "created_at":{
                     setCreate_Time(pair.getValue());
+                    break;
+                }
+                case "height":{
+                    setHeight(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "width":{
+                    setWidth(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "sample_height":{
+                    setSample_height(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "sample_width":{
+                    setSample_width(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "image-height":
+                case "preview_height":{
+                    setPreview_height(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "image-width":
+                case "preview_width":{
+                    setPreview_width(Integer.parseInt(pair.getValue()));
                     break;
                 }
             }
@@ -479,5 +518,94 @@ public class Post implements Serializable {
      */
     public String getValue(String key) {
         return this.original.get(key);
+    }
+
+    /**
+     * Getting height in pixels of full image. If not defined - method return {@code Integer.MIN_VALUE}.
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * Set full image height in pixels.
+     * @param height image height in pixels.
+     */
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    /**
+     * Getting width in pixels of full image. If not defined - method return {@code Integer.MIN_VALUE}.
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * Set full image width in pixels.
+     * @param width image width in pixels.
+     */
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    /**
+     * Getting height of sample image. If not defined - method return {@code Integer.MIN_VALUE}.
+     */
+    public int getSample_height() {
+        return sample_height;
+    }
+
+    /**
+     * Set sample image height in pixels.
+     * @param sample_height image height in pixels.
+     */
+    public void setSample_height(int sample_height) {
+        this.sample_height = sample_height;
+    }
+
+    /**
+     * Getting width of sample image. If not defined - method return {@code Integer.MIN_VALUE}.
+     */
+    public int getSample_width() {
+        return sample_width;
+    }
+
+    /**
+     * Set sample image width in pixels.
+     * @param sample_width image width in pixels.
+     */
+    public void setSample_width(int sample_width) {
+        this.sample_width = sample_width;
+    }
+
+    /**
+     * Getting height of preview image. If not defined - method return {@code Integer.MIN_VALUE}.
+     */
+    public int getPreview_height() {
+        return preview_height;
+    }
+    /**
+     * Set preview image height in pixels.
+     * @param preview_height image height in pixels.
+     */
+    public void setPreview_height(int preview_height) {
+        this.preview_height = preview_height;
+    }
+
+    /**
+     * Getting width of preview image. If not defined - method return {@code Integer.MIN_VALUE}.
+     */
+    public int getPreview_width() {
+        return preview_width;
+    }
+
+    /**
+     * Set preview image width in pixels.
+     * @param preview_width image width in pixels.
+     */
+    public void setPreview_width(int preview_width) {
+        this.preview_width = preview_width;
     }
 }

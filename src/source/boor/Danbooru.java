@@ -163,6 +163,14 @@ public class Danbooru extends AbstractBoor implements RemotePostModule, LoginMod
                     post.setCreate_Time(pair.getValue());
                     break;
                 }
+                case "image-width":{
+                    post.setPreview_width(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "image-height":{
+                    post.setPreview_height(Integer.parseInt(pair.getValue()));
+                    break;
+                }
 
             }
         }

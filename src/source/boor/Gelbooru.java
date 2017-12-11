@@ -136,6 +136,30 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
                     post.setCreate_Time(pair.getValue());
                     break;
                 }
+                case "height":{
+                    post.setHeight(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "width":{
+                    post.setWidth(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "sample_height":{
+                    post.setSample_height(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "sample_width":{
+                    post.setSample_width(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "preview_height":{
+                    post.setPreview_height(Integer.parseInt(pair.getValue()));
+                    break;
+                }
+                case "preview_width":{
+                    post.setPreview_width(Integer.parseInt(pair.getValue()));
+                    break;
+                }
             }
         }
         //after all check comments flag
