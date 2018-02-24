@@ -4,10 +4,10 @@ import engine.BooruEngineException;
 import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import interfaces.CommentCreatorModule;
-import interfaces.LoginModule;
-import interfaces.RemotePostModule;
-import interfaces.UploadModule;
+import interfaces.CommentUploader;
+import interfaces.Login;
+import interfaces.PostCreator;
+import interfaces.PostUploader;
 import source.Post;
 import source.еnum.Api;
 import source.еnum.Format;
@@ -28,11 +28,11 @@ import java.util.regex.Pattern;
  * Singleton which describe Danbooru. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.JSON}. Default {@code api} is {@code API.Advanced}.
  * <p>
- * Implements <code>LoginModule</code>,<code>VotingPostModule</code>,
- * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
- * <code>UploadModule</code>.
+ * Implements <code>Login</code>,<code>PostVoting</code>,
+ * <code>PostCreator</code>, <code>CommentUploader</code>,
+ * <code>PostUploader</code>.
  */
-public class Danbooru extends AbstractBoor implements RemotePostModule, LoginModule, CommentCreatorModule, UploadModule {
+public class Danbooru extends AbstractBoor implements PostCreator, Login, CommentUploader, PostUploader {
 
     private final HashMap<String, String> loginData = new HashMap<>();
     private static final Danbooru instance = new Danbooru();

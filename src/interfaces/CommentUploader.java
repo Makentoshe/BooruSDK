@@ -6,9 +6,9 @@ import engine.connector.HttpsConnection;
 /**
  * Interface with the basic methods for commenting *boor posts.
  * <p>
- * Require login information - so use <tt>LoginModule</tt> for getting access to user data.
+ * Require login information - so use <tt>Login</tt> for getting access to user data.
  */
-public interface CommentCreatorModule {
+public interface CommentUploader {
 
     /**
      * Create comment for post. Note: <strong>Be careful: Not all *boors support "postAsAnon" or "bumpPost" params.</strong>

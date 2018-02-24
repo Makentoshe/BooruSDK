@@ -9,7 +9,7 @@ import engine.connector.HttpsConnection;
  * <p>
  * Give access for login and other actions, which requires user data.
  */
-public interface LoginModule {
+public interface Login {
 //TODO: use URLEncoder.encode(data, String.valueOf(Charset.defaultCharset()))
 
     /**

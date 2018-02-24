@@ -121,13 +121,15 @@ public class Post implements Serializable {
     }
 
     /**
-     * Constructor for special boor. It creating in special method {@code newPostInstance(Hashmap&lt;String, String&gt;)}.
-     * <p>But the boor will be have {@code Undefined} status.
+     * Default constructor.
      */
     public Post() {
         //DEFAULT CONSTRUCTOR
     }
 
+    /**
+     * Copy constructor.
+     */
     public Post(Post post){
         defaultConstructor(post.getMap());
     }

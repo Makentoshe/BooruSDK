@@ -32,12 +32,12 @@ import java.util.regex.Pattern;
  * Singleton which describe E621. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.JSON}. Default {@code api} is {@code API.Advanced}.
  * <p>
- * Implements <code>LoginModule</code>,<code>VotingPostModule</code>,
- * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
- * <code>UploadModule</code>.
+ * Implements <code>Login</code>,<code>PostVoting</code>,
+ * <code>PostCreator</code>, <code>CommentUploader</code>,
+ * <code>PostUploader</code>.
  */
-public class E621 extends AbstractBoor implements LoginModule, RemotePostModule, VotingPostModule,
-        CommentCreatorModule, UploadModule {
+public class E621 extends AbstractBoor implements Login, PostCreator, PostVoting,
+        CommentUploader, PostUploader {
 
     private static final E621 instance = new E621();
 

@@ -31,12 +31,12 @@ import java.util.regex.Pattern;
  * Singleton which describe Konachan. This class can help user to login, vote posts, create posts, comment posts, etc.
  * Default {@code format} is {@code Format.XML}. Default {@code api} is {@code API.Basic}.
  * <p>
- * Implements <code>LoginModule</code>,<code>VotingPostModule</code>,
- * <code>RemotePostModule</code>, <code>CommentCreatorModule</code>,
- * <code>UploadModule</code>.
+ * Implements <code>Login</code>,<code>PostVoting</code>,
+ * <code>PostCreator</code>, <code>CommentUploader</code>,
+ * <code>PostUploader</code>.
  */
-public class Konachan extends AbstractBoor implements LoginModule, VotingPostModule,
-        RemotePostModule, UploadModule, CommentCreatorModule {
+public class Konachan extends AbstractBoor implements Login, PostVoting,
+        PostCreator, PostUploader, CommentUploader {
 
     private static final Konachan instance = new Konachan();
 

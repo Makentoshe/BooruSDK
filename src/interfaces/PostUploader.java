@@ -12,7 +12,7 @@ import java.io.File;
  * <p>
  * Require login information - so use <tt>LoginModule</tt> for getting access to user data.
  */
-public interface UploadModule {
+public interface PostUploader {
 
     /**
      * Method create post(upload) on *booru.

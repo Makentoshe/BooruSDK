@@ -6,7 +6,7 @@ import engine.connector.HttpsConnection;
 /**
  * Interface with the method for a voting posts on any *boor.
  */
-public interface VotingPostModule {
+public interface PostVoting {
 
     /**
      * Voting a post. To perform this action need any identification data,
