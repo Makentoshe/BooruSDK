@@ -5,7 +5,7 @@ import engine.BooruEngineException;
 import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import module.*;
+import interfaces.*;
 import source.Post;
 import source.еnum.Api;
 import source.еnum.Format;
@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -101,6 +100,11 @@ public class Sakugabooru extends AbstractBoor implements LoginModule, RemotePost
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
         return null;
+    }
+
+    @Override
+    public String getPostLinkById(int post_id) {
+        return getCustomRequest("/post/show/" + post_id);
     }
 
     /**

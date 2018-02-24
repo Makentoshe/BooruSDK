@@ -1,4 +1,4 @@
-package module;
+package interfaces;
 
 import com.sun.istack.internal.Nullable;
 import engine.BooruEngineException;

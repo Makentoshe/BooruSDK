@@ -121,4 +121,12 @@ public abstract class AbstractBoor implements Serializable {
     public final String getCommentsByPostIdRequest(int post_id){
         return getCommentsByPostIdRequest(post_id, getFormat());
     }
+
+    /**
+     * Create request for getting post data for user.
+     *
+     * @param post_id post, for which the link will be created.
+     * @return the link to post with standard user interface.
+     */
+    public abstract String getPostLinkById(int post_id);
 }

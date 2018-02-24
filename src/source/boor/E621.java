@@ -4,7 +4,7 @@ import engine.BooruEngineException;
 import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import module.*;
+import interfaces.*;
 import source.Post;
 import source.еnum.Api;
 import source.еnum.Format;
@@ -96,6 +96,11 @@ public class E621 extends AbstractBoor implements LoginModule, RemotePostModule,
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
         return getCustomRequest("/comment/search." + format.toString().toLowerCase() + "?post_id=" + post_id);
+    }
+
+    @Override
+    public String getPostLinkById(int post_id) {
+        return getCustomRequest("/post/show/" + post_id);
     }
 
     /**

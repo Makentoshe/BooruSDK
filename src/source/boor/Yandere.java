@@ -5,7 +5,7 @@ import engine.BooruEngineException;
 import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import module.*;
+import interfaces.*;
 import source.Post;
 import source.еnum.Api;
 import source.еnum.Format;
@@ -105,6 +105,11 @@ public class Yandere extends AbstractBoor implements LoginModule, RemotePostModu
     @Override
     public String getCommentsByPostIdRequest(int post_id, Format format) {
         return null;
+    }
+
+    @Override
+    public String getPostLinkById(int post_id) {
+        return getCustomRequest("/post/show/" + post_id);
     }
 
     /**

@@ -1,4 +1,4 @@
-package module;
+package interfaces;
 
 import source.Post;
 

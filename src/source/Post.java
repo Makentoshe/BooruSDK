@@ -12,14 +12,6 @@ import java.util.*;
  * <p>
  *     If you want add new boor you can use this class or extend it.
  * <p>
- *     You getting post as is. This means, that you can't modify this element after creating.
- * You can dynamically add data to entity, but if the data is already defined, you can't change it.
- * For example, when you try setup new id, when the id is defined - this operation will be ignored.
- * <p>
- *     You can only getting data and work with it.
- * <p>
- *     Default constructor for Post support some formats attributes.
- * <p>
  *     Be careful, if your attributes has specific names -
  * you can implement in you boor RemotePostModuleInterface interface, which have special method
  * {@code newPostInstance(Hashmap&lt;String, String&gt;)}.
@@ -47,7 +39,7 @@ import java.util.*;
  */
 public class Post implements Serializable {
 
-    private Map<String, String> original;
+    private HashMap<String, String> original;
 
     private int id = Integer.MIN_VALUE;
 
@@ -72,8 +64,6 @@ public class Post implements Serializable {
     private boolean[] has_comments = null;
 
     private String comments_url = null;
-
-    private String sourceBoor = null;
 
     private AbstractBoor sourceBoorRef = null;
 
@@ -102,7 +92,6 @@ public class Post implements Serializable {
      */
     public Post(HashMap<String, String> hashMap, AbstractBoor sourceBoor) {
         sourceBoorRef = sourceBoor;
-        this.sourceBoor = sourceBoorRef.getClass().getSimpleName();
 
         defaultConstructor(hashMap);
     }
@@ -129,7 +118,6 @@ public class Post implements Serializable {
      */
     public Post(AbstractBoor sourceBoor) {
         sourceBoorRef = sourceBoor;
-        this.sourceBoor = sourceBoorRef.getClass().getSimpleName();
     }
 
     /**
@@ -137,7 +125,11 @@ public class Post implements Serializable {
      * <p>But the boor will be have {@code Undefined} status.
      */
     public Post() {
-        this.sourceBoor = Boor.Undefined.toString();
+        //DEFAULT CONSTRUCTOR
+    }
+
+    public Post(Post post){
+        defaultConstructor(post.getMap());
     }
 
     protected void defaultConstructor(HashMap<String, String> hashMap) {
@@ -270,11 +262,8 @@ public class Post implements Serializable {
         return id;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public final void setId(int id) {
-        if (this.id == Integer.MIN_VALUE) this.id = id;
+        this.id = id;
     }
 
     /**
@@ -291,11 +280,9 @@ public class Post implements Serializable {
         return md5;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
+
     public final void setMd5(String md5) {
-        if (this.md5 == null) this.md5 = md5;
+        this.md5 = md5;
     }
 
     /**
@@ -305,11 +292,8 @@ public class Post implements Serializable {
         return score;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public final void setScore(int score) {
-        if (this.score == Integer.MIN_VALUE) this.score = score;
+        this.score = score;
     }
 
     /**
@@ -320,26 +304,17 @@ public class Post implements Serializable {
     }
 
     /**
-     * Getting string with name, from where boor  this post. If data will not defined - method return {@code null}.
+     * Getting AbstractBoor reference, from where boor  this post. If data will not defined - method return {@code null}.
      */
-    public String getSourceBoor() {
-        return sourceBoor;
+    public AbstractBoor getSourceBoor() {
+        return sourceBoorRef;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
-    public final void setSourceBoor(String sourceBoor) {
-        if (this.sourceBoor != null) return;
-        this.sourceBoor = sourceBoor;
+    public final void setSourceBoor(AbstractBoor sourceBoor) {
+        this.sourceBoorRef = sourceBoor;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public final void setRating(String data) {
-        if (this.rating != null) return;
-
         switch (data) {
             case "s": {
                 this.rating = Rating.SAFE;
@@ -363,11 +338,8 @@ public class Post implements Serializable {
         return source;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public final void setSource(String source) {
-        if (this.source == null) this.source = source;
+        this.source = source;
     }
 
     /**
@@ -377,12 +349,7 @@ public class Post implements Serializable {
         return preview_url;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public final void setPreview_url(String preview_url) {
-        if (this.preview_url != null) return;
-
         //when http not defined
         if (!preview_url.contains("http")) {
             this.preview_url = "https:" + preview_url;
@@ -391,12 +358,7 @@ public class Post implements Serializable {
         }
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public final void setTags(String tags) {
-        if (this.tags != null) return;
-
         String[] split = tags.split(" ");
         this.tags = new HashSet<>(Arrays.asList(split));
     }
@@ -408,11 +370,7 @@ public class Post implements Serializable {
         return sample_url;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public final void setSample_url(String sample_url) {
-        if (this.sample_url != null) return;
         //when http not defined
         if (!sample_url.contains("http")) {
             this.sample_url = "https:" + sample_url;
@@ -428,11 +386,7 @@ public class Post implements Serializable {
         return file_url;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public final void setFile_url(String file_url) {
-        if (this.file_url != null) return;
         //when http not defined
         if (!file_url.contains("http")) {
             this.file_url = "https:" + file_url;
@@ -441,7 +395,6 @@ public class Post implements Serializable {
         }
     }
 
-
     /**
      * Getting id, who's create/upload post. If data will not defined - method return {@code Integer.MIN_VALUE}.
      */
@@ -449,11 +402,8 @@ public class Post implements Serializable {
         return creator_id;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public final void setCreator_id(int creator_id) {
-        if (this.creator_id == Integer.MIN_VALUE) this.creator_id = creator_id;
+      this.creator_id = creator_id;
     }
 
     /**
@@ -463,11 +413,7 @@ public class Post implements Serializable {
         return comments_url;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public void setComments_url(String comments_url) {
-        if (this.comments_url != null) return;
         this.comments_url = comments_url;
     }
 
@@ -481,11 +427,7 @@ public class Post implements Serializable {
         return has_comments[0];
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public void setHas_comments(boolean has_comments) {
-        if (this.has_comments != null) return;
         this.has_comments = new boolean[]{has_comments};
     }
 
@@ -497,18 +439,14 @@ public class Post implements Serializable {
         return this.create_time;
     }
 
-    /**
-     * Method will be success only if data was not defined yet.
-     */
     public void setCreate_Time(String create_time) {
-        if (this.create_time != null) return;
         this.create_time = create_time;
     }
 
     /**
      * @return original Map with <strong>all</strong> non modified post data.
      */
-    public Map<String, String> getMap(){
+    public HashMap<String, String> getMap(){
         return this.original;
     }
 

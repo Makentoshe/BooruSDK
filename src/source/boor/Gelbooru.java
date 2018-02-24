@@ -5,7 +5,7 @@ import engine.BooruEngineException;
 import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import module.*;
+import interfaces.*;
 import source.Post;
 import source.еnum.Api;
 import source.еnum.Format;
@@ -180,6 +180,11 @@ public class Gelbooru extends AbstractBoor implements LoginModule, VotingPostMod
     @Override
     public String getCommentsByPostIdRequest(final int post_id, final Format format) {
         return getCustomRequest("/index.php?page=dapi&q=index&s=comment&post_id=" + post_id + (format.equals(Format.JSON) ? "&json=1" : ""));
+    }
+
+    @Override
+    public String getPostLinkById(int post_id) {
+        return getCustomRequest("/index.php?page=post&s=view&id=" + post_id);
     }
 
     /**

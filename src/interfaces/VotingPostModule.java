@@ -1,4 +1,4 @@
-package module;
+package interfaces;
 
 import engine.BooruEngineException;
 import engine.connector.HttpsConnection;

@@ -4,10 +4,10 @@ import engine.BooruEngineException;
 import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import module.CommentCreatorModule;
-import module.LoginModule;
-import module.RemotePostModule;
-import module.UploadModule;
+import interfaces.CommentCreatorModule;
+import interfaces.LoginModule;
+import interfaces.RemotePostModule;
+import interfaces.UploadModule;
 import source.Post;
 import source.еnum.Api;
 import source.еnum.Format;
@@ -93,6 +93,11 @@ public class Danbooru extends AbstractBoor implements RemotePostModule, LoginMod
     public String getCommentsByPostIdRequest(int post_id, Format format) {
         return getCustomRequest("/comments." + format.toString().toLowerCase() +
                 "?group_by=comment&search[post_id]=" + post_id);
+    }
+
+    @Override
+    public String getPostLinkById(int post_id) {
+        return getCustomRequest("/posts/" + post_id);
     }
 
     /**

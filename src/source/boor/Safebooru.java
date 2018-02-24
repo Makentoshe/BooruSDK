@@ -5,7 +5,7 @@ import engine.BooruEngineException;
 import engine.MultipartConstructor;
 import engine.connector.HttpsConnection;
 import engine.connector.Method;
-import module.*;
+import interfaces.*;
 import source.Post;
 import source.еnum.Api;
 import source.еnum.Format;
@@ -76,6 +76,11 @@ public class Safebooru extends AbstractBoor implements LoginModule, VotingPostMo
     @Override
     public String getCommentsByPostIdRequest(int post_id, @NotNull Format format) {
         return getCustomRequest("/index.php?page=dapi&q=index&s=comment&post_id=" + post_id + (format.equals(Format.JSON) ? "&json=1" : ""));
+    }
+
+    @Override
+    public String getPostLinkById(int post_id) {
+        return getCustomRequest("/index.php?page=post&s=view&id=" + post_id);
     }
 
     /**
