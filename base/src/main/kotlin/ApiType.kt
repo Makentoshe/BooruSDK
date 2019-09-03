@@ -1,1 +1,0 @@
-enum class ApiType { JSON, XML, OTHER }

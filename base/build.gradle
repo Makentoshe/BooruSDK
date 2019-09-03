@@ -10,7 +10,15 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    def okhttp = "4.1.0"
+    def kotlin = "kotlin-stdlib-jdk8"
+
+    // Kotlin standard library
+    implementation "org.jetbrains.kotlin:$kotlin"
+
+    // OkHttp
+    // https://github.com/square/okhttp/
+    api "com.squareup.okhttp3:okhttp:$okhttp"
 }
 
 compileKotlin {
@@ -18,4 +26,38 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+task deliver(type: CopyTask) {
+    def actualJar = "${project.name}-${project.version}.jar"
+    def root = projectDir.parentFile
+    def filter = new FileFilter() {
+        @Override
+        boolean accept(File pathname) {
+            if (pathname.name.startsWith(".")) return false
+            if (pathname.name == project.name) return false
+            return true
+        }
+    }
+
+    source = "${projectDir.absolutePath}\\build\\libs\\$actualJar"
+    targets = root.listFiles(filter).collect { "$it\\libs\\$actualJar".toString() }
+}
+
+/** Performs a copy file */
+class CopyTask extends DefaultTask {
+    String source
+    List<String> targets
+
+    @TaskAction
+    def copy() {
+        def sourceFile = new File(source)
+
+        targets.each { target ->
+            def targetFile = new File(target)
+            if (targetFile.exists()) targetFile.delete()
+            targetFile.parentFile.mkdirs()
+            targetFile << sourceFile.bytes
+        }
+    }
 }
