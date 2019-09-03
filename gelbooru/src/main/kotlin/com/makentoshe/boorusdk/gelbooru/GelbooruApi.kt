@@ -49,4 +49,7 @@ interface GelbooruApi {
         @Field("pass") password: String,
         @Field("submit") submit: String = "Log+in"
     ): Call<ByteArray>
+
+    @GET("index.php?page=post&s=vote&type=up")
+    fun votePostUp(@Query("id") id: Id): Call<ByteArray>
 }
