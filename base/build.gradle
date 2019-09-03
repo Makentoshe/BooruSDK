@@ -40,8 +40,8 @@ task deliver(type: CopyTask) {
         }
     }
 
-    source = "${projectDir.absolutePath}\\build\\libs\\$actualJar"
-    targets = root.listFiles(filter).collect { "$it\\libs\\$actualJar".toString() }
+    source = "${projectDir.absolutePath}${File.separator}build${File.separator}libs${File.separator}$actualJar"
+    targets = root.listFiles(filter).collect { "$it${File.separator}libs${File.separator}$actualJar".toString() }
 }
 
 /** Performs a copy file */
