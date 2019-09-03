@@ -6,11 +6,13 @@ import okhttp3.HttpUrl
 
 internal class SessionCookieJar : CookieJar {
 
-    private val cookies = ArrayList<Cookie>()
+    private var cookies = HashSet<Cookie>()
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-        this.cookies.toMutableSet().addAll(cookies)
+        this.cookies.addAll(cookies)
     }
 
-    override fun loadForRequest(url: HttpUrl) = cookies
+    override fun loadForRequest(url: HttpUrl): List<Cookie> {
+        return cookies.toList()
+    }
 }
