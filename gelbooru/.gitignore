@@ -8,7 +8,7 @@
 /out
 
 # File contains main function
-src/main/kotlin/Main.kt
+src/main/kotlin/GelbooruParserJson.kt
 
 # Compiled class file
 *.class
@@ -34,4 +34,4 @@ hs_err_pid*
 .idea
 
 # Main class
-Main.kt
+GelbooruParserJson.kt
