@@ -6,17 +6,18 @@ import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
 
+@ExperimentalStdlibApi
 fun main() {
     val manager = GelbooruManager.build()
-//    manager.login("Makentoshe", "1243568790")
-    val a = manager.posts(10, Page(1), Tags()) {
-        GelbooruParserXml().parse(String(it))
-    }
 
-    println(a)
 }
 
 open class GelbooruManager(protected val gelbooruApi: GelbooruApi) : BooruManager {
+
+    fun votePostUp(id: Id, parser: (ByteArray) -> Int): Int{
+        val response = gelbooruApi.votePostUp(id).execute()
+        return parser(extractBody(response))
+    }
 
     fun login(user: String, password: String): Boolean {
         val response = gelbooruApi.login(user, password).execute().raw().priorResponse ?: return false
@@ -27,15 +28,7 @@ open class GelbooruManager(protected val gelbooruApi: GelbooruApi) : BooruManage
     override fun posts(
         count: Int, page: Page, tags: Tags, parser: (ByteArray) -> List<ParseResult>
     ): List<ParseResult> {
-        val query = mapOf(
-            "page" to "dapi",
-            "s" to "post",
-            "q" to "index",
-            "limit" to "$count",
-            "pid" to "$page",
-            "tags" to "$tags"
-        )
-        val response = gelbooruApi.custom(query).execute()
+        val response = gelbooruApi.posts(count, page, tags).execute()
         return parser(extractBody(response))
     }
 
