@@ -6,28 +6,43 @@ import org.jsoup.Jsoup
 import retrofit2.Response
 import retrofit2.Retrofit
 
-@ExperimentalStdlibApi
+data class PostCommentRequest(val postId: Id, val message: String, val postAsAnonymous: Boolean)
+
 fun main() {
     val manager = GelbooruManager.build()
-    manager.login("Makentoshe", "1243568790").also { loginManager ->
-        if (loginManager == null) return@also
-        val result = loginManager.commentPost(Id(4901318), "Cute girls makes a cute things", true)
-    }
+    manager.login("Username", "password")
+    val commentRequest = PostCommentRequest(Id(4901924), "just a little mofumofu", false)
+    manager.commentPost(commentRequest)
 }
 
 open class GelbooruManager(
     protected val gelbooruApi: GelbooruApi, protected val cookieStorage: CookieStorage
 ) : BooruManager {
 
+    private val isLoggedIn: Boolean
+        get() = cookieStorage.hasCookie("user_id") && cookieStorage.hasCookie("pass_hash")
+
+    fun commentPost(request: PostCommentRequest) {
+        if (!isLoggedIn) throw IllegalStateException("You are not logged in")
+        val postHttpPage = getPostHttp(request.postId, ::String)
+
+        val csrfToken = Jsoup.parse(postHttpPage).body().select("#comment_form [name=csrf-token]").attr("value")
+        val postAsAnon = if (request.postAsAnonymous) "on" else null
+        val passHash = cookieStorage.getCookie("pass_hash").value
+        val userId = cookieStorage.getCookie("user_id").value
+
+        gelbooruApi.commentPost(userId, passHash, request.postId, request.message, csrfToken, postAsAnon).execute()
+    }
+
     fun votePostUp(id: Id, parser: (ByteArray) -> Int): Int {
         val response = gelbooruApi.votePostUp(id).execute()
         return parser(extractBody(response))
     }
 
-    fun login(user: String, password: String): GelbooruManagerLogin? {
-        val response = gelbooruApi.login(user, password).execute().raw().priorResponse ?: return null
+    fun login(user: String, password: String): Boolean {
+        val response = gelbooruApi.login(user, password).execute().raw().priorResponse ?: return false
         val loginCookies = response.headers("Set-Cookie")
-        return if (loginCookies.isEmpty()) null else GelbooruManagerLogin(gelbooruApi, cookieStorage)
+        return loginCookies.isNotEmpty()
     }
 
     override fun posts(
@@ -95,22 +110,5 @@ open class GelbooruManager(
                 .addConverterFactory(ByteArrayConverterFactory()).build()
             return GelbooruManager(retrofit.create(GelbooruApi::class.java), cookieJar)
         }
-    }
-}
-
-class GelbooruManagerLogin(
-    protected val gelbooruApi: GelbooruApi,
-    protected val cookieStorage: CookieStorage
-) {
-    fun commentPost(postId: Id, text: String, postAsAnon: Boolean) {
-        if (text.split(" ").count() < 3) throw IllegalArgumentException("Text should be more than 3 words")
-        val http = gelbooruApi.getPostHttp(postId).execute().body().let { String(it ?: byteArrayOf()) }
-        val csrfToken = Jsoup.parse(http).body().select("#comment_form [name=csrf-token]").attr("value")
-        val phpsessid = cookieStorage.getCookie("PHPSESSID").value
-        val username = cookieStorage.getCookie("user_id").value
-        val passHash = cookieStorage.getCookie("pass_hash").value
-        val anon = if (postAsAnon) "on" else null
-        val result = gelbooruApi.commentPost(postId, text, csrfToken, phpsessid, username, passHash, anon).execute().raw().priorResponse
-        println(String(result!!.body!!.bytes()))
     }
 }

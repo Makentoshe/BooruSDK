@@ -56,14 +56,13 @@ interface GelbooruApi {
     @FormUrlEncoded
     @POST("index.php?page=comment&s=save")
     fun commentPost(
+        @Header("user_id") userId: String,
+        @Header("pass_hash") passHash: String,
         @Query("id") postId: Id,
         @Field("comment") text: String,
         @Field("csrf-token") csrfToken: String,
-        @Header("PHPSESSID") phpsessid: String,
-        @Header("user_id") userId: String,
-        @Header("pass_hash") passHash: String,
-        @Field("post_anonymous") anon: String? = null,
-        @Field("conf") conf: String? = null,
+        @Field("post_anonymous") anon: String? = "on",
+        @Field("conf") conf: String? = "1",
         @Field("submit") submit: String = "Post+comment"
     ): Call<ByteArray>
 }
