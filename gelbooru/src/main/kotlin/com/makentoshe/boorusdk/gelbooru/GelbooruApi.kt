@@ -6,9 +6,6 @@ import retrofit2.http.*
 
 interface GelbooruApi {
 
-    @GET("index.php")
-    fun custom(@QueryMap query: Map<String, String>): Call<ByteArray>
-
     @GET("index.php?page=dapi&s=post&q=index")
     fun posts(@Query("id") id: Id): Call<ByteArray>
 
@@ -18,6 +15,9 @@ interface GelbooruApi {
         @Query("pid") page: Page,
         @Query("tags") tags: Tags
     ): Call<ByteArray>
+
+    @GET("https://gelbooru.com/index.php?page=post&s=view")
+    fun getPostHttp(@Query("id") id: Id): Call<ByteArray>
 
     @GET("index.php?page=autocomplete")
     fun autocomplete(@Query("term") term: String): Call<ByteArray>
@@ -52,4 +52,18 @@ interface GelbooruApi {
 
     @GET("index.php?page=post&s=vote&type=up")
     fun votePostUp(@Query("id") id: Id): Call<ByteArray>
+
+    @FormUrlEncoded
+    @POST("index.php?page=comment&s=save")
+    fun commentPost(
+        @Query("id") postId: Id,
+        @Field("comment") text: String,
+        @Field("csrf-token") csrfToken: String,
+        @Header("PHPSESSID") phpsessid: String,
+        @Header("user_id") userId: String,
+        @Header("pass_hash") passHash: String,
+        @Field("post_anonymous") anon: String? = null,
+        @Field("conf") conf: String? = null,
+        @Field("submit") submit: String = "Post+comment"
+    ): Call<ByteArray>
 }

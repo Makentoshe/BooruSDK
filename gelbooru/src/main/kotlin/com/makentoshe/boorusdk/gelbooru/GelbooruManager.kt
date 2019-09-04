@@ -1,28 +1,33 @@
 package com.makentoshe.boorusdk.gelbooru
 
 import com.makentoshe.boorusdk.base.*
-import com.makentoshe.boorusdk.gelbooru.parser.GelbooruParserXml
 import okhttp3.OkHttpClient
+import org.jsoup.Jsoup
 import retrofit2.Response
 import retrofit2.Retrofit
 
 @ExperimentalStdlibApi
 fun main() {
     val manager = GelbooruManager.build()
-
+    manager.login("Makentoshe", "1243568790").also { loginManager ->
+        if (loginManager == null) return@also
+        val result = loginManager.commentPost(Id(4901318), "Cute girls makes a cute things", true)
+    }
 }
 
-open class GelbooruManager(protected val gelbooruApi: GelbooruApi) : BooruManager {
+open class GelbooruManager(
+    protected val gelbooruApi: GelbooruApi, protected val cookieStorage: CookieStorage
+) : BooruManager {
 
-    fun votePostUp(id: Id, parser: (ByteArray) -> Int): Int{
+    fun votePostUp(id: Id, parser: (ByteArray) -> Int): Int {
         val response = gelbooruApi.votePostUp(id).execute()
         return parser(extractBody(response))
     }
 
-    fun login(user: String, password: String): Boolean {
-        val response = gelbooruApi.login(user, password).execute().raw().priorResponse ?: return false
+    fun login(user: String, password: String): GelbooruManagerLogin? {
+        val response = gelbooruApi.login(user, password).execute().raw().priorResponse ?: return null
         val loginCookies = response.headers("Set-Cookie")
-        return loginCookies.isNotEmpty()
+        return if (loginCookies.isEmpty()) null else GelbooruManagerLogin(gelbooruApi, cookieStorage)
     }
 
     override fun posts(
@@ -34,6 +39,11 @@ open class GelbooruManager(protected val gelbooruApi: GelbooruApi) : BooruManage
 
     override fun posts(id: Id, parser: (ByteArray) -> ParseResult): ParseResult {
         val response = gelbooruApi.posts(id).execute()
+        return parser(extractBody(response))
+    }
+
+    fun getPostHttp(id: Id, parser: (ByteArray) -> String): String {
+        val response = gelbooruApi.getPostHttp(id).execute()
         return parser(extractBody(response))
     }
 
@@ -79,18 +89,28 @@ open class GelbooruManager(protected val gelbooruApi: GelbooruApi) : BooruManage
 
     companion object {
         fun build(): GelbooruManager {
-            val client = buildClient()
-            val retrofit = Retrofit.Builder()
-                .client(client)
-                .baseUrl("https://gelbooru.com")
-                .addConverterFactory(ByteArrayConverterFactory())
-                .build()
-            return GelbooruManager(retrofit.create(GelbooruApi::class.java))
+            val cookieJar = SessionCookie()
+            val client = OkHttpClient.Builder().cookieJar(cookieJar).build()
+            val retrofit = Retrofit.Builder().client(client).baseUrl("https://gelbooru.com")
+                .addConverterFactory(ByteArrayConverterFactory()).build()
+            return GelbooruManager(retrofit.create(GelbooruApi::class.java), cookieJar)
         }
+    }
+}
 
-        private fun buildClient(): OkHttpClient {
-            val cookieJar = SessionCookieJar()
-            return OkHttpClient.Builder().cookieJar(cookieJar).build()
-        }
+class GelbooruManagerLogin(
+    protected val gelbooruApi: GelbooruApi,
+    protected val cookieStorage: CookieStorage
+) {
+    fun commentPost(postId: Id, text: String, postAsAnon: Boolean) {
+        if (text.split(" ").count() < 3) throw IllegalArgumentException("Text should be more than 3 words")
+        val http = gelbooruApi.getPostHttp(postId).execute().body().let { String(it ?: byteArrayOf()) }
+        val csrfToken = Jsoup.parse(http).body().select("#comment_form [name=csrf-token]").attr("value")
+        val phpsessid = cookieStorage.getCookie("PHPSESSID").value
+        val username = cookieStorage.getCookie("user_id").value
+        val passHash = cookieStorage.getCookie("pass_hash").value
+        val anon = if (postAsAnon) "on" else null
+        val result = gelbooruApi.commentPost(postId, text, csrfToken, phpsessid, username, passHash, anon).execute().raw().priorResponse
+        println(String(result!!.body!!.bytes()))
     }
 }
