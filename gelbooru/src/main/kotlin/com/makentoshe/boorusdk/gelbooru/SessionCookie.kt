@@ -8,7 +8,6 @@ class SessionCookie : CookieStorage, CookieJar {
 
     private var cookies = HashSet<Cookie>()
 
-    //PHPSESSID=s214sqq3iqm9n8dkv3afmqbsv5; path=/
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
         this.cookies.addAll(cookies)
     }
@@ -25,7 +24,11 @@ class SessionCookie : CookieStorage, CookieJar {
         saveFromResponse(url, cookies)
     }
 
-    override fun getCookie(name: String) : Cookie {
+    override fun getCookie(name: String): Cookie {
         return cookies.stream().filter { it.name == name }.findFirst().get()
+    }
+
+    override fun hasCookie(name: String): Boolean {
+        return cookies.stream().filter { it.name == name }.count() > 0
     }
 }
