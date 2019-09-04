@@ -2,7 +2,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.41'
 }
 
-group 'com.makentoshe.boorusdk.gelbooru'
+group 'com.makentoshe.boorusdk'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -10,41 +10,11 @@ repositories {
 }
 
 dependencies {
-    def jsoup = "1.11.3"
-    def gson = "2.8.5"
-    def okhttp = "4.1.0"
-
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-
-    // Kotlin standard library
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
-    // Xml parsing
-    // https://github.com/jhy/jsoup
-    implementation "org.jsoup:jsoup:$jsoup"
-
-    // Json parsing
-    // https://github.com/google/gson
-    implementation "com.google.code.gson:gson:$gson"
-
-    // OkHttp
-    // https://github.com/square/okhttp/
-    implementation "com.squareup.okhttp3:okhttp:$okhttp"
-
-    // Retrofit
-    // https://github.com/square/retrofit
-    implementation "com.squareup.retrofit2:retrofit:2.3.0"
-    implementation "com.squareup.retrofit2:converter-gson:2.3.0"
-
-    // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
 }
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
-    kotlinOptions {
-        freeCompilerArgs = ["-XXLanguage:+InlineClasses"]
-    }
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
