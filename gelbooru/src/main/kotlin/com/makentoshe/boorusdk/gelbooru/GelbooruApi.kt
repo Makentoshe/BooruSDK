@@ -1,26 +1,27 @@
 package com.makentoshe.boorusdk.gelbooru
 
-import com.makentoshe.boorusdk.base.*
+import com.makentoshe.boorusdk.base.model.*
 import retrofit2.Call
 import retrofit2.http.*
 
 interface GelbooruApi {
 
     @GET("index.php?page=dapi&s=post&q=index")
-    fun posts(@Query("id") id: Id): Call<ByteArray>
+    fun getPost(@Query("id") id: Id): Call<ByteArray>
 
     @GET("index.php?page=dapi&s=post&q=index")
-    fun posts(
-        @Query("limit") limit: Int,
+    fun getPosts(
+        @Query("limit") count: Count,
         @Query("pid") page: Page,
-        @Query("tags") tags: Tags
+        @Query("tags") tags: Tags,
+        @Query("json") json: Int
     ): Call<ByteArray>
 
     @GET("https://gelbooru.com/index.php?page=post&s=view")
     fun getPostHttp(@Query("id") id: Id): Call<ByteArray>
 
     @GET("index.php?page=autocomplete")
-    fun autocomplete(@Query("term") term: String): Call<ByteArray>
+    fun autocomplete(@Query("term") term: Term): Call<ByteArray>
 
     @GET("index.php?page=dapi&s=comment&q=index")
     fun comments(@Query("post_id") postId: Id): Call<ByteArray>
@@ -32,14 +33,11 @@ interface GelbooruApi {
     fun tags(@Query("id") id: Id): Call<ByteArray>
 
     @GET("index.php?page=dapi&s=tag&q=index")
-    fun tags(@Query("name_pattern") pattern: String, @Query("limit") limit: Int): Call<ByteArray>
-
-    @GET("index.php?page=dapi&s=tag&q=index")
     fun tags(
-        @Query("name_pattern") pattern: String,
-        @Query("limit") limit: Int,
-        @Query("order") order: Order,
-        @Query("orderby") orderby: Orderby
+        @Query("name_pattern") pattern: Term,
+        @Query("limit") count: Count,
+        @Query("order") order: Order?,
+        @Query("orderby") orderby: Orderby?
     ): Call<ByteArray>
 
     @FormUrlEncoded
@@ -65,4 +63,20 @@ interface GelbooruApi {
         @Field("conf") conf: String? = "1",
         @Field("submit") submit: String = "Post+comment"
     ): Call<ByteArray>
+}
+
+interface GelbooruApiJson {
+
+    @GET("index.php?page=dapi&s=post&q=index&json=1")
+    fun getPost(@Query("id") id: Id): Call<ByteArray>
+
+    @GET("index.php?page=dapi&s=post&q=index&json=1")
+    fun getPosts(
+        @Query("limit") limit: Int, @Query("pid") page: Page, @Query("tags") tags: Tags
+    ): Call<ByteArray>
+
+}
+
+interface GelbooruApiXml {
+
 }

@@ -1,13 +1,16 @@
 package com.makentoshe.boorusdk.gelbooru
 
-import com.makentoshe.boorusdk.base.*
+import com.makentoshe.boorusdk.base.BooruManager
+import com.makentoshe.boorusdk.base.model.Id
+import com.makentoshe.boorusdk.base.model.ParseResult
+import com.makentoshe.boorusdk.base.request.*
+import com.makentoshe.boorusdk.gelbooru.parser.GelbooruParserXml
 import okhttp3.OkHttpClient
 import org.jsoup.Jsoup
 import retrofit2.Response
 import retrofit2.Retrofit
 
 fun main() {
-    val manager = GelbooruManager.build()
 }
 
 open class GelbooruManager(
@@ -19,7 +22,7 @@ open class GelbooruManager(
 
     fun <R> commentPost(postId: Id, message: String, postAsAnonymous: Boolean, parser: (ByteArray) -> R): R {
         if (!isLoggedIn) throw IllegalStateException("You are not logged in")
-        val postHttpPage = getPostHttp(postId, ::String)
+        val postHttpPage = getPostHttp(PostHttpRequest.build(postId), ::String)
 
         val csrfToken = Jsoup.parse(postHttpPage).body().select("#comment_form [name=csrf-token]").attr("value")
         val postAsAnon = if (postAsAnonymous) "on" else null
@@ -42,52 +45,45 @@ open class GelbooruManager(
         return loginCookies.isNotEmpty()
     }
 
-    override fun posts(
-        count: Int, page: Page, tags: Tags, parser: (ByteArray) -> List<ParseResult>
-    ): List<ParseResult> {
-        val response = gelbooruApi.posts(count, page, tags).execute()
+    override fun getPosts(request: PostsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
+        val json = request.type.ordinal
+        val response = gelbooruApi.getPosts(request.count, request.page, request.tags, json).execute()
         return parser(extractBody(response))
     }
 
-    override fun posts(id: Id, parser: (ByteArray) -> ParseResult): ParseResult {
-        val response = gelbooruApi.posts(id).execute()
+    override fun getPost(request: PostRequest, parser: (ByteArray) -> ParseResult): ParseResult {
+        val response = gelbooruApi.getPost(request.id).execute()
+        val xml = String(extractBody(response))
+        return GelbooruParserXml().parse(xml)[0]
+    }
+
+    override fun getPostHttp(request: PostHttpRequest, parser: (ByteArray) -> String): String {
+        val response = gelbooruApi.getPostHttp(request.id).execute()
+        return String(extractBody(response))
+    }
+
+    override fun getAutocomplete(request: AutocompleteRequest, parser: (ByteArray) -> Array<String>): Array<String> {
+        val response = gelbooruApi.autocomplete(request.term).execute()
         return parser(extractBody(response))
     }
 
-    fun getPostHttp(id: Id, parser: (ByteArray) -> String): String {
-        val response = gelbooruApi.getPostHttp(id).execute()
+    override fun getComment(request: CommentRequest, parser: (ByteArray) -> ParseResult): ParseResult {
+        val response = gelbooruApi.comments(request.id).execute()
         return parser(extractBody(response))
     }
 
-    override fun search(term: String, parser: (ByteArray) -> Array<String>): Array<String> {
-        val response = gelbooruApi.autocomplete(term).execute()
-        return parser(extractBody(response))
-    }
-
-    override fun comments(postId: Id, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
-        val response = gelbooruApi.comments(postId).execute()
-        return parser(extractBody(response))
-    }
-
-    override fun comments(parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
+    override fun getComments(request: CommentsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
         val response = gelbooruApi.comments().execute()
         return parser(extractBody(response))
     }
 
-    override fun tags(id: Id, parser: (ByteArray) -> ParseResult): ParseResult {
-        val response = gelbooruApi.tags(id).execute()
+    override fun getTag(request: TagRequest, parser: (ByteArray) -> ParseResult): ParseResult {
+        val response = gelbooruApi.tags(request.id).execute()
         return parser(extractBody(response))
     }
 
-    override fun tags(pattern: String, limit: Int, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
-        val response = gelbooruApi.tags(pattern, limit).execute()
-        return parser(extractBody(response))
-    }
-
-    override fun tags(
-        pattern: String, limit: Int, order: Order, orderby: Orderby, parser: (ByteArray) -> List<ParseResult>
-    ): List<ParseResult> {
-        val response = gelbooruApi.tags(pattern, limit, order, orderby).execute()
+    override fun getTags(request: TagsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
+        val response = gelbooruApi.tags(request.pattern, request.count, request.order, request.orderby).execute()
         return parser(extractBody(response))
     }
 

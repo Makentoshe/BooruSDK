@@ -1,6 +1,6 @@
 package com.makentoshe.boorusdk.gelbooru.parser
 
-import com.makentoshe.boorusdk.base.ParseResult
+import com.makentoshe.boorusdk.base.model.ParseResult
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode

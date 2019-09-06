@@ -1,7 +1,7 @@
 package com.makentoshe.boorusdk.gelbooru.parser
 
 import com.google.gson.Gson
-import com.makentoshe.boorusdk.base.ParseResult
+import com.makentoshe.boorusdk.base.model.ParseResult
 
 open class GelbooruParserJson : GelbooruParser<String>() {
 
