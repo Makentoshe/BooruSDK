@@ -1,4 +1,4 @@
-package com.makentoshe.boorusdk.base
+package com.makentoshe.boorusdk.base.model
 
 enum class Orderby {
     DATE, COUNT, NAME;

@@ -1,6 +1,6 @@
-package com.makentoshe.boorusdk.base
+package com.makentoshe.boorusdk.base.model
 
-inline class Tags(val value: Set<String> = setOf()) {
+data class Tags(val value: Set<String> = setOf()) {
     override fun toString(): String {
         return value.joinToString(separator = " ")
     }

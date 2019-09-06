@@ -1,28 +1,32 @@
 package com.makentoshe.boorusdk.base
 
+import com.makentoshe.boorusdk.base.model.ParseResult
+import com.makentoshe.boorusdk.base.request.*
+
 interface BooruManager {
 
-    fun posts(
-        count: Int, page: Page, tags: Tags, parser: (ByteArray) -> List<ParseResult>
-    ): List<ParseResult>
+    /** Returns a post http page */
+    fun getPostHttp(request: PostHttpRequest, parser: (ByteArray) -> String): String
 
-    fun posts(id: Id, parser: (ByteArray) -> ParseResult): ParseResult
+    /** Returns a list of posts */
+    fun getPosts(request: PostsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult>
 
-    fun search(term: String, parser: (ByteArray) -> Array<String>): Array<String>
+    /** Returns a single post */
+    fun getPost(request: PostRequest, parser: (ByteArray) -> ParseResult): ParseResult
 
-    fun comments(postId: Id, parser: (ByteArray) -> List<ParseResult>): List<ParseResult>
+    /** Returns a list of related tags */
+    fun getAutocomplete(request: AutocompleteRequest, parser: (ByteArray) -> Array<String>): Array<String>
 
-    fun comments(parser: (ByteArray) -> List<ParseResult>): List<ParseResult>
+    /** Returns a single comment */
+    fun getComment(request: CommentRequest, parser: (ByteArray) -> ParseResult): ParseResult
 
-    fun tags(id: Id, parser: (ByteArray) -> ParseResult): ParseResult
+    /** Return a list of comments */
+    fun getComments(request: CommentsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult>
 
-    fun tags(pattern: String, limit: Int = 100, parser: (ByteArray) -> List<ParseResult>): List<ParseResult>
+    /** Return a single tag */
+    fun getTag(request: TagRequest, parser: (ByteArray) -> ParseResult): ParseResult
 
-    fun tags(
-        pattern: String,
-        limit: Int = 100,
-        order: Order,
-        orderby: Orderby,
-        parser: (ByteArray) -> List<ParseResult>
-    ): List<ParseResult>
+    /** Return a list of tags */
+    fun getTags(request: TagsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult>
+
 }
