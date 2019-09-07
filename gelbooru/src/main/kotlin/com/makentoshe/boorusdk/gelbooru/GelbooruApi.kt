@@ -24,7 +24,7 @@ interface GelbooruApi {
     fun autocomplete(@Query("term") term: Term): Call<ByteArray>
 
     @GET("index.php?page=dapi&s=comment&q=index")
-    fun comments(@Query("post_id") postId: Id): Call<ByteArray>
+    fun comments(@Query("post_id") postId: Id, @Query("json") json: Int?): Call<ByteArray>
 
     @GET("index.php?page=dapi&s=comment&q=index")
     fun comments(): Call<ByteArray>
@@ -43,8 +43,8 @@ interface GelbooruApi {
     @FormUrlEncoded
     @POST("index.php?page=account&s=login&code=00")
     fun login(
-        @Field("user") user: String,
-        @Field("pass") password: String,
+        @Field("user") user: Username,
+        @Field("pass") password: Password,
         @Field("submit") submit: String = "Log+in"
     ): Call<ByteArray>
 
@@ -54,12 +54,10 @@ interface GelbooruApi {
     @FormUrlEncoded
     @POST("index.php?page=comment&s=save")
     fun commentPost(
-        @Header("user_id") userId: String,
-        @Header("pass_hash") passHash: String,
         @Query("id") postId: Id,
-        @Field("comment") text: String,
+        @Field("comment") text: Comment,
         @Field("csrf-token") csrfToken: String,
-        @Field("post_anonymous") anon: String? = "on",
+        @Field("post_anonymous") anon: String? = null,
         @Field("conf") conf: String? = "1",
         @Field("submit") submit: String = "Post+comment"
     ): Call<ByteArray>

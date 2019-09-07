@@ -1,7 +1,6 @@
 package com.makentoshe.boorusdk.gelbooru
 
 import com.makentoshe.boorusdk.base.BooruManager
-import com.makentoshe.boorusdk.base.model.Id
 import com.makentoshe.boorusdk.base.model.ParseResult
 import com.makentoshe.boorusdk.base.request.*
 import com.makentoshe.boorusdk.gelbooru.parser.GelbooruParserXml
@@ -11,6 +10,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 
 fun main() {
+    val manager = GelbooruManager.build()
+    val loginRequest = LoginRequest.build("Makentoshe", "1243568790")
+    val result = manager.login(loginRequest)
+    println(result)
 }
 
 open class GelbooruManager(
@@ -20,29 +23,31 @@ open class GelbooruManager(
     private val isLoggedIn: Boolean
         get() = cookieStorage.hasCookie("user_id") && cookieStorage.hasCookie("pass_hash")
 
-    fun <R> commentPost(postId: Id, message: String, postAsAnonymous: Boolean, parser: (ByteArray) -> R): R {
+    override fun login(request: LoginRequest): Boolean {
+        val response = gelbooruApi.login(request.username, request.password).execute()
+        val headers = response.raw().priorResponse?.headers ?: throw IllegalStateException("Login API invalid")
+        return headers.values("Set-Cookie").run {
+            any { it.contains("user_id") } && any { it.contains("pass_hash") }
+        }
+    }
+
+    override fun commentPost(request: CommentPostRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
+        // check is logged in
         if (!isLoggedIn) throw IllegalStateException("You are not logged in")
-        val postHttpPage = getPostHttp(PostHttpRequest.build(postId), ::String)
-
+        // get http page
+        val postHttpPage = getPostHttp(PostHttpRequest.build(request.id), ::String)
+        // extract csrf token
         val csrfToken = Jsoup.parse(postHttpPage).body().select("#comment_form [name=csrf-token]").attr("value")
-        val postAsAnon = if (postAsAnonymous) "on" else null
-        val passHash = cookieStorage.getCookie("pass_hash").value
-        val userId = cookieStorage.getCookie("user_id").value
-
-        return parser(
-            gelbooruApi.commentPost(userId, passHash, postId, message, csrfToken, postAsAnon).execute().body()!!
-        )
+        val postAsAnon = if (request.postAsAnonymous) "on" else null
+        // perform request
+        gelbooruApi.commentPost(request.id, request.comment, csrfToken, postAsAnon).execute()
+        // get all comments for the post
+        return getComments(CommentsRequest.build(request.id.value, request.type), parser)
     }
 
-    fun <R> votePostUp(id: Id, parser: (ByteArray) -> R): R {
-        val response = gelbooruApi.votePostUp(id).execute()
+    override fun votePost(request: VotePostRequest, parser: (ByteArray) -> Int): Int {
+        val response = gelbooruApi.votePostUp(request.id).execute()
         return parser(extractBody(response))
-    }
-
-    fun login(user: String, password: String): Boolean {
-        val response = gelbooruApi.login(user, password).execute().raw().priorResponse ?: return false
-        val loginCookies = response.headers("Set-Cookie")
-        return loginCookies.isNotEmpty()
     }
 
     override fun getPosts(request: PostsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
@@ -67,13 +72,12 @@ open class GelbooruManager(
         return parser(extractBody(response))
     }
 
-    override fun getComment(request: CommentRequest, parser: (ByteArray) -> ParseResult): ParseResult {
-        val response = gelbooruApi.comments(request.id).execute()
-        return parser(extractBody(response))
-    }
-
     override fun getComments(request: CommentsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
-        val response = gelbooruApi.comments().execute()
+        val response = if (request.id != null) {
+            gelbooruApi.comments(request.id!!, request.type.ordinal).execute()
+        } else {
+            gelbooruApi.comments().execute()
+        }
         return parser(extractBody(response))
     }
 
