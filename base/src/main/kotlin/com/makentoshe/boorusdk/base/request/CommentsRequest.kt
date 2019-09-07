@@ -1,14 +1,17 @@
 package com.makentoshe.boorusdk.base.request
 
-import java.lang.reflect.Type
+import com.makentoshe.boorusdk.base.model.Id
+import com.makentoshe.boorusdk.base.model.Type
 
 interface CommentsRequest {
     val type: Type
+    val id: Id?
 
     companion object {
-        fun build(type: Type): CommentsRequest {
+        fun build(id: Int?, type: Type): CommentsRequest {
             return object : CommentsRequest {
                 override val type = type
+                override val id = if (id == null) null else Id(id)
             }
         }
     }
