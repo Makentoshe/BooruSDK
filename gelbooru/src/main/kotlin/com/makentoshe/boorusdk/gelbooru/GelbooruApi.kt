@@ -24,10 +24,7 @@ interface GelbooruApi {
     fun autocomplete(@Query("term") term: String): Call<ByteArray>
 
     @GET("index.php?page=dapi&s=comment&q=index")
-    fun comments(@Query("post_id") postId: Id, @Query("json") json: Int?): Call<ByteArray>
-
-    @GET("index.php?page=dapi&s=comment&q=index")
-    fun comments(): Call<ByteArray>
+    fun getComments(@Query("post_id") postId: Int? = null, @Query("json") type: Int?): Call<ByteArray>
 
     @GET("index.php?page=dapi&s=tag&q=index")
     fun tags(@Query("id") id: Id): Call<ByteArray>

@@ -41,5 +41,5 @@ interface DanbooruApi {
         @Query("search[creator_name]") creatorName: String? = null,
         @Query("search[creator_id]") creatorId: Int? = null,
         @Query("search[is_deleted]") isDeleted: Boolean? = null
-    ): String
+    ): Call<ByteArray>
 }

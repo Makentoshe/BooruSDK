@@ -18,7 +18,7 @@ open class DanbooruManager(
         return String(extractBody(response))
     }
 
-    override fun getPosts(request: PostsRequest): String{
+    override fun getPosts(request: PostsRequest): String {
         val response = danbooruApi.getPosts(
             type = request.type.name.toLowerCase(),
             count = request.count,
@@ -43,12 +43,24 @@ open class DanbooruManager(
         return String(extractBody(response))
     }
 
-    override fun getComments(request: CommentsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getComments(request: CommentsRequest): String {
+        val response = danbooruApi.getComments(
+            type = request.type.name.toLowerCase(),
+            count = request.limit,
+            page = request.page,
+            postId = request.postId,
+            postsTagMatch = request.postTagMatch,
+            creatorName = request.creatorName,
+            creatorId = request.creatorId,
+            isDeleted = request.isDeleted
+        ).execute()
+        return String(extractBody(response))
     }
 
     override fun getPostHttp(request: PostRequest): String {
-        val response = danbooruApi.getPostHttp(id = request.id).execute()
+        val response = danbooruApi.getPostHttp(
+            id = request.id
+        ).execute()
         return String(extractBody(response))
     }
 
@@ -88,6 +100,7 @@ open class DanbooruManager(
 
 fun main() {
     val manager = DanbooruManager.build()
-    val request = PostRequest.build(3621307, Type.XML)
-    val post = manager.getPost(request)
+    val request = CommentsRequest.build(type = Type.XML)
+    val response = manager.getComments(request)
+    println(response)
 }

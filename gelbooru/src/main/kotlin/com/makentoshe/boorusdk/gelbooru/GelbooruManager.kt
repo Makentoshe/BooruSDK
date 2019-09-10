@@ -40,7 +40,7 @@ open class GelbooruManager(
         // perform request
         gelbooruApi.commentPost(request.id, request.comment, csrfToken, postAsAnon).execute()
         // get all comments for the post
-        return getComments(CommentsRequest.build(request.id.value, request.type), parser)
+        return emptyList()//getComments(CommentsRequest.build(request.id.value, request.type), parser)
     }
 
     override fun votePost(request: VotePostRequest, parser: (ByteArray) -> Int): Int {
@@ -71,13 +71,12 @@ open class GelbooruManager(
         return String(extractBody(response))
     }
 
-    override fun getComments(request: CommentsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
-        val response = if (request.id != null) {
-            gelbooruApi.comments(request.id!!, request.type.ordinal).execute()
-        } else {
-            gelbooruApi.comments().execute()
-        }
-        return parser(extractBody(response))
+    override fun getComments(request: CommentsRequest): String {
+        val response = gelbooruApi.getComments(
+            postId = request.postId,
+            type = request.type.ordinal
+        ).execute()
+        return String(extractBody(response))
     }
 
     override fun getTag(request: TagRequest, parser: (ByteArray) -> ParseResult): ParseResult {

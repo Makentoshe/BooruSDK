@@ -17,8 +17,8 @@ interface BooruManager {
     /** Returns a list of related tags in one of a types represented in the request */
     fun getAutocomplete(request: AutocompleteRequest): String
 
-    /** Returns a list of comments */
-    fun getComments(request: CommentsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult>
+    /** Returns a list of comments in one of a types represented in the request */
+    fun getComments(request: CommentsRequest): String
 
     /** Return a single tag */
     fun getTag(request: TagRequest, parser: (ByteArray) -> ParseResult): ParseResult
