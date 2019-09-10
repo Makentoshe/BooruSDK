@@ -13,8 +13,9 @@ open class GelbooruManager(
     protected val gelbooruApi: GelbooruApi, protected val cookieStorage: CookieStorage
 ) : BooruManager {
 
-    override fun getPostHttp(request: PostRequest): String {
-        val response = gelbooruApi.getPostHttp(request.id).execute()
+    override fun getPostHttp(request: PostsRequest): String {
+        val postId = request.id ?: throw IllegalArgumentException("Request should contain id value")
+        val response = gelbooruApi.getPostHttp(postId).execute()
         return String(extractBody(response))
     }
 
@@ -33,7 +34,7 @@ open class GelbooruManager(
         // check is logged in
         if (!isLoggedIn) throw IllegalStateException("You are not logged in")
         // get http page (type will be ignored)
-        val postHttpPage = getPostHttp(PostRequest.build(request.id.value, Type.XML))
+        val postHttpPage = getPostHttp(PostsRequest.build(type = Type.XML, id = request.id.value))
         // extract csrf token
         val csrfToken = Jsoup.parse(postHttpPage).body().select("#comment_form [name=csrf-token]").attr("value")
         val postAsAnon = if (request.postAsAnonymous) "on" else null
@@ -49,21 +50,15 @@ open class GelbooruManager(
     }
 
     override fun getPosts(request: PostsRequest): String {
-        val json = request.type.ordinal
-        val response = gelbooruApi.getPosts(request.count, request.page, request.tags, json).execute()
-        return String(extractBody(response))
-    }
-
-    override fun getPost(request: PostRequest): String {
-        val response = gelbooruApi.getPost(
+        val type = if (request.type == Type.JSON) 1 else null
+        val response = gelbooruApi.getPosts(
+            type = type,
             id = request.id,
-            type = request.type.ordinal.toString()
+            count = request.count,
+            page = request.page,
+            tags = request.tags
         ).execute()
-        // return string from not null byte array
-        response.body()?.let {
-            return String(it)
-        }
-        throw Exception(response.message())
+        return String(extractBody(response))
     }
 
     override fun getAutocomplete(request: AutocompleteRequest): String {

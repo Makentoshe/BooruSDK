@@ -11,10 +11,11 @@ interface GelbooruApi {
 
     @GET("index.php?page=dapi&s=post&q=index")
     fun getPosts(
+        @Query("id") id: Int? = null,
         @Query("limit") count: Count? = null,
         @Query("pid") page: Page? = null,
         @Query("tags") tags: Tags? = null,
-        @Query("json") json: Int? = null
+        @Query("json") type: Int? = null
     ): Call<ByteArray>
 
     @GET("https://gelbooru.com/index.php?page=post&s=view")

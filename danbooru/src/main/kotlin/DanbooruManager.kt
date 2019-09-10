@@ -5,29 +5,28 @@ import com.makentoshe.boorusdk.base.request.*
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.lang.IllegalArgumentException
 
 open class DanbooruManager(
     protected val danbooruApi: DanbooruApi
 ) : BooruManager {
 
-    override fun getPost(request: PostRequest): String {
-        val response = danbooruApi.getPost(
-            id = request.id,
-            type = request.type.name.toLowerCase()
-        ).execute()
-        return String(extractBody(response))
-    }
-
     override fun getPosts(request: PostsRequest): String {
-        val response = danbooruApi.getPosts(
-            type = request.type.name.toLowerCase(),
-            count = request.count,
-            page = request.page,
-            tags = request.tags,
-            md5 = request.md5,
-            random = request.random,
-            raw = request.raw
-        ).execute()
+        val type = request.type.name.toLowerCase()
+        val postId = request.id
+        val response = if (postId != null) {
+            danbooruApi.getPost(type = type, id = postId).execute()
+        } else {
+            danbooruApi.getPosts(
+                type = type,
+                count = request.count,
+                page = request.page,
+                tags = request.tags,
+                md5 = request.md5,
+                random = request.random,
+                raw = request.raw
+            ).execute()
+        }
         return String(extractBody(response))
     }
 
@@ -57,10 +56,10 @@ open class DanbooruManager(
         return String(extractBody(response))
     }
 
-    override fun getPostHttp(request: PostRequest): String {
-        val response = danbooruApi.getPostHttp(
-            id = request.id
-        ).execute()
+    override fun getPostHttp(request: PostsRequest): String {
+        val postId = request.id ?: throw IllegalArgumentException("Id value should be defined")
+        if (postId < 0) throw IllegalArgumentException("Id value should not be less 0")
+        val response = danbooruApi.getPostHttp(id = postId).execute()
         return String(extractBody(response))
     }
 
@@ -100,7 +99,11 @@ open class DanbooruManager(
 
 fun main() {
     val manager = DanbooruManager.build()
-    val request = CommentsRequest.build(type = Type.XML)
-    val response = manager.getComments(request)
+    val request = PostsRequest.build(
+        type = Type.XML,
+        count = 2,
+        id = 3624352
+        )
+    val response = manager.getPosts(request)
     println(response)
 }

@@ -4,6 +4,7 @@ import com.makentoshe.boorusdk.base.model.*
 
 interface PostsRequest {
     val type: Type
+    val id: Int?
     val count: Count?
     val page: Page?
     val tags: Tags?
@@ -16,12 +17,14 @@ interface PostsRequest {
             type: Type,
             count: Int? = null,
             page: Int? = null,
+            id: Int? = null,
             md5: String? = null,
             random: Boolean? = null,
             raw: String? = null,
             vararg tags: String = emptyArray()
         ): PostsRequest {
             return object : PostsRequest {
+                override val id = id
                 override val type = type
                 override val count = count?.let(::Count)
                 override val page = page?.let(::Page)
