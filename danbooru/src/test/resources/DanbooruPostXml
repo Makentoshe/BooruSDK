@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<post>
+    <id type="integer">3621307</id>
+    <created-at type="dateTime">2019-09-07T13:36:11-04:00</created-at>
+    <uploader-id type="integer">49091</uploader-id>
+    <score type="integer">1</score>
+    <source>https://twitter.com/gudongudon/status/1170082275146387456</source>
+    <md5>a508cc49a012857808a29ec3657d3633</md5>
+    <last-comment-bumped-at type="dateTime" nil="true"/>
+    <rating>s</rating>
+    <image-width type="integer">1821</image-width>
+    <image-height type="integer">1080</image-height>
+    <tag-string>1girl black_blouse black_ribbon black_sailor_collar black_serafuku black_skirt blonde_hair blouse breasts cannon collarbone commentary_request cowboy_shot dutch_angle eyebrows_visible_through_hair green_eyes gudon_(iukhzl) hair_between_eyes hair_ornament hair_ribbon high_heels highres kantai_collection long_hair machinery neckerchief pleated_skirt red_neckwear ribbon rigging sailor_collar school_uniform serafuku shoes short_sleeves simple_background skirt small_breasts smokestack socks solo standing torpedo torpedo_tubes turret white_background yuudachi_(kantai_collection)</tag-string>
+    <is-note-locked type="boolean">false</is-note-locked>
+    <fav-count type="integer">3</fav-count>
+    <file-ext>jpg</file-ext>
+    <last-noted-at type="dateTime" nil="true"/>
+    <is-rating-locked type="boolean">false</is-rating-locked>
+    <parent-id type="integer">3620555</parent-id>
+    <has-children type="boolean">false</has-children>
+    <approver-id type="integer" nil="true"/>
+    <tag-count-general type="integer">42</tag-count-general>
+    <tag-count-artist type="integer">1</tag-count-artist>
+    <tag-count-character type="integer">1</tag-count-character>
+    <tag-count-copyright type="integer">1</tag-count-copyright>
+    <file-size type="integer">239808</file-size>
+    <is-status-locked type="boolean">false</is-status-locked>
+    <pool-string></pool-string>
+    <up-score type="integer">1</up-score>
+    <down-score type="integer">0</down-score>
+    <is-pending type="boolean">false</is-pending>
+    <is-flagged type="boolean">false</is-flagged>
+    <is-deleted type="boolean">false</is-deleted>
+    <tag-count type="integer">47</tag-count>
+    <updated-at type="dateTime">2019-09-07T13:36:11-04:00</updated-at>
+    <is-banned type="boolean">false</is-banned>
+    <pixiv-id type="integer" nil="true"/>
+    <last-commented-at type="dateTime" nil="true"/>
+    <has-active-children type="boolean">false</has-active-children>
+    <bit-flags type="integer">2</bit-flags>
+    <tag-count-meta type="integer">2</tag-count-meta>
+    <keeper-data nil="true"/>
+    <uploader-name>nanami</uploader-name>
+    <has-large type="boolean">true</has-large>
+    <has-visible-children type="boolean">false</has-visible-children>
+    <children-ids nil="true"/>
+    <is-favorited type="boolean">false</is-favorited>
+    <tag-string-general>1girl black_blouse black_ribbon black_sailor_collar black_serafuku black_skirt blonde_hair blouse breasts cannon collarbone cowboy_shot dutch_angle eyebrows_visible_through_hair green_eyes hair_between_eyes hair_ornament hair_ribbon high_heels long_hair machinery neckerchief pleated_skirt red_neckwear ribbon rigging sailor_collar school_uniform serafuku shoes short_sleeves simple_background skirt small_breasts smokestack socks solo standing torpedo torpedo_tubes turret white_background</tag-string-general>
+    <tag-string-character>yuudachi_(kantai_collection)</tag-string-character>
+    <tag-string-copyright>kantai_collection</tag-string-copyright>
+    <tag-string-artist>gudon_(iukhzl)</tag-string-artist>
+    <tag-string-meta>commentary_request highres</tag-string-meta>
+    <file-url>https://danbooru.donmai.us/data/a508cc49a012857808a29ec3657d3633.jpg</file-url>
+    <large-file-url>https://danbooru.donmai.us/data/sample/sample-a508cc49a012857808a29ec3657d3633.jpg</large-file-url>
+    <preview-file-url>https://raikou4.donmai.us/preview/a5/08/a508cc49a012857808a29ec3657d3633.jpg</preview-file-url>
+</post>

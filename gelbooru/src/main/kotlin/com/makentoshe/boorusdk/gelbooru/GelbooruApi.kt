@@ -7,21 +7,21 @@ import retrofit2.http.*
 interface GelbooruApi {
 
     @GET("index.php?page=dapi&s=post&q=index")
-    fun getPost(@Query("id") id: Id): Call<ByteArray>
+    fun getPost(@Query("id") id: Int, @Query("json") type: String): Call<ByteArray>
 
     @GET("index.php?page=dapi&s=post&q=index")
     fun getPosts(
-        @Query("limit") count: Count,
-        @Query("pid") page: Page,
-        @Query("tags") tags: Tags,
-        @Query("json") json: Int
+        @Query("limit") count: Count? = null,
+        @Query("pid") page: Page? = null,
+        @Query("tags") tags: Tags? = null,
+        @Query("json") json: Int? = null
     ): Call<ByteArray>
 
     @GET("https://gelbooru.com/index.php?page=post&s=view")
-    fun getPostHttp(@Query("id") id: Id): Call<ByteArray>
+    fun getPostHttp(@Query("id") id: Int): Call<ByteArray>
 
     @GET("index.php?page=autocomplete")
-    fun autocomplete(@Query("term") term: Term): Call<ByteArray>
+    fun autocomplete(@Query("term") term: String): Call<ByteArray>
 
     @GET("index.php?page=dapi&s=comment&q=index")
     fun comments(@Query("post_id") postId: Id, @Query("json") json: Int?): Call<ByteArray>
@@ -61,20 +61,4 @@ interface GelbooruApi {
         @Field("conf") conf: String? = "1",
         @Field("submit") submit: String = "Post+comment"
     ): Call<ByteArray>
-}
-
-interface GelbooruApiJson {
-
-    @GET("index.php?page=dapi&s=post&q=index&json=1")
-    fun getPost(@Query("id") id: Id): Call<ByteArray>
-
-    @GET("index.php?page=dapi&s=post&q=index&json=1")
-    fun getPosts(
-        @Query("limit") limit: Int, @Query("pid") page: Page, @Query("tags") tags: Tags
-    ): Call<ByteArray>
-
-}
-
-interface GelbooruApiXml {
-
 }

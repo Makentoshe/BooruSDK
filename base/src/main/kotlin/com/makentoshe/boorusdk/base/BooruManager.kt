@@ -6,16 +6,16 @@ import com.makentoshe.boorusdk.base.request.*
 interface BooruManager {
 
     /** Returns a post http page */
-    fun getPostHttp(request: PostHttpRequest, parser: (ByteArray) -> String): String
+    fun getPostHttp(request: PostRequest): String
 
-    /** Returns a list of posts */
-    fun getPosts(request: PostsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult>
+    /** Returns a list of posts in one of a types represented in the request */
+    fun getPosts(request: PostsRequest): String
 
-    /** Returns a single post */
-    fun getPost(request: PostRequest, parser: (ByteArray) -> ParseResult): ParseResult
+    /** Returns a single post in one of a types represented in the request. */
+    fun getPost(request: PostRequest): String
 
-    /** Returns a list of related tags */
-    fun getAutocomplete(request: AutocompleteRequest, parser: (ByteArray) -> Array<String>): Array<String>
+    /** Returns a list of related tags in one of a types represented in the request */
+    fun getAutocomplete(request: AutocompleteRequest): String
 
     /** Returns a list of comments */
     fun getComments(request: CommentsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult>
