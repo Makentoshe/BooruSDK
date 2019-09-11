@@ -1,14 +1,15 @@
 import com.makentoshe.boorusdk.base.BooruManager
 import com.makentoshe.boorusdk.base.model.ParseResult
 import com.makentoshe.boorusdk.base.model.TagCategory
-import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.*
+import okhttp3.Cookie
 import okhttp3.OkHttpClient
+import org.jsoup.Jsoup
 import retrofit2.Response
 import retrofit2.Retrofit
 
 open class DanbooruManager(
-    protected val danbooruApi: DanbooruApi
+    protected val danbooruApi: DanbooruApi, protected val cookieStorage: CookieStorage
 ) : BooruManager {
 
     override fun getPosts(request: PostsRequest): String {
@@ -108,7 +109,16 @@ open class DanbooruManager(
     }
 
     override fun login(request: LoginRequest): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val customResponse = String(extractBody(danbooruApi.newSession().execute()))
+        val token = Jsoup.parse(customResponse).select("[name=authenticity_token]").attr("value")
+        val response = danbooruApi.login(
+            token = token,
+            username = request.username,
+            password = request.password
+        ).execute()
+        return response.headers().values("Set-Cookie").run {
+            any { it.contains("password_hash") } && any { it.contains("user_name") }
+        }
     }
 
     override fun votePost(request: VotePostRequest, parser: (ByteArray) -> Int): Int {
@@ -125,21 +135,21 @@ open class DanbooruManager(
 
     companion object {
         fun build(): DanbooruManager {
-            val client = OkHttpClient.Builder().build()
+            val cookieStorage = SessionCookie()
+            val client = OkHttpClient.Builder().cookieJar(cookieStorage).build()
             val retrofit = Retrofit.Builder().client(client).baseUrl("https://danbooru.donmai.us")
                 .addConverterFactory(ByteArrayConverterFactory()).build()
-            return DanbooruManager(retrofit.create(DanbooruApi::class.java))
+            return DanbooruManager(retrofit.create(DanbooruApi::class.java), cookieStorage)
         }
     }
 }
 
 fun main() {
     val manager = DanbooruManager.build()
-    val request = TagsRequest.build(
-        type = Type.XML,
-        pattern = "hats*",
-        category = TagCategory.COPYTIGHT
+    val request = LoginRequest.build(
+        username = "Makentoshe",
+        password = "1243568790"
     )
-    val response = manager.getTags(request)
-    println(response)
+    val response = manager.login(request)
+    println("")
 }

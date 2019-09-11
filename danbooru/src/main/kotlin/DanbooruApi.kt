@@ -1,8 +1,6 @@
 import com.makentoshe.boorusdk.base.model.*
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface DanbooruApi {
 
@@ -63,4 +61,18 @@ interface DanbooruApi {
         @Query("search[order]") order: String? = null,
         @Query("search[category]") category: Int? = null
     ): Call<ByteArray>
+
+    @POST("session")
+    @FormUrlEncoded
+    fun login(
+        @Field("authenticity_token") token: String,
+        @Field("name") username: String,
+        @Field("password") password: String,
+        @Field("remember") remember: Int = 1,
+        @Field("commit") commit: String = "Submit",
+        @Field("url") url: String = ""
+    ): Call<ByteArray>
+
+    @GET("session/new")
+    fun newSession(): Call<ByteArray>
 }
