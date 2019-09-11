@@ -23,7 +23,10 @@ open class GelbooruManager(
         get() = cookieStorage.hasCookie("user_id") && cookieStorage.hasCookie("pass_hash")
 
     override fun login(request: LoginRequest): Boolean {
-        val response = gelbooruApi.login(request.username, request.password).execute()
+        val response = gelbooruApi.login(
+            username = request.username,
+            password = request.password
+        ).execute()
         val headers = response.raw().priorResponse?.headers ?: throw IllegalStateException("Login API invalid")
         return headers.values("Set-Cookie").run {
             any { it.contains("user_id") } && any { it.contains("pass_hash") }

@@ -39,8 +39,8 @@ interface GelbooruApi {
     @FormUrlEncoded
     @POST("index.php?page=account&s=login&code=00")
     fun login(
-        @Field("user") user: Username,
-        @Field("pass") password: Password,
+        @Field("user") username: String,
+        @Field("pass") password: String,
         @Field("submit") submit: String = "Log+in"
     ): Call<ByteArray>
 

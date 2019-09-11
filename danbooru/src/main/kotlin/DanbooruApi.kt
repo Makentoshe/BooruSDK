@@ -62,8 +62,8 @@ interface DanbooruApi {
         @Query("search[category]") category: Int? = null
     ): Call<ByteArray>
 
-    @POST("session")
     @FormUrlEncoded
+    @POST("session")
     fun login(
         @Field("authenticity_token") token: String,
         @Field("name") username: String,
@@ -75,4 +75,11 @@ interface DanbooruApi {
 
     @GET("session/new")
     fun newSession(): Call<ByteArray>
+
+    @FormUrlEncoded
+    @POST("posts/{id}/votes.json")
+    fun votePost(
+        @Path("id") id: Int,
+        @Field("score") score: String
+    ): Call<ByteArray>
 }
