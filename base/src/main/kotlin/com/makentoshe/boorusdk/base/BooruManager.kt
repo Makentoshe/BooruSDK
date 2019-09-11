@@ -17,11 +17,8 @@ interface BooruManager {
     /** Returns a list of comments in one of a types represented in the request */
     fun getComments(request: CommentsRequest): String
 
-    /** Return a single tag */
-    fun getTag(request: TagRequest, parser: (ByteArray) -> ParseResult): ParseResult
-
     /** Return a list of tags */
-    fun getTags(request: TagsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult>
+    fun getTags(request: TagsRequest): String
 
     /** Performs a login and returns a result */
     fun login(request: LoginRequest): Boolean

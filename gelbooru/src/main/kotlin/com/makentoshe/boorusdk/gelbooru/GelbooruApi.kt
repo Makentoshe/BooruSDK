@@ -28,14 +28,12 @@ interface GelbooruApi {
     fun getComments(@Query("post_id") postId: Int? = null, @Query("json") type: Int?): Call<ByteArray>
 
     @GET("index.php?page=dapi&s=tag&q=index")
-    fun tags(@Query("id") id: Id): Call<ByteArray>
-
-    @GET("index.php?page=dapi&s=tag&q=index")
-    fun tags(
-        @Query("name_pattern") pattern: Term,
-        @Query("limit") count: Count,
-        @Query("order") order: Order?,
-        @Query("orderby") orderby: Orderby?
+    fun getTags(
+        @Query("id") tagId: Int? = null,
+        @Query("name_pattern") pattern: String? = null,
+        @Query("limit") count: Int? = null,
+        @Query("order") order: Order? = null,
+        @Query("orderby") orderby: Orderby? = null
     ): Call<ByteArray>
 
     @FormUrlEncoded

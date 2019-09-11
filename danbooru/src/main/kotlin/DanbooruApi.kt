@@ -7,7 +7,10 @@ import retrofit2.http.Query
 interface DanbooruApi {
 
     @GET("posts/{id}.{type}")
-    fun getPost(@Path("id") id: Int, @Path("type") type: String): Call<ByteArray>
+    fun getPost(
+        @Path("id") id: Int,
+        @Path("type") type: String
+    ): Call<ByteArray>
 
     @GET("posts.{type}")
     fun getPosts(
@@ -31,7 +34,7 @@ interface DanbooruApi {
         @Path("postId") id: Int
     ): Call<ByteArray>
 
-    @GET("https://danbooru.donmai.us/comments.{type}?group_by=comment")
+    @GET("comments.{type}?group_by=comment")
     fun getComments(
         @Path("type") type: String,
         @Query("limit") count: Int? = null,
@@ -41,5 +44,23 @@ interface DanbooruApi {
         @Query("search[creator_name]") creatorName: String? = null,
         @Query("search[creator_id]") creatorId: Int? = null,
         @Query("search[is_deleted]") isDeleted: Boolean? = null
+    ): Call<ByteArray>
+
+    @GET("tags/{id}.{type}")
+    fun getTag(
+        @Path("id") id: Int,
+        @Path("type") type: String
+    ): Call<ByteArray>
+
+    @GET("tags.{type}")
+    fun getTags(
+        @Path("type") type: String,
+        @Query("search[name_matches]") pattern: String? = null,
+        @Query("search[name]") name: String? = null,
+        @Query("search[hide_empty]") hideEmpty: String? = null,
+        @Query("search[has_wiki]") hasWiki: String? = null,
+        @Query("search[has_artist]") hasArtist: String? = null,
+        @Query("search[order]") order: String? = null,
+        @Query("search[category]") category: Int? = null
     ): Call<ByteArray>
 }

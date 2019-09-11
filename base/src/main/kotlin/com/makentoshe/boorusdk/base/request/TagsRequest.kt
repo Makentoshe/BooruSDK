@@ -1,22 +1,49 @@
 package com.makentoshe.boorusdk.base.request
 
-import com.makentoshe.boorusdk.base.model.*
+import com.makentoshe.boorusdk.base.model.Order
+import com.makentoshe.boorusdk.base.model.Orderby
+import com.makentoshe.boorusdk.base.model.TagCategory
+import com.makentoshe.boorusdk.base.model.Type
 
 interface TagsRequest {
-    val pattern: Term
-    val count: Count
+    val type: Type
+    val id: Int?
+    val pattern: String?
+    val count: Int?
     val order: Order?
     val orderby: Orderby?
-    val type: Type
+    val name: String?
+    val hasArtist: Boolean?
+    val hasWiki: Boolean?
+    val hideEmpty: Boolean?
+    val category: TagCategory?
 
     companion object {
-        fun build(pattern: String, count: Int = 100, order: Order? = null, orderby: Orderby? = null, type: Type): TagsRequest {
+        fun build(
+            type: Type,
+            pattern: String? = null,
+            count: Int? = null,
+            order: Order? = null,
+            orderby: Orderby? = null,
+            name: String? = null,
+            hasArtist: Boolean? = null,
+            hasWiki: Boolean? = null,
+            hideEmpty: Boolean? = null,
+            category: TagCategory? = null,
+            id: Int? = null
+        ): TagsRequest {
             return object : TagsRequest {
-                override val pattern = Term(pattern)
-                override val count = Count(count)
+                override val id = id
+                override val pattern = pattern
+                override val count = count
                 override val order = order
                 override val orderby = orderby
                 override val type = type
+                override val name = name
+                override val hasArtist = hasArtist
+                override val hideEmpty = hideEmpty
+                override val category = category
+                override val hasWiki = hasWiki
             }
         }
     }

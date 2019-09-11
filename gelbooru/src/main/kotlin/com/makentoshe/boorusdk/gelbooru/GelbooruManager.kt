@@ -74,14 +74,15 @@ open class GelbooruManager(
         return String(extractBody(response))
     }
 
-    override fun getTag(request: TagRequest, parser: (ByteArray) -> ParseResult): ParseResult {
-        val response = gelbooruApi.tags(request.id).execute()
-        return parser(extractBody(response))
-    }
-
-    override fun getTags(request: TagsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
-        val response = gelbooruApi.tags(request.pattern, request.count, request.order, request.orderby).execute()
-        return parser(extractBody(response))
+    override fun getTags(request: TagsRequest): String {
+        val response = gelbooruApi.getTags(
+            tagId = request.id,
+            pattern = request.pattern,
+            count = request.count,
+            order = request.order,
+            orderby = request.orderby
+        ).execute()
+        return String(extractBody(response))
     }
 
     private fun extractBody(response: Response<ByteArray>): ByteArray {

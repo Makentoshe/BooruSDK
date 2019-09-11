@@ -1,11 +1,11 @@
 import com.makentoshe.boorusdk.base.BooruManager
 import com.makentoshe.boorusdk.base.model.ParseResult
+import com.makentoshe.boorusdk.base.model.TagCategory
 import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.*
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.lang.IllegalArgumentException
 
 open class DanbooruManager(
     protected val danbooruApi: DanbooruApi
@@ -63,12 +63,48 @@ open class DanbooruManager(
         return String(extractBody(response))
     }
 
-    override fun getTag(request: TagRequest, parser: (ByteArray) -> ParseResult): ParseResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getTags(request: TagsRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getTags(request: TagsRequest): String {
+        val tagId = request.id
+        val response = if (tagId != null) {
+            danbooruApi.getTag(
+                type = request.type.name.toLowerCase(),
+                id = tagId
+            ).execute()
+        } else {
+            val hideEmpty = when (request.hideEmpty) {
+                true -> "yes"
+                false -> "no"
+                else -> null
+            }
+            val hasWiki = when (request.hasWiki) {
+                true -> "yes"
+                false -> "no"
+                else -> null
+            }
+            val hasArtist = when (request.hasArtist) {
+                true -> "yes"
+                false -> "no"
+                else -> null
+            }
+            val category = when (request.category) {
+                TagCategory.GENERAL -> 0
+                TagCategory.ARTIST -> 1
+                TagCategory.COPYTIGHT -> 3
+                TagCategory.CHARACTER -> 4
+                else -> null
+            }
+            danbooruApi.getTags(
+                type = request.type.name.toLowerCase(),
+                pattern = request.pattern,
+                name = request.name,
+                hideEmpty = hideEmpty,
+                hasWiki = hasWiki,
+                hasArtist = hasArtist,
+                order = request.orderby?.name?.toLowerCase(),
+                category = category
+            ).execute()
+        }
+        return String(extractBody(response))
     }
 
     override fun login(request: LoginRequest): Boolean {
@@ -99,11 +135,11 @@ open class DanbooruManager(
 
 fun main() {
     val manager = DanbooruManager.build()
-    val request = PostsRequest.build(
+    val request = TagsRequest.build(
         type = Type.XML,
-        count = 2,
-        id = 3624352
-        )
-    val response = manager.getPosts(request)
+        pattern = "hats*",
+        category = TagCategory.COPYTIGHT
+    )
+    val response = manager.getTags(request)
     println(response)
 }
