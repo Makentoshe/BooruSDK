@@ -1,7 +1,6 @@
 package com.makentoshe.boorusdk.gelbooru
 
 import com.makentoshe.boorusdk.base.BooruManager
-import com.makentoshe.boorusdk.base.model.ParseResult
 import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.*
 import okhttp3.OkHttpClient
@@ -33,18 +32,22 @@ open class GelbooruManager(
         }
     }
 
-    override fun commentPost(request: CommentPostRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
+    override fun newComment(request: NewCommentRequest): String {
         // check is logged in
         if (!isLoggedIn) throw IllegalStateException("You are not logged in")
         // get http page (type will be ignored)
-        val postHttpPage = getPostHttp(PostsRequest.build(type = Type.XML, id = request.id.value))
+        val postHttpPage = getPostHttp(PostsRequest.build(type = Type.XML, id = request.postId))
         // extract csrf token
         val csrfToken = Jsoup.parse(postHttpPage).body().select("#comment_form [name=csrf-token]").attr("value")
-        val postAsAnon = if (request.postAsAnonymous) "on" else null
         // perform request
-        gelbooruApi.commentPost(request.id, request.comment, csrfToken, postAsAnon).execute()
+        gelbooruApi.commentPost(
+            postId = request.postId,
+            body = request.body,
+            csrfToken = csrfToken,
+            postAsAnonymous = if (request.postAsAnonymous == true) "on" else null
+        ).execute()
         // get all comments for the post
-        return emptyList()//getComments(CommentsRequest.build(request.id.value, request.type), parser)
+        return ""//getComments(CommentsRequest.build(request.id, request.type), parser)
     }
 
     override fun votePost(request: VotePostRequest, parser: (ByteArray) -> Int): Int {

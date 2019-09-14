@@ -76,10 +76,31 @@ interface DanbooruApi {
     @GET("session/new")
     fun newSession(): Call<ByteArray>
 
+    // TODO implement using Gold Account permissions
     @FormUrlEncoded
     @POST("posts/{id}/votes.json")
     fun votePost(
         @Path("id") id: Int,
-        @Field("score") score: String
+        @Field("score") score: String,
+        @Field("authenticity_token") token: String
+    ): Call<ByteArray>
+
+    @FormUrlEncoded
+    @POST("comments.{type}")
+    fun createComment(
+        @Path("type") type: String,
+        @Field("comment[post_id]") postId: Int,
+        @Field("comment[body]") body: String,
+        @Field("comment[do_not_bump_post]") doNotBumpPost: Boolean = false,
+        @Field("authenticity_token") token: String,
+        @Field("commit") commit: String? = "Submit"
     ): Call<ByteArray>
 }
+
+//authenticity_token=4%2FcsP%2BFCKK1Y7Ibn5ZvfIIZqDuA81wRBRMj3P67WjIHB6sTsXipFqNw6SxqZ86FEsVj090FkGArdHx%2B2uFUNvw%3D%3D&comment%5Bpost_id%5D=3617559&comment%5Bbody%5D=I+think+her+face+is+a+little+lewd&commit=Submit&comment%5Bdo_not_bump_post%5D=0&comment%5Bdo_not_bump_post%5D=1
+
+//delete comment
+//DELETE https://danbooru.donmai.us/comments/1947774 HTTP/1.1
+
+//OqLbeAIQB2Urn72/Yp3ArfWDXxY1WNxVKmunllxrU/+9NLzqcJf6gQIE5wsW/gf8T/sJ9+CPkEYRLz9AvDXq4g
+//TCS9U91j9AndwJTMVv9qU9Nb8f3HtJ3bqVWm28kbpehkT%2BSw%2B%2BIB%2FfqcHs6XmHdA5AoP5NGFxkBmS6qwHqoVXQ%3D%3D

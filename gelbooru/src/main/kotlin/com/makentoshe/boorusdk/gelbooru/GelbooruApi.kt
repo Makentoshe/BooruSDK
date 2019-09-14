@@ -45,15 +45,15 @@ interface GelbooruApi {
     ): Call<ByteArray>
 
     @GET("index.php?page=post&s=vote&type=up")
-    fun votePostUp(@Query("id") id: Id): Call<ByteArray>
+    fun votePostUp(@Query("id") id: Int): Call<ByteArray>
 
     @FormUrlEncoded
     @POST("index.php?page=comment&s=save")
     fun commentPost(
-        @Query("id") postId: Id,
-        @Field("comment") text: Comment,
+        @Query("id") postId: Int,
+        @Field("comment") body: String,
         @Field("csrf-token") csrfToken: String,
-        @Field("post_anonymous") anon: String? = null,
+        @Field("post_anonymous") postAsAnonymous: String? = null,
         @Field("conf") conf: String? = "1",
         @Field("submit") submit: String = "Post+comment"
     ): Call<ByteArray>

@@ -1,6 +1,5 @@
 package com.makentoshe.boorusdk.base
 
-import com.makentoshe.boorusdk.base.model.ParseResult
 import com.makentoshe.boorusdk.base.request.*
 
 interface BooruManager {
@@ -27,5 +26,5 @@ interface BooruManager {
     fun votePost(request: VotePostRequest, parser: (ByteArray) -> Int): Int
 
     /** Performs a post commenting and returns a new list of the comments for this post */
-    fun commentPost(request: CommentPostRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult>
+    fun newComment(request: NewCommentRequest): String
 }

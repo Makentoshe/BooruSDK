@@ -1,8 +1,7 @@
 import com.makentoshe.boorusdk.base.BooruManager
-import com.makentoshe.boorusdk.base.model.ParseResult
 import com.makentoshe.boorusdk.base.model.TagCategory
+import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.*
-import okhttp3.Cookie
 import okhttp3.OkHttpClient
 import org.jsoup.Jsoup
 import retrofit2.Response
@@ -31,14 +30,23 @@ open class DanbooruManager(
         return String(extractBody(response))
     }
 
-    override fun commentPost(request: CommentPostRequest, parser: (ByteArray) -> List<ParseResult>): List<ParseResult> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun newComment(request: NewCommentRequest): String {
+        val customResponse = String(extractBody(danbooruApi.getPostHttp(request.postId).execute()))
+        val token = Jsoup.parse(customResponse).select("meta[name=csrf-token]").attr("content")
+        val response = danbooruApi.createComment(
+            type = request.type.name.toLowerCase(),
+            postId = request.postId,
+            body = request.body,
+            doNotBumpPost = request.bump?.not() ?: false,
+            token = token
+        ).execute()
+        return String(extractBody(response))
     }
 
     override fun getAutocomplete(request: AutocompleteRequest): String {
         val response = danbooruApi.getAutocomplete(
             type = request.type.name.toLowerCase(),
-            term = request.term.toString()
+            term = request.term
         ).execute()
         return String(extractBody(response))
     }
@@ -122,14 +130,14 @@ open class DanbooruManager(
     }
 
     override fun votePost(request: VotePostRequest, parser: (ByteArray) -> Int): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("Not implemented. For testing this functional need Gold Account permissions")
     }
 
     private fun extractBody(response: Response<ByteArray>): ByteArray {
         return if (response.isSuccessful) {
             response.body() ?: byteArrayOf()
         } else {
-            throw Exception(response.message())
+            throw Exception(response.errorBody()?.string() ?: response.message())
         }
     }
 
@@ -146,10 +154,6 @@ open class DanbooruManager(
 
 fun main() {
     val manager = DanbooruManager.build()
-    val request = LoginRequest.build(
-        username = "Makentoshe",
-        password = "1243568790"
-    )
-    val response = manager.login(request)
+
     println("")
 }
