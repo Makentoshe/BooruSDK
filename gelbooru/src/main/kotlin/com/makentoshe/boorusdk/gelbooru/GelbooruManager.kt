@@ -91,6 +91,11 @@ open class GelbooruManager(
         return String(extractBody(response))
     }
 
+    //https://gelbooru.com/public/remove.php?id=2434772&csrf-token=26a41447fce39b329e16a949ef56550749a25ec570400fb5c1534528923d5d11&removecomment=1&post_id=4915517
+    override fun deleteComment(request: DeleteCommentRequest): String {
+        TODO("This command does not supported for gelbooru")
+    }
+
     private fun extractBody(response: Response<ByteArray>): ByteArray {
         return if (response.isSuccessful) {
             response.body() ?: byteArrayOf()
@@ -108,8 +113,4 @@ open class GelbooruManager(
             return GelbooruManager(retrofit.create(GelbooruApi::class.java), cookieJar)
         }
     }
-}
-
-fun main() {
-    val manager = GelbooruManager.build()
 }
