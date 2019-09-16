@@ -2,6 +2,7 @@ import com.makentoshe.boorusdk.base.BooruManager
 import com.makentoshe.boorusdk.base.model.TagCategory
 import com.makentoshe.boorusdk.base.request.*
 import function.DeleteComment
+import function.GetPosts
 import function.Login
 import okhttp3.OkHttpClient
 import org.jsoup.Jsoup
@@ -13,22 +14,7 @@ open class DanbooruManager(
 ) : BooruManager {
 
     override fun getPosts(request: PostsRequest): String {
-        val type = request.type.name.toLowerCase()
-        val postId = request.id
-        val response = if (postId != null) {
-            danbooruApi.getPost(type = type, id = postId).execute()
-        } else {
-            danbooruApi.getPosts(
-                type = type,
-                count = request.count,
-                page = request.page,
-                tags = request.tags,
-                md5 = request.md5,
-                random = request.random,
-                raw = request.raw
-            ).execute()
-        }
-        return String(extractBody(response))
+        return GetPosts(danbooruApi).apply(request)
     }
 
     override fun newComment(request: NewCommentRequest): String {
@@ -174,3 +160,4 @@ fun main() {
 
     println(result)
 }
+
