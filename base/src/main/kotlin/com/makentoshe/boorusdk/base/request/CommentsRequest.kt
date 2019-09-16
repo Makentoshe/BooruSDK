@@ -2,37 +2,25 @@ package com.makentoshe.boorusdk.base.request
 
 import com.makentoshe.boorusdk.base.model.Type
 
-interface CommentsRequest {
-    val type: Type
-    val postId: Int?
-    val page: Int?
-    val limit: Int?
-    val creatorName: String?
-    val creatorId: Int?
-    val postTagMatch: String?
-    val isDeleted: Boolean?
-
-    companion object {
-        fun build(
-            type: Type,
-            limit: Int? = null,
-            page: Int? = null,
-            postId: Int? = null,
-            creatorName: String? = null,
-            creatorId: Int? = null,
-            postTagMatch: String? = null,
-            isDeleted: Boolean? = null
-        ): CommentsRequest {
-            return object : CommentsRequest {
-                override val type = type
-                override val postId = postId
-                override val page = page
-                override val limit = limit
-                override val creatorName = creatorName
-                override val creatorId = creatorId
-                override val postTagMatch = postTagMatch
-                override val isDeleted = isDeleted
-            }
-        }
-    }
-}
+/**
+ * @param type represents an outcome string format.
+ * @param commentId if not null only the one comment, related to current id will be returned
+ * @param postId if not null all comments, related to current id will be returned.
+ * @param limit the number of results to return per page.
+ * @param page returns the given page.
+ * @param creatorName the name of the creator (exact match).
+ * @param creatorId the user id of the creator.
+ * @param postTagMatch the comment's post's tags match the given terms. Meta-tags not supported.
+ * @param isDeleted can
+ */
+open class CommentsRequest(
+    val type: Type,
+    val commentId: Int? = null,
+    val limit: Int? = null,
+    val page: Int? = null,
+    val postId: Int? = null,
+    val creatorName: String? = null,
+    val creatorId: Int? = null,
+    val postTagMatch: String? = null,
+    val isDeleted: Boolean? = null
+)

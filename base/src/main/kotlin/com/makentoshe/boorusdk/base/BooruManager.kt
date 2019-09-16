@@ -13,9 +13,6 @@ interface BooruManager {
     /** Returns a list of related tags in one of a types represented in the request */
     fun getAutocomplete(request: AutocompleteRequest): String
 
-    /** Returns a list of comments in one of a types represented in the request */
-    fun getComments(request: CommentsRequest): String
-
     /** Return a list of tags */
     fun getTags(request: TagsRequest): String
 
@@ -25,6 +22,12 @@ interface BooruManager {
     /** Performs a post voting and returns a new post score */
     fun votePost(request: VotePostRequest, parser: (ByteArray) -> Int): Int
 
+    /** Returns a list of comments in one of a types represented in the request */
+    fun getComments(request: CommentsRequest): String
+
     /** Performs a post commenting and returns a new list of the comments for this post */
     fun newComment(request: NewCommentRequest): String
+
+    /** Performs a comment deletion and returns a deleted comment */
+    fun deleteComment(request: DeleteCommentRequest): String
 }
