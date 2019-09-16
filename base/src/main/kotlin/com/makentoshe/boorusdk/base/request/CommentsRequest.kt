@@ -11,7 +11,7 @@ import com.makentoshe.boorusdk.base.model.Type
  * @param creatorName the name of the creator (exact match).
  * @param creatorId the user id of the creator.
  * @param postTagMatch the comment's post's tags match the given terms. Meta-tags not supported.
- * @param isDeleted can
+ * @param isDeleted if true returns deleted comments.
  */
 open class CommentsRequest(
     val type: Type,
