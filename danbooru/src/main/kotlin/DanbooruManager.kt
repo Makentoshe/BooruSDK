@@ -1,7 +1,8 @@
 import com.makentoshe.boorusdk.base.BooruManager
 import com.makentoshe.boorusdk.base.model.TagCategory
-import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.*
+import function.DeleteComment
+import function.Login
 import okhttp3.OkHttpClient
 import org.jsoup.Jsoup
 import retrofit2.Response
@@ -33,14 +34,18 @@ open class DanbooruManager(
     override fun newComment(request: NewCommentRequest): String {
         val customResponse = String(extractBody(danbooruApi.getPostHttp(request.postId).execute()))
         val token = Jsoup.parse(customResponse).select("meta[name=csrf-token]").attr("content")
-        val response = danbooruApi.createComment(
+        val newCommentResponse = danbooruApi.createComment(
             type = request.type.name.toLowerCase(),
             postId = request.postId,
             body = request.body,
             doNotBumpPost = request.bump?.not() ?: false,
             token = token
         ).execute()
-        return String(extractBody(response))
+        val getCommentsResponse = danbooruApi.getComments(
+            type = request.type.name.toLowerCase(),
+            postId = request.postId
+        ).execute()
+        return String(extractBody(getCommentsResponse))
     }
 
     override fun getAutocomplete(request: AutocompleteRequest): String {
@@ -52,16 +57,24 @@ open class DanbooruManager(
     }
 
     override fun getComments(request: CommentsRequest): String {
-        val response = danbooruApi.getComments(
-            type = request.type.name.toLowerCase(),
-            count = request.limit,
-            page = request.page,
-            postId = request.postId,
-            postsTagMatch = request.postTagMatch,
-            creatorName = request.creatorName,
-            creatorId = request.creatorId,
-            isDeleted = request.isDeleted
-        ).execute()
+        val commentId = request.commentId
+        val response = if (commentId == null) {
+            danbooruApi.getComments(
+                type = request.type.name.toLowerCase(),
+                count = request.limit,
+                page = request.page,
+                postId = request.postId,
+                postsTagMatch = request.postTagMatch,
+                creatorName = request.creatorName,
+                creatorId = request.creatorId,
+                isDeleted = request.isDeleted
+            ).execute()
+        } else {
+            danbooruApi.getComment(
+                type = request.type.name.toLowerCase(),
+                commentId = commentId
+            ).execute()
+        }
         return String(extractBody(response))
     }
 
@@ -117,20 +130,17 @@ open class DanbooruManager(
     }
 
     override fun login(request: LoginRequest): Boolean {
-        val customResponse = String(extractBody(danbooruApi.newSession().execute()))
-        val token = Jsoup.parse(customResponse).select("[name=authenticity_token]").attr("value")
-        val response = danbooruApi.login(
-            token = token,
-            username = request.username,
-            password = request.password
-        ).execute()
-        return response.headers().values("Set-Cookie").run {
-            any { it.contains("password_hash") } && any { it.contains("user_name") }
-        }
+        return Login(danbooruApi).apply(request)
     }
 
     override fun votePost(request: VotePostRequest, parser: (ByteArray) -> Int): Int {
         TODO("Not implemented. For testing this functional need Gold Account permissions")
+    }
+
+    override fun deleteComment(request: DeleteCommentRequest): String {
+        // todo check is logged in
+        val response = DeleteComment(danbooruApi).apply(request)
+        return response.isSuccessful.toString()
     }
 
     private fun extractBody(response: Response<ByteArray>): ByteArray {
@@ -155,5 +165,12 @@ open class DanbooruManager(
 fun main() {
     val manager = DanbooruManager.build()
 
-    println("")
+    val result = manager.login(
+        LoginRequest.build(
+            username = "Makentoshe",
+            password = "1243568790"
+        )
+    )
+
+    println(result)
 }

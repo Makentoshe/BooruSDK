@@ -32,18 +32,6 @@ interface DanbooruApi {
         @Path("postId") id: Int
     ): Call<ByteArray>
 
-    @GET("comments.{type}?group_by=comment")
-    fun getComments(
-        @Path("type") type: String,
-        @Query("limit") count: Int? = null,
-        @Query("page") page: Int? = null,
-        @Query("search[post_id]") postId: Int? = null,
-        @Query("search[post_tag_match]") postsTagMatch: String? = null,
-        @Query("search[creator_name]") creatorName: String? = null,
-        @Query("search[creator_id]") creatorId: Int? = null,
-        @Query("search[is_deleted]") isDeleted: Boolean? = null
-    ): Call<ByteArray>
-
     @GET("tags/{id}.{type}")
     fun getTag(
         @Path("id") id: Int,
@@ -85,6 +73,24 @@ interface DanbooruApi {
         @Field("authenticity_token") token: String
     ): Call<ByteArray>
 
+    @GET("comments/{id}.{type}")
+    fun getComment(
+        @Path("type") type: String,
+        @Path("id") commentId: Int
+    ) : Call<ByteArray>
+
+    @GET("comments.{type}?group_by=comment")
+    fun getComments(
+        @Path("type") type: String,
+        @Query("limit") count: Int? = null,
+        @Query("page") page: Int? = null,
+        @Query("search[post_id]") postId: Int? = null,
+        @Query("search[post_tag_match]") postsTagMatch: String? = null,
+        @Query("search[creator_name]") creatorName: String? = null,
+        @Query("search[creator_id]") creatorId: Int? = null,
+        @Query("search[is_deleted]") isDeleted: Boolean? = null
+    ): Call<ByteArray>
+
     @FormUrlEncoded
     @POST("comments.{type}")
     fun createComment(
@@ -95,12 +101,11 @@ interface DanbooruApi {
         @Field("authenticity_token") token: String,
         @Field("commit") commit: String? = "Submit"
     ): Call<ByteArray>
+
+    @DELETE("/comments/{id}.{type}")
+    fun deleteComment(
+        @Path("id") commentId: Int,
+        @Path("type") type: String,
+        @Header("X-CSRF-Token") token: String
+    ): Call<ByteArray>
 }
-
-//authenticity_token=4%2FcsP%2BFCKK1Y7Ibn5ZvfIIZqDuA81wRBRMj3P67WjIHB6sTsXipFqNw6SxqZ86FEsVj090FkGArdHx%2B2uFUNvw%3D%3D&comment%5Bpost_id%5D=3617559&comment%5Bbody%5D=I+think+her+face+is+a+little+lewd&commit=Submit&comment%5Bdo_not_bump_post%5D=0&comment%5Bdo_not_bump_post%5D=1
-
-//delete comment
-//DELETE https://danbooru.donmai.us/comments/1947774 HTTP/1.1
-
-//OqLbeAIQB2Urn72/Yp3ArfWDXxY1WNxVKmunllxrU/+9NLzqcJf6gQIE5wsW/gf8T/sJ9+CPkEYRLz9AvDXq4g
-//TCS9U91j9AndwJTMVv9qU9Nb8f3HtJ3bqVWm28kbpehkT%2BSw%2B%2BIB%2FfqcHs6XmHdA5AoP5NGFxkBmS6qwHqoVXQ%3D%3D

@@ -11,7 +11,6 @@ repositories {
 
 dependencies {
     def kotlin = "kotlin-stdlib-jdk8"
-    def jsoup = "1.11.3"
     def gson = "2.8.5"
     def okhttp = "4.1.0"
     def retrofit = "2.3.0"
@@ -24,6 +23,7 @@ dependencies {
 
     // Xml parsing
     // https://github.com/jhy/jsoup
+    def jsoup = "1.11.3"
     implementation "org.jsoup:jsoup:$jsoup"
 
     // Json parsing
