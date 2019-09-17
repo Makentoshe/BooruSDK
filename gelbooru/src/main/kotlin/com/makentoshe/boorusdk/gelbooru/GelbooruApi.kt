@@ -60,4 +60,9 @@ interface GelbooruApi {
         @Field("conf") conf: String? = "1",
         @Field("submit") submit: String = "Post+comment"
     ): Call<ByteArray>
+
+    @GET("index.php?page=pool&s=show")
+    fun getPool(
+        @Query("id") poolId: Int
+    ): Call<ByteArray>
 }

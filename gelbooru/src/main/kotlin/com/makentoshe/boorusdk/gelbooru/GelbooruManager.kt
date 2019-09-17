@@ -112,6 +112,14 @@ open class GelbooruManager(
         }
     }
 
+    override fun getPool(request: GetPoolRequest): String {
+        return GetPool(gelbooruApi).apply(request)
+    }
+
+    override fun getPools(request: GetPoolsRequest): String {
+        TODO("not implemented")
+    }
+
     companion object {
         fun build(): GelbooruManager {
             val cookieJar = SessionCookie()
