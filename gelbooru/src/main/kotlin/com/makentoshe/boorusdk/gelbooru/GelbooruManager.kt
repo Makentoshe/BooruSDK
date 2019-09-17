@@ -72,10 +72,18 @@ open class GelbooruManager(
         return String(extractBody(response))
     }
 
-    override fun getComments(request: CommentsRequest): String {
-        val response = gelbooruApi.getComments(
-            postId = request.postId,
-            type = request.type.ordinal
+    override fun getComment(request: GetCommentRequest): String {
+        TODO("This command does not supports for gelbooru")
+    }
+
+    override fun getComments(request: GetCommentsRequest): String {
+        val response = gelbooruApi.getComments().execute()
+        return String(extractBody(response))
+    }
+
+    override fun getPostComments(request: GetPostCommentsRequest): String {
+        val response = gelbooruApi.getPostComments(
+            postId = request.postId
         ).execute()
         return String(extractBody(response))
     }
@@ -93,7 +101,7 @@ open class GelbooruManager(
 
     //https://gelbooru.com/public/remove.php?id=2434772&csrf-token=26a41447fce39b329e16a949ef56550749a25ec570400fb5c1534528923d5d11&removecomment=1&post_id=4915517
     override fun deleteComment(request: DeleteCommentRequest): String {
-        TODO("This command does not supported for gelbooru")
+        TODO("This command does not supports for gelbooru")
     }
 
     private fun extractBody(response: Response<ByteArray>): ByteArray {
