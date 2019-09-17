@@ -3,7 +3,7 @@ package function
 import DanbooruApi
 import com.makentoshe.boorusdk.base.request.GetCommentsRequest
 
-class GetComments(
+internal class GetComments(
     private val danbooruApi: DanbooruApi
 ): Function<GetCommentsRequest, String>() {
 

@@ -4,14 +4,13 @@ import DanbooruApi
 import com.makentoshe.boorusdk.base.request.LoginRequest
 import org.jsoup.Jsoup
 import retrofit2.Response
-import java.util.function.Function
 
 /**
  * Performs a log in action for danbooru
  */
 internal class Login(
     private val danbooruApi: DanbooruApi
-) : Function<LoginRequest, Boolean> {
+) : Function<LoginRequest, Boolean>() {
 
     /**
      * Performs a log in action
@@ -40,14 +39,6 @@ internal class Login(
     private fun Response<ByteArray>.hasPasswordHash(): Boolean {
         val cookies = raw().priorResponse?.headers("set-cookie")
         return cookies?.any { it.contains("password_hash") } ?: false
-    }
-
-    private fun Response<ByteArray>.extractBody(): String {
-        return if (isSuccessful) {
-            String(body() ?: byteArrayOf())
-        } else {
-            throw Exception(errorBody()?.string() ?: message())
-        }
     }
 
 }

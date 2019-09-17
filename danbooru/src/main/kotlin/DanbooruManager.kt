@@ -2,10 +2,7 @@ import com.makentoshe.boorusdk.base.BooruManager
 import com.makentoshe.boorusdk.base.model.TagCategory
 import com.makentoshe.boorusdk.base.request.*
 import function.*
-import function.DeleteComment
-import function.Login
 import okhttp3.OkHttpClient
-import org.jsoup.Jsoup
 import retrofit2.Response
 import retrofit2.Retrofit
 
@@ -18,20 +15,7 @@ open class DanbooruManager(
     }
 
     override fun newComment(request: NewCommentRequest): String {
-        val customResponse = String(extractBody(danbooruApi.getPostHttp(request.postId).execute()))
-        val token = Jsoup.parse(customResponse).select("meta[name=csrf-token]").attr("content")
-        val newCommentResponse = danbooruApi.createComment(
-            type = request.type.name.toLowerCase(),
-            postId = request.postId,
-            body = request.body,
-            doNotBumpPost = request.bump?.not() ?: false,
-            token = token
-        ).execute()
-        val getCommentsResponse = danbooruApi.getComments(
-            type = request.type.name.toLowerCase(),
-            postId = request.postId
-        ).execute()
-        return String(extractBody(getCommentsResponse))
+        return CreateComment(danbooruApi).apply(request)
     }
 
     override fun getAutocomplete(request: AutocompleteRequest): String {

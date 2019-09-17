@@ -4,7 +4,7 @@ import DanbooruApi
 import com.makentoshe.boorusdk.base.request.GetCommentRequest
 import retrofit2.Response
 
-class GetComment(
+internal class GetComment(
     private val danbooruApi: DanbooruApi
 ): java.util.function.Function<GetCommentRequest, String> {
 

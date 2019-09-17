@@ -6,11 +6,10 @@ import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.DeleteCommentRequest
 import org.jsoup.Jsoup
 import retrofit2.Response
-import java.util.function.Function
 
 internal class DeleteComment(
     private val danbooruApi: DanbooruApi
-) : Function<DeleteCommentRequest, Response<ByteArray>> {
+) : Function<DeleteCommentRequest, Response<ByteArray>>() {
 
     override fun apply(t: DeleteCommentRequest): Response<ByteArray> {
         val commentJson = getComment(t.commentId)
@@ -35,11 +34,4 @@ internal class DeleteComment(
         return danbooruApi.getPostHttp(postId).execute().extractBody()
     }
 
-    private fun Response<ByteArray>.extractBody(): String {
-        return if (isSuccessful) {
-            String(body() ?: byteArrayOf())
-        } else {
-            throw Exception(errorBody()?.string() ?: message())
-        }
-    }
 }

@@ -2,11 +2,10 @@ package function
 
 import DanbooruApi
 import com.makentoshe.boorusdk.base.request.PostsRequest
-import retrofit2.Response
 
-class GetPosts(
+internal class GetPosts(
     private val danbooruApi: DanbooruApi
-): java.util.function.Function<PostsRequest, String> {
+) : Function<PostsRequest, String>() {
 
     override fun apply(t: PostsRequest): String {
         return if (t.id != null) {
@@ -35,11 +34,4 @@ class GetPosts(
         ).execute().extractBody()
     }
 
-    private fun Response<ByteArray>.extractBody(): String {
-        return if (isSuccessful) {
-            String(body() ?: byteArrayOf())
-        } else {
-            throw Exception(errorBody()?.string() ?: message())
-        }
-    }
 }
