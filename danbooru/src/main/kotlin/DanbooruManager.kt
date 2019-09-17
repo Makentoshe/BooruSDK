@@ -1,8 +1,8 @@
 import com.makentoshe.boorusdk.base.BooruManager
 import com.makentoshe.boorusdk.base.model.TagCategory
 import com.makentoshe.boorusdk.base.request.*
+import function.*
 import function.DeleteComment
-import function.GetPosts
 import function.Login
 import okhttp3.OkHttpClient
 import org.jsoup.Jsoup
@@ -42,26 +42,16 @@ open class DanbooruManager(
         return String(extractBody(response))
     }
 
-    override fun getComments(request: CommentsRequest): String {
-        val commentId = request.commentId
-        val response = if (commentId == null) {
-            danbooruApi.getComments(
-                type = request.type.name.toLowerCase(),
-                count = request.limit,
-                page = request.page,
-                postId = request.postId,
-                postsTagMatch = request.postTagMatch,
-                creatorName = request.creatorName,
-                creatorId = request.creatorId,
-                isDeleted = request.isDeleted
-            ).execute()
-        } else {
-            danbooruApi.getComment(
-                type = request.type.name.toLowerCase(),
-                commentId = commentId
-            ).execute()
-        }
-        return String(extractBody(response))
+    override fun getComment(request: GetCommentRequest): String {
+        return GetComment(danbooruApi).apply(request)
+    }
+
+    override fun getComments(request: GetCommentsRequest): String {
+        return GetComments(danbooruApi).apply(request)
+    }
+
+    override fun getPostComments(request: GetPostCommentsRequest): String {
+        return GetPostComments(danbooruApi).apply(request)
     }
 
     override fun getPostHttp(request: PostsRequest): String {
@@ -160,4 +150,3 @@ fun main() {
 
     println(result)
 }
-
