@@ -108,4 +108,24 @@ interface DanbooruApi {
         @Path("type") type: String,
         @Header("X-CSRF-Token") token: String
     ): Call<ByteArray>
+
+    @GET("/pools.{type}")
+    fun getPools(
+        @Path("type") type: String,
+        @Query("search[name_matches]") nameMatches: String? = null,
+        @Query("search[id]") ids: String? = null,
+        @Query("search[description_matches]") descriptionMatches: String? = null,
+        @Query("search[creator_name]") creatorName: String? = null,
+        @Query("search[creator_id]") creatorId: Int? = null,
+        @Query("search[is_active]") isActive: Boolean? = null,
+        @Query("search[is_deleted]") isDeleted: Boolean? = null,
+        @Query("search[category]") category: String? = null,
+        @Query("search[order]") order: String? = null
+    ): Call<ByteArray>
+
+    @GET("/pools/{id}.{type}")
+    fun getPool(
+        @Path("type") type: String,
+        @Path("id") poolId: Int
+    ): Call<ByteArray>
 }

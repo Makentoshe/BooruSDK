@@ -1,5 +1,6 @@
 import com.makentoshe.boorusdk.base.BooruManager
 import com.makentoshe.boorusdk.base.model.TagCategory
+import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.*
 import function.*
 import okhttp3.OkHttpClient
@@ -103,6 +104,14 @@ open class DanbooruManager(
         return response.isSuccessful.toString()
     }
 
+    override fun getPool(request: GetPoolRequest): String {
+        return GetPool(danbooruApi).apply(request)
+    }
+
+    override fun getPools(request: GetPoolsRequest): String {
+        return GetPools(danbooruApi).apply(request)
+    }
+
     private fun extractBody(response: Response<ByteArray>): ByteArray {
         return if (response.isSuccessful) {
             response.body() ?: byteArrayOf()
@@ -125,10 +134,10 @@ open class DanbooruManager(
 fun main() {
     val manager = DanbooruManager.build()
 
-    val result = manager.login(
-        LoginRequest.build(
-            username = "Makentoshe",
-            password = "1243568790"
+    val result = manager.getPool(
+        GetPoolRequest(
+            type = Type.JSON,
+            poolId = 12746
         )
     )
 
