@@ -1,9 +1,6 @@
 package com.makentoshe.boorusdk.base
 
 import com.makentoshe.boorusdk.base.request.*
-import com.makentoshe.boorusdk.base.request.GetCommentRequest
-import com.makentoshe.boorusdk.base.request.GetCommentsRequest
-import com.makentoshe.boorusdk.base.request.GetPostCommentsRequest
 
 interface BooruManager {
 
@@ -39,4 +36,10 @@ interface BooruManager {
 
     /** Performs a comment deletion and returns a deleted comment */
     fun deleteComment(request: DeleteCommentRequest): String
+
+    /** Returns a list of pools */
+    fun getPools(request: GetPoolsRequest): String
+
+    /** Returns a single pool */
+    fun getPool(request: GetPoolRequest): String
 }
