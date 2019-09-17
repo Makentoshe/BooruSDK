@@ -6,20 +6,17 @@ import retrofit2.Response
 
 internal class GetComment(
     private val danbooruApi: DanbooruApi
-): java.util.function.Function<GetCommentRequest, String> {
+): Function<GetCommentRequest, String>() {
 
     override fun apply(t: GetCommentRequest): String {
         return danbooruApi.getComment(
             type = t.type.name.toLowerCase(),
-            commentId = t.commentId
+            commentId = t.checkCommentId().commentId
         ).execute().extractBody()
     }
 
-    private fun Response<ByteArray>.extractBody(): String {
-        return if (isSuccessful) {
-            String(body() ?: byteArrayOf())
-        } else {
-            throw Exception(errorBody()?.string() ?: message())
-        }
+    private fun GetCommentRequest.checkCommentId(): GetCommentRequest {
+        if (commentId < 0) throw IllegalArgumentException("Comment id should not be less 0")
+        return this
     }
 }
