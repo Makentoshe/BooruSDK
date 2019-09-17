@@ -1,4 +1,4 @@
-package com.makentoshe.boorusdk.gelbooru
+package com.makentoshe.boorusdk.gelbooru.function
 
 import retrofit2.Response
 

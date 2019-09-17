@@ -65,4 +65,9 @@ interface GelbooruApi {
     fun getPool(
         @Query("id") poolId: Int
     ): Call<ByteArray>
+
+    @GET("index.php?page=pool&s=list")
+    fun getPools(
+        @Query("pid") page: Int? = null
+    ): Call<ByteArray>
 }
