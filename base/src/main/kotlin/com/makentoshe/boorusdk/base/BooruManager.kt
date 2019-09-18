@@ -1,6 +1,11 @@
 package com.makentoshe.boorusdk.base
 
 import com.makentoshe.boorusdk.base.request.*
+import com.makentoshe.boorusdk.base.request.comment.*
+import com.makentoshe.boorusdk.base.request.pool.GetPoolRequest
+import com.makentoshe.boorusdk.base.request.pool.GetPoolsRequest
+import com.makentoshe.boorusdk.base.request.post.GetPostRequest
+import com.makentoshe.boorusdk.base.request.post.GetPostsRequest
 
 interface BooruManager {
 
