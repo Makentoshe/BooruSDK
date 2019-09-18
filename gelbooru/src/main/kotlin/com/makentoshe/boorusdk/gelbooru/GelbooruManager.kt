@@ -23,9 +23,8 @@ open class GelbooruManager(
         return GetPosts(gelbooruApi).apply(request)
     }
 
-    override fun getPostHttp(request: PostsRequest): String {
-        val postId = request.id ?: throw IllegalArgumentException("Request should contain id value")
-        val response = gelbooruApi.getPostHttp(postId).execute()
+    override fun getPostHttp(request: GetPostRequest): String {
+        val response = gelbooruApi.getPostHttp(request.postId).execute()
         return String(extractBody(response))
     }
 
@@ -47,7 +46,7 @@ open class GelbooruManager(
         // check is logged in
         if (!isLoggedIn) throw IllegalStateException("You are not logged in")
         // get http page (type will be ignored)
-        val postHttpPage = getPostHttp(PostsRequest.build(type = Type.XML, id = request.postId))
+        val postHttpPage = getPostHttp(GetPostRequest(Type.XML, request.postId))
         // extract csrf token
         val csrfToken = Jsoup.parse(postHttpPage).body().select("#comment_form [name=csrf-token]").attr("value")
         // perform request
@@ -58,16 +57,13 @@ open class GelbooruManager(
             postAsAnonymous = if (request.postAsAnonymous == true) "on" else null
         ).execute()
         // get all comments for the post
+        // TODO
         return ""//getComments(CommentsRequest.build(request.id, request.type), parser)
     }
 
     override fun votePost(request: VotePostRequest, parser: (ByteArray) -> Int): Int {
         val response = gelbooruApi.votePostUp(request.id).execute()
         return parser(extractBody(response))
-    }
-
-    override fun getPosts(request: PostsRequest): String {
-        return ""
     }
 
     override fun getAutocomplete(request: AutocompleteRequest): String {

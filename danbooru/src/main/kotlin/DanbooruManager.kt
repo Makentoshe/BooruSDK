@@ -26,10 +26,6 @@ open class DanbooruManager(
         return GetPost(danbooruApi).apply(request)
     }
 
-    override fun getPosts(request: PostsRequest): String {
-        return ""
-    }
-
     override fun newComment(request: NewCommentRequest): String {
         return CreateComment(danbooruApi).apply(request)
     }
@@ -54,10 +50,8 @@ open class DanbooruManager(
         return GetPostComments(danbooruApi).apply(request)
     }
 
-    override fun getPostHttp(request: PostsRequest): String {
-        val postId = request.id ?: throw IllegalArgumentException("Id value should be defined")
-        if (postId < 0) throw IllegalArgumentException("Id value should not be less 0")
-        val response = danbooruApi.getPostHttp(id = postId).execute()
+    override fun getPostHttp(request: GetPostRequest): String {
+        val response = danbooruApi.getPostHttp(request.postId).execute()
         return String(extractBody(response))
     }
 
