@@ -12,5 +12,6 @@ open class GetPoolsRequest(
     val creatorName: String? = null,
     val nameMatches: String? = null,
     val descriptionMatches: String? = null,
-    val id: List<Int>? = null
+    val id: List<Int>? = null,
+    val page: Int? = null
 ) : PoolRequest
