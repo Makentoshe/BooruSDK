@@ -2,6 +2,8 @@ import com.makentoshe.boorusdk.base.BooruManager
 import com.makentoshe.boorusdk.base.model.TagCategory
 import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.*
+import cookie.CookieStorage
+import cookie.SessionCookie
 import function.*
 import okhttp3.OkHttpClient
 import retrofit2.Response
@@ -99,9 +101,7 @@ open class DanbooruManager(
     }
 
     override fun deleteComment(request: DeleteCommentRequest): String {
-        // todo check is logged in
-        val response = DeleteComment(danbooruApi).apply(request)
-        return response.isSuccessful.toString()
+        return DeleteComment(danbooruApi, cookieStorage).apply(request)
     }
 
     override fun getPool(request: GetPoolRequest): String {

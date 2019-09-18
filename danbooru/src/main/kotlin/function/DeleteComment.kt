@@ -4,14 +4,21 @@ import DanbooruApi
 import com.google.gson.Gson
 import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.DeleteCommentRequest
+import cookie.CookieStorage
 import org.jsoup.Jsoup
-import retrofit2.Response
 
 internal class DeleteComment(
-    private val danbooruApi: DanbooruApi
-) : Function<DeleteCommentRequest, Response<ByteArray>>() {
+    private val danbooruApi: DanbooruApi,
+    private val sessionCookie: CookieStorage
+) : Function<DeleteCommentRequest, String>() {
 
-    override fun apply(t: DeleteCommentRequest): Response<ByteArray> {
+    private val isLoggedIn: Boolean
+    get() = sessionCookie.hasCookie("user_name") && sessionCookie.hasCookie("password_hash")
+
+    override fun apply(t: DeleteCommentRequest): String {
+        if (!isLoggedIn) {
+            throw IllegalStateException("Should be logged in")
+        }
         val commentJson = getComment(t.commentId)
         val postId = (Gson().fromJson(commentJson, Map::class.java)["post_id"] as Double).toInt()
         val postHttp = getPostHttp(postId)
@@ -20,7 +27,7 @@ internal class DeleteComment(
             commentId = t.commentId,
             type = t.type.name.toLowerCase(),
             token = token
-        ).execute()
+        ).execute().extractBody()
     }
 
     private fun getComment(commentId: Int): String {
