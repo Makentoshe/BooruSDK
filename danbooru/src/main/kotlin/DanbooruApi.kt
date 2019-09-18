@@ -13,11 +13,11 @@ interface DanbooruApi {
     @GET("posts.{type}")
     fun getPosts(
         @Path("type") type: String,
-        @Query("limit") count: Count? = Count(10),
-        @Query("page") page: Page? = Page(0),
-        @Query("tags") tags: Tags? = Tags(emptySet()),
-        @Query("md5") md5: Md5? = null,
-        @Query("random") random: Random? = null,
+        @Query("limit") count: Int? = null,
+        @Query("page") page: Int? = null,
+        @Query("tags") tags: String? = null,
+        @Query("md5") md5: String? = null,
+        @Query("random") random: Boolean? = null,
         @Query("raw") raw: String? = null
     ): Call<ByteArray>
 

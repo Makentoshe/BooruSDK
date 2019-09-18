@@ -1,37 +1,29 @@
 package function
 
 import DanbooruApi
-import com.makentoshe.boorusdk.base.request.PostsRequest
+import com.makentoshe.boorusdk.base.request.GetPostsRequest
 
 internal class GetPosts(
     private val danbooruApi: DanbooruApi
-) : Function<PostsRequest, String>() {
+) : Function<GetPostsRequest, String>() {
 
-    override fun apply(t: PostsRequest): String {
-        return if (t.id != null) {
-            getSinglePost(t)
-        } else {
-            getListOfPosts(t)
+    override fun apply(t: GetPostsRequest): String {
+        if (t.count != null && t.count!! < 0) {
+            throw IllegalArgumentException("count should not be less 0")
         }
-    }
+        if (t.page != null && t.page!! < 0) {
+            throw IllegalArgumentException("page should not be less 0")
+        }
 
-    private fun getListOfPosts(request: PostsRequest): String {
         return danbooruApi.getPosts(
-            type = request.type.name.toLowerCase(),
-            count = request.count,
-            page = request.page,
-            tags = request.tags,
-            md5 = request.md5,
-            random = request.random,
-            raw = request.raw
+            type = t.type.name.toLowerCase(),
+            count = t.count,
+            page = t.page,
+            tags = t.tags,
+            md5 = t.md5,
+            random = t.random,
+            raw = t.raw
         ).execute().extractBody()
     }
-
-    private fun getSinglePost(request: PostsRequest): String {
-        return danbooruApi.getPost(
-            type = request.type.name.toLowerCase(),
-            id = request.id!!
-        ).execute().extractBody()
-    }
-
 }
+

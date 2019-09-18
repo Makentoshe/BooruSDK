@@ -18,8 +18,16 @@ open class DanbooruManager(
     protected val danbooruApi: DanbooruApi, protected val cookieStorage: CookieStorage
 ) : BooruManager {
 
-    override fun getPosts(request: PostsRequest): String {
+    override fun getPosts(request: GetPostsRequest): String {
         return GetPosts(danbooruApi).apply(request)
+    }
+
+    override fun getPost(request: GetPostRequest): String {
+        return GetPost(danbooruApi).apply(request)
+    }
+
+    override fun getPosts(request: PostsRequest): String {
+        return ""
     }
 
     override fun newComment(request: NewCommentRequest): String {
