@@ -1,9 +1,8 @@
 package com.makentoshe.boorusdk.gelbooru.function
 
 import com.makentoshe.boorusdk.base.model.Type
-import com.makentoshe.boorusdk.base.request.GetPoolsRequest
+import com.makentoshe.boorusdk.base.request.pool.GetPoolsRequest
 import com.makentoshe.boorusdk.gelbooru.GelbooruApi
-import kotlin.math.absoluteValue
 
 internal class GetPools(
     private val gelbooruApi: GelbooruApi

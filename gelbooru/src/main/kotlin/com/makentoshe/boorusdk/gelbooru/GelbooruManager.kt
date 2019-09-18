@@ -3,6 +3,11 @@ package com.makentoshe.boorusdk.gelbooru
 import com.makentoshe.boorusdk.base.BooruManager
 import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.*
+import com.makentoshe.boorusdk.base.request.comment.*
+import com.makentoshe.boorusdk.base.request.pool.GetPoolRequest
+import com.makentoshe.boorusdk.base.request.pool.GetPoolsRequest
+import com.makentoshe.boorusdk.base.request.post.GetPostRequest
+import com.makentoshe.boorusdk.base.request.post.GetPostsRequest
 import com.makentoshe.boorusdk.gelbooru.function.GetPool
 import com.makentoshe.boorusdk.gelbooru.function.GetPost
 import com.makentoshe.boorusdk.gelbooru.function.GetPosts

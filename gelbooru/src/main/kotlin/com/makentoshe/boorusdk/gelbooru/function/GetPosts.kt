@@ -1,7 +1,7 @@
 package com.makentoshe.boorusdk.gelbooru.function
 
 import com.makentoshe.boorusdk.base.model.Type
-import com.makentoshe.boorusdk.base.request.GetPostsRequest
+import com.makentoshe.boorusdk.base.request.post.GetPostsRequest
 import com.makentoshe.boorusdk.gelbooru.GelbooruApi
 
 internal class GetPosts(
