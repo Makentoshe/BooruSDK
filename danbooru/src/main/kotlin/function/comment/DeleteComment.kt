@@ -1,10 +1,11 @@
-package function
+package function.comment
 
 import DanbooruApi
 import com.google.gson.Gson
 import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.DeleteCommentRequest
 import cookie.CookieStorage
+import function.Function
 import org.jsoup.Jsoup
 
 internal class DeleteComment(

@@ -5,6 +5,11 @@ import com.makentoshe.boorusdk.base.request.*
 import cookie.CookieStorage
 import cookie.SessionCookie
 import function.*
+import function.comment.CreateComment
+import function.comment.DeleteComment
+import function.comment.GetComment
+import function.comment.GetComments
+import function.comment.GetPostComments
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit

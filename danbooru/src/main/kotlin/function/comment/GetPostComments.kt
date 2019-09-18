@@ -1,7 +1,8 @@
-package function
+package function.comment
 
 import DanbooruApi
 import com.makentoshe.boorusdk.base.request.GetPostCommentsRequest
+import function.Function
 
 internal class GetPostComments(
     private val danbooruApi: DanbooruApi

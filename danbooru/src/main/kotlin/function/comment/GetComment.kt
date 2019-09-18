@@ -1,8 +1,8 @@
-package function
+package function.comment
 
 import DanbooruApi
 import com.makentoshe.boorusdk.base.request.GetCommentRequest
-import retrofit2.Response
+import function.Function
 
 internal class GetComment(
     private val danbooruApi: DanbooruApi

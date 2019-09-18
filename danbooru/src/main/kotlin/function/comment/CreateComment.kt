@@ -1,7 +1,8 @@
-package function
+package function.comment
 
 import DanbooruApi
 import com.makentoshe.boorusdk.base.request.NewCommentRequest
+import function.Function
 import org.jsoup.Jsoup
 
 internal class CreateComment(
