@@ -1,7 +1,7 @@
 package function.comment
 
 import DanbooruApi
-import com.makentoshe.boorusdk.base.request.GetCommentsRequest
+import com.makentoshe.boorusdk.base.request.comment.GetCommentsRequest
 import function.Function
 
 internal class GetComments(

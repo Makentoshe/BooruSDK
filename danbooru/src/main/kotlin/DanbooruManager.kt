@@ -2,6 +2,11 @@ import com.makentoshe.boorusdk.base.BooruManager
 import com.makentoshe.boorusdk.base.model.TagCategory
 import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.*
+import com.makentoshe.boorusdk.base.request.comment.*
+import com.makentoshe.boorusdk.base.request.pool.GetPoolRequest
+import com.makentoshe.boorusdk.base.request.pool.GetPoolsRequest
+import com.makentoshe.boorusdk.base.request.post.GetPostRequest
+import com.makentoshe.boorusdk.base.request.post.GetPostsRequest
 import cookie.CookieStorage
 import cookie.SessionCookie
 import function.*

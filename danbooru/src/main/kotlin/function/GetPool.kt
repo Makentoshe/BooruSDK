@@ -1,7 +1,7 @@
 package function
 
 import DanbooruApi
-import com.makentoshe.boorusdk.base.request.GetPoolRequest
+import com.makentoshe.boorusdk.base.request.pool.GetPoolRequest
 
 internal class GetPool(
     private val danbooruApi: DanbooruApi

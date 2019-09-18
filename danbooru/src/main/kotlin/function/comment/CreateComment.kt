@@ -1,13 +1,13 @@
 package function.comment
 
 import DanbooruApi
-import com.makentoshe.boorusdk.base.request.NewCommentRequest
+import com.makentoshe.boorusdk.base.request.comment.NewCommentRequest
 import function.Function
 import org.jsoup.Jsoup
 
 internal class CreateComment(
     private val danbooruApi: DanbooruApi
-): Function<NewCommentRequest, String>() {
+) : Function<NewCommentRequest, String>() {
 
     override fun apply(t: NewCommentRequest): String {
         // create a new comment for selected post
