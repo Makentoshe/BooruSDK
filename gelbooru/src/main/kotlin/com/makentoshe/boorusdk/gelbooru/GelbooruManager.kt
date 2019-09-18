@@ -4,6 +4,8 @@ import com.makentoshe.boorusdk.base.BooruManager
 import com.makentoshe.boorusdk.base.model.Type
 import com.makentoshe.boorusdk.base.request.*
 import com.makentoshe.boorusdk.gelbooru.function.GetPool
+import com.makentoshe.boorusdk.gelbooru.function.GetPost
+import com.makentoshe.boorusdk.gelbooru.function.GetPosts
 import okhttp3.OkHttpClient
 import org.jsoup.Jsoup
 import retrofit2.Response
@@ -12,6 +14,14 @@ import retrofit2.Retrofit
 open class GelbooruManager(
     protected val gelbooruApi: GelbooruApi, protected val cookieStorage: CookieStorage
 ) : BooruManager {
+
+    override fun getPost(request: GetPostRequest): String {
+        return GetPost(gelbooruApi).apply(request)
+    }
+
+    override fun getPosts(request: GetPostsRequest): String {
+        return GetPosts(gelbooruApi).apply(request)
+    }
 
     override fun getPostHttp(request: PostsRequest): String {
         val postId = request.id ?: throw IllegalArgumentException("Request should contain id value")
@@ -57,15 +67,7 @@ open class GelbooruManager(
     }
 
     override fun getPosts(request: PostsRequest): String {
-        val type = if (request.type == Type.JSON) 1 else null
-        val response = gelbooruApi.getPosts(
-            type = type,
-            id = request.id,
-            count = request.count,
-            page = request.page,
-            tags = request.tags
-        ).execute()
-        return String(extractBody(response))
+        return ""
     }
 
     override fun getAutocomplete(request: AutocompleteRequest): String {
