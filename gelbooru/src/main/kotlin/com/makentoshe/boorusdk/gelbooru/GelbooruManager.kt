@@ -134,3 +134,15 @@ open class GelbooruManager(
         }
     }
 }
+
+fun main() {
+    val manager = GelbooruManager.build()
+
+    val request = GetPoolRequest(
+        type = Type.XML,
+        poolId = 46467
+    )
+
+    val response = manager.getPool(request)
+    println(response)
+}
