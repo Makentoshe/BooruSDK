@@ -9,6 +9,7 @@ import com.makentoshe.boorusdk.base.request.pool.GetPoolsRequest
 import com.makentoshe.boorusdk.base.request.post.GetPostRequest
 import com.makentoshe.boorusdk.base.request.post.GetPostsRequest
 import com.makentoshe.boorusdk.gelbooru.function.GetPool
+import com.makentoshe.boorusdk.gelbooru.function.GetPools
 import com.makentoshe.boorusdk.gelbooru.function.GetPost
 import com.makentoshe.boorusdk.gelbooru.function.GetPosts
 import okhttp3.OkHttpClient
@@ -121,7 +122,7 @@ open class GelbooruManager(
     }
 
     override fun getPools(request: GetPoolsRequest): String {
-        TODO("not implemented")
+        return GetPools(gelbooruApi).apply(request)
     }
 
     companion object {
